@@ -30,11 +30,11 @@
 #### 源码下载
 1. 主商城端（又称后端、服务端，PHP开发 用于管理后台和提供api接口）
 
-    下载地址：https://gitee.com/xany/yoshop2
+    下载地址：https://gitee.com/xany/yoshop2.0
 
 2. 用户端（也叫客户端、前端，uniapp开发 用于生成H5和微信小程序）
 
-    下载地址：https://gitee.com/xany/yoshop2-uniapp
+    下载地址：https://gitee.com/xany/yoshop2.0-uniapp
 
 #### 环境要求
 - CentOS 7.0+
