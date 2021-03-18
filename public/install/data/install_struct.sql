@@ -33,7 +33,7 @@ CREATE TABLE `yoshop_article` (
 
 DROP TABLE IF EXISTS `yoshop_article_category`;
 CREATE TABLE `yoshop_article_category` (
-  `category_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '商品分类ID',
+  `category_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '文章分类ID',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '分类名称',
   `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态(1显示 0隐藏)',
   `sort` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '排序方式(数字越小越靠前)',
@@ -98,7 +98,7 @@ CREATE TABLE `yoshop_comment` (
   KEY `order_id` (`order_id`),
   KEY `goods_id` (`goods_id`),
   KEY `store_id` (`store_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='订单评价记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='商品评价记录表';
 
 DROP TABLE IF EXISTS `yoshop_comment_image`;
 CREATE TABLE `yoshop_comment_image` (
@@ -110,7 +110,7 @@ CREATE TABLE `yoshop_comment_image` (
   PRIMARY KEY (`id`),
   KEY `comment_id` (`comment_id`) USING BTREE,
   KEY `store_id` (`store_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='订单评价图片记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='商品评价图片记录表';
 
 DROP TABLE IF EXISTS `yoshop_coupon`;
 CREATE TABLE `yoshop_coupon` (
@@ -488,7 +488,7 @@ CREATE TABLE `yoshop_page` (
   PRIMARY KEY (`page_id`),
   KEY `store_id` (`store_id`),
   KEY `page_type` (`page_type`,`store_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='店铺页面记录表';
 
 DROP TABLE IF EXISTS `yoshop_recharge_order`;
 CREATE TABLE `yoshop_recharge_order` (
@@ -553,7 +553,7 @@ CREATE TABLE `yoshop_region` (
   `code` varchar(255) NOT NULL DEFAULT '' COMMENT '区划编码',
   `level` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '层级(1省级 2市级 3区/县级)',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='省市区数据表';
 
 DROP TABLE IF EXISTS `yoshop_spec`;
 CREATE TABLE `yoshop_spec` (
