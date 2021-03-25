@@ -17,7 +17,7 @@ use OSS\Core\OssException;
 
 /**
  * 阿里云存储引擎 (OSS)
- * Class Qiniu
+ * Class Aliyun
  * @package app\common\library\storage\engine
  */
 class Aliyun extends Basics
@@ -49,10 +49,10 @@ class Aliyun extends Basics
 
     /**
      * 删除文件
-     * @param $fileName
+     * @param string $fileName
      * @return bool|mixed
      */
-    public function delete($fileName)
+    public function delete(string $fileName)
     {
         try {
             $ossClient = new OssClient(

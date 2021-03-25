@@ -16,7 +16,7 @@ use Qcloud\Cos\Client;
 
 /**
  * 腾讯云存储引擎 (COS)
- * Class Qiniu
+ * Class Qcloud
  * @package app\common\library\storage\engine
  */
 class Qcloud extends Basics

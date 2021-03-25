@@ -18,7 +18,7 @@ use think\file\UploadedFile;
 
 /**
  * 存储引擎抽象类
- * Class server
+ * Class Basics
  * @package app\common\library\storage\drivers
  */
 abstract class Basics
