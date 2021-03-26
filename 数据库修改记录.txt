@@ -1,0 +1,13 @@
+
+# 第三方用户信息表 - 添加索引
+# 修改时间：2021-3-26
+# 当前版本号：v2.0.1
+ALTER TABLE `yoshop_user_oauth` ADD INDEX `oauth_type_2` (`oauth_type`, `oauth_id`) USING BTREE ;
+
+
+# 第三方用户信息表 - 添加字段：是否删除
+# 修改时间：2021-3-26
+# 当前版本号：v2.0.1
+ALTER TABLE `yoshop_user_oauth`
+ADD COLUMN `is_delete`  tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否删除' AFTER `store_id` ;
+
