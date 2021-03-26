@@ -43,33 +43,33 @@ function CheckForm() {
     //     $("#username").focus();
     //     return false;
     // }
-	//
+    //
     // if ($("#username").val().length < 5 ||
     //     $("#username").val().length > 20) {
     //     alert("用户名长度不得小于5位或大于20位！");
     //     $("#username").focus();
     //     return false;
     // }
-	//
+    //
     // if ($("#password").val() == "") {
     //     alert("请输入管理员密码！");
     //     $("#password").focus();
     //     return false;
     // }
-	//
+    //
     // if ($("#password").val().length < 5 ||
     //     $("#password").val().length > 16) {
     //     alert("密码由5-16个字符组成，区分大小写！");
     //     $("#password").focus();
     //     return false;
     // }
-	//
+    //
     // if ($("#repassword").val() == "") {
     //     alert("请输入重复密码！");
     //     $("#repassword").focus();
     //     return false;
     // }
-	//
+    //
     // if ($("#password").val() != $("#repassword").val()) {
     //     alert("两次密码不同！");
     //     $("#repassword").focus();
@@ -77,12 +77,14 @@ function CheckForm() {
     // }
 
     if ($("#cpwd").val() == "false") {
-        var dbhost = $("#dbhost").val();
-        var dbuser = $("#dbuser").val();
-        var dbpwd = $("#dbpwd").val();
-
         $.ajax({
-            url: 'index.php?s=63832' + '&dbhost=' + dbhost + '&dbuser=' + dbuser + '&dbpwd=' + dbpwd,
+            url: 'index.php',
+            data: {
+                s: 63832,
+                dbhost: $("#dbhost").val(),
+                dbuser: $("#dbuser").val(),
+                dbpwd: $("#dbpwd").val(),
+            },
             type: 'get',
             dataType: 'html',
             success: function (data) {
@@ -109,14 +111,19 @@ function CheckForm() {
     }
 }
 
-
+/**
+ * 验证数据库账号密码是否正确
+ * @constructor
+ */
 function CheckPwd() {
-    var dbhost = $("#dbhost").val();
-    var dbuser = $("#dbuser").val();
-    var dbpwd = $("#dbpwd").val();
-
     $.ajax({
-        url: 'index.php?s=63832' + '&dbhost=' + dbhost + '&dbuser=' + dbuser + '&dbpwd=' + dbpwd,
+        url: 'index.php',
+        data: {
+            s: 63832,
+            dbhost: $("#dbhost").val(),
+            dbuser: $("#dbuser").val(),
+            dbpwd: $("#dbpwd").val(),
+        },
         type: 'get',
         dataType: 'html',
         success: function (data) {
