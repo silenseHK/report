@@ -35,6 +35,7 @@ class UserOauth extends BaseModel
     {
         return $this->where('user_id', '=', $userId)
             ->where('oauth_type', '=', $oauthType)
+            ->where('is_delete', '=', 0)
             ->value($this->getPk());
     }
 
@@ -48,6 +49,7 @@ class UserOauth extends BaseModel
     {
         return (new static)->where('oauth_id', '=', $oauthId)
             ->where('oauth_type', '=', $oauthType)
+            ->where('is_delete', '=', 0)
             ->value('user_id');
     }
 

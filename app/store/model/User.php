@@ -14,6 +14,7 @@ namespace app\store\model;
 
 use app\common\model\User as UserModel;
 
+use app\store\model\UserOauth as UserOauthModel;
 use app\store\model\user\GradeLog as GradeLogModel;
 use app\store\model\user\PointsLog as PointsLogModel;
 use app\store\model\user\BalanceLog as BalanceLogModel;
@@ -130,6 +131,10 @@ class User extends UserModel
     public function setDelete()
     {
         return $this->transaction(function () {
+            // 将第三方用户信息记录标记删除
+            UserOauthModel::updateBase(['is_delete' => 1], [
+                ['user_id', '=', $this['user_id']]
+            ]);
             // 标记为已删除
             return $this->save(['is_delete' => 1]);
         });
