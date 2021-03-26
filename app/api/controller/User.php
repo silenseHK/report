@@ -34,6 +34,8 @@ class User extends Controller
         $userInfo = UserService::getCurrentLoginUser(true);
         // 获取用户头像
         $userInfo['avatar'];
+        // 获取会员等级
+        $userInfo['grade'];
         return $this->renderSuccess(compact('userInfo'));
     }
 
