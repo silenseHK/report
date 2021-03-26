@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\service\user;
 
@@ -39,38 +39,24 @@ class Oauth extends BaseService
     {
         // 是否存在第三方用户
         $model = new UserOauthModel;
-        $exist = $model->isExistOauthType($userId, $partyData['oauth']);
-        if ($exist) {
+        $isExistOauthType = $model->isExistOauthType($userId, $partyData['oauth']);
+        if ($isExistOauthType) {
             return true;
         }
+        // 获取oauth_id和unionId
+        $oauthInfo = $this->getOauthInfo($partyData);
         // 如果不存在oauth则写入
         return $model->add([
             'user_id' => $userId,
             'oauth_type' => $partyData['oauth'],
-            'oauth_id' => $this->getOauthId($partyData),
-            'unionid' => $this->geUnionid($partyData),
+            'oauth_id' => $oauthInfo['oauth_id'],
+            'unionid' => $oauthInfo['unionid'] ?? '',   // unionid可以不存在
             'store_id' => $this->storeId
         ]);
     }
 
     /**
-     * 获取微信平台的unionid
-     * @param array $partyData 第三方登录信息
-     * @return mixed|null
-     */
-    private function geUnionid(array $partyData)
-    {
-        // todo: 此处暂未实现, 需解析wx.getUserInfo接口返回的encryptedData加密数据
-        // 参考文档1: https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/union-id.html
-        // 参考文档2: https://developers.weixin.qq.com/miniprogram/dev/api/open-api/user-info/wx.getUserInfo.html
-        if ($partyData['oauth'] === 'MP-WEIXIN') {
-            return '';
-        }
-        return null;
-    }
-
-    /**
-     * 获取第三方用户唯一标识 (openid)
+     * 获取第三方用户session信息 (openid、unionid、session_key等)
      * @param array $partyData
      * @return mixed|null
      * @throws BaseException
@@ -78,10 +64,11 @@ class Oauth extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function getOauthId(array $partyData)
+    private function getOauthInfo(array $partyData)
     {
         if ($partyData['oauth'] === 'MP-WEIXIN') {
-            return $this->wxCode2Openid($partyData['code']);
+            $wxSession = $this->wxCode2Session($partyData['code']);
+            return ['oauth_id' => $wxSession['openid'], 'unionid' => $wxSession['unionid'] ?? null];
         }
         return null;
     }
@@ -95,7 +82,7 @@ class Oauth extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function wxCode2Openid(string $code)
+    private function wxCode2Session(string $code)
     {
         // 获取当前小程序信息
         $wxConfig = WxappModel::getWxappCache();
@@ -103,7 +90,7 @@ class Oauth extends BaseService
         $WxUser = new WxUser($wxConfig['app_id'], $wxConfig['app_secret']);
         $result = $WxUser->jscode2session($code);
         !$result && throwError($WxUser->getError());
-        return $result['openid'];
+        return $result;
     }
 
 }

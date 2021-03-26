@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\service\passport;
 
@@ -46,7 +46,9 @@ class Login extends BaseService
     public function login(array $data)
     {
         // 数据验证
-        if (!$this->validate($data)) return false;
+        if (!$this->validate($data)) {
+            return false;
+        }
         // 自动登录注册
         $this->register($data);
         // 保存oauth信息
