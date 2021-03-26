@@ -67,7 +67,7 @@ class Oauth extends BaseService
     private function getOauthInfo(array $partyData)
     {
         if ($partyData['oauth'] === 'MP-WEIXIN') {
-            $wxSession = $this->wxCode2Session($partyData['code']);
+            $wxSession = static::wxCode2Session($partyData['code']);
             return ['oauth_id' => $wxSession['openid'], 'unionid' => $wxSession['unionid'] ?? null];
         }
         return null;
@@ -82,7 +82,7 @@ class Oauth extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function wxCode2Session(string $code)
+    public static function wxCode2Session(string $code)
     {
         // 获取当前小程序信息
         $wxConfig = WxappModel::getWxappCache();
@@ -92,5 +92,17 @@ class Oauth extends BaseService
         !$result && throwError($WxUser->getError());
         return $result;
     }
+
+    /**
+     * 根据openid获取用户ID
+     * @param string $oauthId 第三方用户唯一标识 (openid)
+     * @param string $oauthType 第三方登陆类型
+     * @return mixed
+     */
+    public static function getUserIdByOauthId(string $oauthId, string $oauthType)
+    {
+        return UserOauthModel::getUserIdByOauthId($oauthId, $oauthType);
+    }
+
 
 }

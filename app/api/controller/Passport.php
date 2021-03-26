@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\controller;
 
@@ -24,7 +24,7 @@ use app\api\service\passport\SmsCaptcha as SmsCaptchaService;
 class Passport extends Controller
 {
     /**
-     * 登录接口
+     * 登录接口 (需提交手机号、短信验证码、第三方用户信息)
      * @return array|\think\response\Json
      * @throws \app\common\exception\BaseException
      * @throws \think\db\exception\DataNotFoundException
@@ -36,6 +36,26 @@ class Passport extends Controller
         // 执行登录
         $LoginService = new LoginService;
         if (!$LoginService->login($this->postForm())) {
+            return $this->renderError($LoginService->getError());
+        }
+        // 用户信息
+        $userInfo = $LoginService->getUserInfo();
+        return $this->renderSuccess([
+            'userId' => (int)$userInfo['user_id'],
+            'token' => $LoginService->getToken((int)$userInfo['user_id'])
+        ], '登录成功');
+    }
+
+    /**
+     * 微信小程序快捷登录 (需提交wx.login接口返回的code、微信用户公开信息)
+     * 实现流程：判断openid是否存在 -> 存在:  更新用户登录信息 -> 返回userId和token
+     *                          -> 不存在: 返回false, 跳转到注册页面
+     */
+    public function mpWxLogin()
+    {
+        // 执行登录
+        $LoginService = new LoginService;
+        if (!$LoginService->mpWxLogin($this->postForm())) {
             return $this->renderError($LoginService->getError());
         }
         // 用户信息

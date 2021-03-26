@@ -58,6 +58,33 @@ class Login extends BaseService
     }
 
     /**
+     * 快捷登录：微信小程序用户
+     * @param array $data
+     * @return bool
+     * @throws BaseException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function mpWxLogin(array $data)
+    {
+        // 根据code换取openid
+        $wxSession = OauthService::wxCode2Session($data['code']);
+        // 判断openid是否存在
+        $userId = OauthService::getUserIdByOauthId($wxSession['openid'], 'MP-WEIXIN');
+        // 获取用户信息
+        $userInfo = !empty($userId) ? UserModel::detail($userId) : null;
+        if (empty($userId) || empty($userInfo)) {
+            $this->error = '第三方用户不存在';
+            return false;
+        }
+        // 更新用户登录信息
+        $this->updateUser($userInfo, true, $data);
+        // 记录登录态
+        return $this->session();
+    }
+
+    /**
      * 保存oauth信息
      * @param array $data
      * @return bool

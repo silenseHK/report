@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\model;
 
@@ -36,6 +36,19 @@ class UserOauth extends BaseModel
         return $this->where('user_id', '=', $userId)
             ->where('oauth_type', '=', $oauthType)
             ->value($this->getPk());
+    }
+
+    /**
+     * 根据openid获取用户ID
+     * @param string $oauthId 第三方用户唯一标识 (openid)
+     * @param string $oauthType 第三方登陆类型
+     * @return mixed
+     */
+    public static function getUserIdByOauthId(string $oauthId, string $oauthType)
+    {
+        return (new static)->where('oauth_id', '=', $oauthId)
+            ->where('oauth_type', '=', $oauthType)
+            ->value('user_id');
     }
 
     /**
