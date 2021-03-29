@@ -99,7 +99,7 @@ class Comment extends CommentModel
     {
         return $this->transaction(function () use ($data) {
             // 更新商品图片记录
-            CommentImageModel::updates($this['comment_id'], $data['imageIds']);
+            CommentImageModel::updates((int)$this['comment_id'], $data['imageIds']);
             // 是否为图片评价
             $data['is_picture'] = !empty($data['images']);
             // 更新评论记录

@@ -95,7 +95,7 @@ class Delivery extends DeliveryModel
             // 保存数据
             $this->save($data);
             // 更新模板区域及运费
-            DeliveryRuleModel::updates($this['delivery_id'], $data['rules']);
+            DeliveryRuleModel::updates((int)$this['delivery_id'], $data['rules']);
         });
         return true;
     }

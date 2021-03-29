@@ -137,7 +137,7 @@ class Role extends RoleModel
             // 更新角色记录
             $this->allowField(['role_name', 'parent_id', 'sort'])->save($data);
             // 更新角色菜单关系记录
-            RoleMenuModel::updates($this['role_id'], $data['menus']);
+            RoleMenuModel::updates((int)$this['role_id'], $data['menus']);
         });
         return true;
     }

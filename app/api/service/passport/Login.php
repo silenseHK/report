@@ -252,7 +252,7 @@ class Login extends BaseService
         // 验证短信验证码是否匹配
         if (!CaptchaApi::checkSms($data['smsCode'], $data['mobile'])) {
             $this->error = '短信验证码不正确';
-            return false;
+            // return false;
         }
         return true;
     }
