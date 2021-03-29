@@ -153,7 +153,7 @@ class User extends StoreUserModel
             // 新增管理员记录
             $this->save($data);
             // 新增角色关系记录
-            UserRole::increased($this['store_user_id'], $data['roles']);
+            UserRole::increased((int)$this['store_user_id'], $data['roles']);
         });
         return true;
     }
@@ -187,7 +187,7 @@ class User extends StoreUserModel
             // 更新管理员记录
             $this->save($data);
             // 更新角色关系记录
-            !$this['is_super'] && UserRole::updates($this['store_user_id'], $data['roles']);
+            !$this['is_super'] && UserRole::updates((int)$this['store_user_id'], $data['roles']);
         });
         return true;
     }
@@ -204,7 +204,7 @@ class User extends StoreUserModel
         }
         return $this->transaction(function () {
             // 删除对应的角色关系
-            UserRole::deleteAll([['store_user_id', '=', $this['store_user_id']]]);
+            UserRole::deleteAll([['store_user_id', '=', (int)$this['store_user_id']]]);
             return $this->save(['is_delete' => 1]);
         });
     }
