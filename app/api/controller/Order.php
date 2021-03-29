@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\controller;
 
@@ -123,7 +123,7 @@ class Order extends Controller
     {
         $model = OrderModel::getDetail($orderId);
         if ($model->receipt()) {
-            return $this->renderSuccess();
+            return $this->renderSuccess('确认收货成功');
         }
         return $this->renderError($model->getError());
     }
