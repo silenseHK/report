@@ -35,7 +35,7 @@ class Comment extends Controller
         // 评价列表
         $model = new CommentModel;
         $list = $model->getCommentList($goodsId, $scoreType);
-        return $this->renderSuccess(compact('list', 'total'));
+        return $this->renderSuccess(compact('list'));
     }
 
     /**
