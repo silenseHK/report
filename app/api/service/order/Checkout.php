@@ -26,13 +26,14 @@ use app\api\service\points\GoodsDeduct as PointsDeductService;
 use app\api\service\order\source\checkout\Factory as CheckoutFactory;
 
 use app\common\enum\Setting as SettingEnum;
-use app\common\library\helper;
 use app\common\enum\order\PayType as OrderPayTypeEnum;
-use app\common\enum\order\DeliveryType as DeliveryTypeEnum;
+use app\common\enum\order\OrderStatus as OrderStatusEnum;
 use app\common\enum\order\OrderSource as OrderSourceEnum;
+use app\common\enum\order\DeliveryType as DeliveryTypeEnum;
 use app\common\service\BaseService;
 use app\common\service\delivery\Express as ExpressService;
 use app\common\service\goods\source\Factory as StockFactory;
+use app\common\library\helper;
 use app\common\exception\BaseException;
 
 /**
@@ -755,10 +756,11 @@ class Checkout extends BaseService
             'order_source' => $this->orderSource['source'],
             'order_source_id' => $this->orderSource['source_id'],
             'points_bonus' => $order['pointsBonus'],
+            'order_status' =>  OrderStatusEnum::NORMAL,
             'store_id' => $this->storeId,
         ];
         if ($order['delivery'] == DeliveryTypeEnum::EXPRESS) {
-            $data['expressPrice'] = $order['expressPrice'];
+            $data['express_price'] = $order['expressPrice'];
         }
         // 保存订单记录
         return $this->model->save($data);
