@@ -252,7 +252,7 @@ class Checkout extends BaseService
         // 积分抵扣总数量
         $this->orderData['pointsNum'] = $actualPointsNum;
         // 允许积分抵扣
-        $this->orderData['is_allow_points'] = true;
+        $this->orderData['isAllowPoints'] = true;
         return true;
     }
 
