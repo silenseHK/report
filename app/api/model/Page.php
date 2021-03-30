@@ -86,7 +86,7 @@ class Page extends PageModel
         if ($item['params']['source'] === 'choice') {
             // 数据来源：手动
             $goodsIds = helper::getArrayColumn($item['data'], 'goods_id');
-
+            if (empty($goodsIds)) return [];
             $goodsList = $model->getListByIdsFromApi($goodsIds);
         } else {
             // 数据来源：自动

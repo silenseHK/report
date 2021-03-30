@@ -42,7 +42,7 @@ class helper
     {
         $columnArr = [];
         foreach ($source as $item) {
-            $columnArr[] = $item[$column];
+            isset($item[$column]) && $columnArr[] = $item[$column];
         }
         return $columnArr;
     }
