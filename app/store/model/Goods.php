@@ -109,6 +109,7 @@ class Goods extends GoodsModel
             list($data['line_price_min'], $data['line_price_max']) = GoodsSkuModel::getLinePrices($data['specData']['skuList']);
         } elseif ($data['spec_type'] == SpecTypeEnum::SINGLE) {
             $data['goods_price_min'] = $data['goods_price_max'] = $data['goods_price'];
+            $data['line_price_min'] = $data['line_price_max'] = $data['line_price'];
             $data['stock_total'] = $data['stock_num'];
         }
         // 规格和sku数据处理
