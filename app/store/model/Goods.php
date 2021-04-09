@@ -96,6 +96,7 @@ class Goods extends GoodsModel
     {
         // 默认数据
         $data = array_merge($data, [
+            'line_price' => $data['line_price'] ?? 0,
             'content' => $data['content'] ?? '',
             'newSpecList' => [],
             'newSkuList' => [],
