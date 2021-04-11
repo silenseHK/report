@@ -31,7 +31,7 @@ class Wxapp extends WxappModel
     {
         // 默认数据
         $data['cert_pem'] = $data['cert_pem'] ?? '';
-        $data['key_pem'] = $data['cert_pem'] ?? '';
+        $data['key_pem'] = $data['key_pem'] ?? '';
         // 事务处理
         return $this->transaction(function () use ($data) {
             // 删除wxapp缓存
