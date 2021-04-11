@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\library\wechat;
 
@@ -79,6 +79,7 @@ class WxBase
      * @param string $url 请求地址
      * @param array $data
      * @return string $result
+     * @throws BaseException
      */
     protected function get(string $url, array $data = [])
     {
@@ -92,17 +93,21 @@ class WxBase
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); // https请求 不验证证书和hosts
         $result = curl_exec($curl);
+        if ($result === false) {
+            throwError(curl_error($curl));
+        }
         curl_close($curl);
         return $result;
     }
 
     /**
      * 模拟POST请求
-     * @param $url
-     * @param array|string $data
-     * @param bool $useCert
-     * @param array $sslCert
-     * @return mixed
+     * @param string $url 请求地址
+     * @param array $data 请求数据
+     * @param false $useCert 是否引入微信支付证书
+     * @param array $sslCert 证书路径
+     * @return mixed|bool|string
+     * @throws BaseException
      */
     protected function post(string $url, $data = [], $useCert = false, $sslCert = [])
     {
@@ -125,6 +130,9 @@ class WxBase
             curl_setopt($curl, CURLOPT_SSLKEY, $sslCert['keyPem']);
         }
         $result = curl_exec($curl);
+        if ($result === false) {
+            throwError(curl_error($curl));
+        }
         curl_close($curl);
         return $result;
     }
@@ -134,6 +142,7 @@ class WxBase
      * @param $url
      * @param array $data
      * @return mixed
+     * @throws BaseException
      */
     protected function post2($url, $data = [])
     {
@@ -148,6 +157,9 @@ class WxBase
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);//这个是重点。
         $result = curl_exec($ch);
+        if ($result === false) {
+            throwError(curl_error($ch));
+        }
         curl_close($ch);
         return $result;
     }
