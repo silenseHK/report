@@ -80,7 +80,7 @@ class Order extends OrderModel
         return $this->with(['goods.image', 'user.avatar'])
             ->alias('order')
             ->field('order.*')
-            ->join('user', 'user.user_id = order.user_id')
+            ->leftJoin('user', 'user.user_id = order.user_id')
             ->where($dataTypeFilter)
             ->where($filter)
             ->where('order.is_delete', '=', 0)
@@ -368,7 +368,7 @@ class Order extends OrderModel
         $filter = [
             ['pay_status', '=', PayStatusEnum::SUCCESS],
             ['delivery_status', '=', DeliveryStatusEnum::NOT_DELIVERED],
-            ['order_status', 'in', [OrderStatusEnum::CANCELLED, OrderStatusEnum::APPLY_CANCEL]]
+            ['order_status', 'in', [OrderStatusEnum::NORMAL, OrderStatusEnum::APPLY_CANCEL]]
         ];
         return $this->getOrderTotal($filter);
     }
