@@ -279,9 +279,10 @@ class Order extends OrderModel
                 $filter['delivery_status'] = DeliveryStatusEnum::DELIVERED;
                 $filter['receipt_status'] = ReceiptStatusEnum::NOT_RECEIVED;
                 break;
-            case 'deliver';
-                $filter['order_status'] = OrderStatusEnum::COMPLETED;
-                $filter['is_comment'] = 0;
+            case 'delivery';
+                $filter['pay_status'] = PayStatusEnum::SUCCESS;
+                $filter['delivery_status'] = DeliveryStatusEnum::NOT_DELIVERED;
+                $filter['order_status'] = OrderStatusEnum::NORMAL;
                 break;
             case 'comment';
                 $filter['is_comment'] = 0;
@@ -378,7 +379,7 @@ class Order extends OrderModel
     {
         return [
             'payment' => $this->getCount('payment'),
-            'deliver' => $this->getCount('deliver'),
+            'delivery' => $this->getCount('delivery'),
             'received' => $this->getCount('received')
         ];
     }
