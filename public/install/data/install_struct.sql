@@ -882,13 +882,15 @@ CREATE TABLE `yoshop_user_oauth` (
   `oauth_id` varchar(100) NOT NULL DEFAULT '' COMMENT '第三方用户唯一标识 (uid openid)',
   `unionid` varchar(100) NOT NULL DEFAULT '' COMMENT '微信unionID',
   `store_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '商城ID',
+  `is_delete` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否删除',
   `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `oauth_type` (`oauth_type`),
-  KEY `store_id` (`store_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='第三方用户信息表';
+  KEY `store_id` (`store_id`),
+  KEY `oauth_type_2` (`oauth_type`,`oauth_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=10108 DEFAULT CHARSET=utf8 COMMENT='第三方用户信息表';
 
 DROP TABLE IF EXISTS `yoshop_user_points_log`;
 CREATE TABLE `yoshop_user_points_log` (
