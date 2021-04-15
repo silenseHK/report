@@ -1288,24 +1288,18 @@
         },
         {
             "name": "topthink/framework",
-            "version": "v6.0.5",
-            "version_normalized": "6.0.5.0",
+            "version": "v6.0.7",
+            "version_normalized": "6.0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/framework.git",
-                "reference": "85625d984f5c96699dc27d384869f206c3aec1cc"
+                "reference": "db8fe22520a9660dd5e4c87e304034ac49e39270"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/framework/zipball/85625d984f5c96699dc27d384869f206c3aec1cc",
-                "reference": "85625d984f5c96699dc27d384869f206c3aec1cc",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/top-think/framework/zipball/db8fe22520a9660dd5e4c87e304034ac49e39270",
+                "reference": "db8fe22520a9660dd5e4c87e304034ac49e39270",
+                "shasum": ""
             },
             "require": {
                 "ext-json": "*",
@@ -1324,7 +1318,7 @@
                 "mockery/mockery": "^1.2",
                 "phpunit/phpunit": "^7.0"
             },
-            "time": "2020-10-26T07:18:00+00:00",
+            "time": "2021-01-25T14:48:29+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1356,7 +1350,7 @@
             ],
             "support": {
                 "issues": "https://github.com/top-think/framework/issues",
-                "source": "https://github.com/top-think/framework/tree/v6.0.5"
+                "source": "https://github.com/top-think/framework/tree/v6.0.7"
             },
             "install-path": "../topthink/framework"
         },

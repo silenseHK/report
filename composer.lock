@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f37995a076245adb9f43fe4f5e2e7f7",
+    "content-hash": "f2ea2b0d24531b234b13638094b3d58c",
     "packages": [
         {
             "name": "aliyuncs/oss-sdk-php",
@@ -896,23 +896,17 @@
         },
         {
             "name": "topthink/framework",
-            "version": "v6.0.5",
+            "version": "v6.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/framework.git",
-                "reference": "85625d984f5c96699dc27d384869f206c3aec1cc"
+                "reference": "db8fe22520a9660dd5e4c87e304034ac49e39270"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/framework/zipball/85625d984f5c96699dc27d384869f206c3aec1cc",
-                "reference": "85625d984f5c96699dc27d384869f206c3aec1cc",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/top-think/framework/zipball/db8fe22520a9660dd5e4c87e304034ac49e39270",
+                "reference": "db8fe22520a9660dd5e4c87e304034ac49e39270",
+                "shasum": ""
             },
             "require": {
                 "ext-json": "*",
@@ -961,9 +955,9 @@
             ],
             "support": {
                 "issues": "https://github.com/top-think/framework/issues",
-                "source": "https://github.com/top-think/framework/tree/v6.0.5"
+                "source": "https://github.com/top-think/framework/tree/v6.0.7"
             },
-            "time": "2020-10-26T07:18:00+00:00"
+            "time": "2021-01-25T14:48:29+00:00"
         },
         {
             "name": "topthink/think-helper",
@@ -1663,7 +1657,8 @@
         "php": ">=7.1.0",
         "ext-curl": "*",
         "ext-bcmath": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-mysqli": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"

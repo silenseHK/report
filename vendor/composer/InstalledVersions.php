@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'a8d6abb156b98a67b59bf74229dac43c2c1351d9',
+    'reference' => 'e9631f384ff2283c6b197e77e03b69610bed7dea',
     'name' => 'topthink/think',
   ),
   'versions' => 
@@ -361,12 +361,12 @@ private static $installed = array (
     ),
     'topthink/framework' => 
     array (
-      'pretty_version' => 'v6.0.5',
-      'version' => '6.0.5.0',
+      'pretty_version' => 'v6.0.7',
+      'version' => '6.0.7.0',
       'aliases' => 
       array (
       ),
-      'reference' => '85625d984f5c96699dc27d384869f206c3aec1cc',
+      'reference' => 'db8fe22520a9660dd5e4c87e304034ac49e39270',
     ),
     'topthink/think' => 
     array (
@@ -375,7 +375,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'a8d6abb156b98a67b59bf74229dac43c2c1351d9',
+      'reference' => 'e9631f384ff2283c6b197e77e03b69610bed7dea',
     ),
     'topthink/think-helper' => 
     array (
