@@ -44,11 +44,11 @@ class User extends BaseService
     public static function login(array $userInfo)
     {
         // 生成token
-        $token = self::makeToken($userInfo['admin_user_id']);
+        $token = self::makeToken((int)$userInfo['admin_user_id']);
         // 记录缓存, 7天
         Cache::instance()->set($token, [
             'user' => [
-                'admin_user_id' => $userInfo['admin_user_id'],
+                'admin_user_id' => (int)$userInfo['admin_user_id'],
                 'user_name' => $userInfo['user_name'],
             ],
             'is_login' => true,
