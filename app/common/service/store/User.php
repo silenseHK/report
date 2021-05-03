@@ -53,7 +53,7 @@ class User extends BaseService
     public static function login(array $userInfo)
     {
         // 生成token
-        $token = self::makeToken($userInfo['store_user_id']);
+        $token = self::makeToken((int)$userInfo['store_user_id']);
         // 记录缓存, 7天
         Cache::set($token, [
             'user' => $userInfo,
