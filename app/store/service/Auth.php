@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\store\service;
 
@@ -58,7 +58,7 @@ class Auth
         // 商家登录信息
         $this->store = StoreUserService::getLoginInfo();
         // 当前用户信息
-        $this->user = $this->store['user'];
+        !empty($this->store) && $this->user = $this->store['user'];
     }
 
     /**
