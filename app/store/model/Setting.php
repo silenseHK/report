@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\store\model;
 
@@ -47,6 +47,7 @@ class Setting extends SettingModel
                 'key' => $key,
                 'describe' => SettingEnum::data()[$key]['describe'],
                 'values' => $values,
+                'update_time' => time(),
                 'store_id' => self::$storeId,
             ]) !== false;
     }
