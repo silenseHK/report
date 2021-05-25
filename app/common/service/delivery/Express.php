@@ -205,7 +205,7 @@ class Express extends BaseService
         foreach ($item['goodsList'] as $goodsItem) {
             // 如果商品为包邮，则不计算总量中
             if (!in_array($goodsItem['goods_id'], $item['free_goods_list'])) {
-                $goodsWeight = helper::bcmul($goodsItem['goods_sku']['goods_weight'], $goodsItem['total_num']);
+                $goodsWeight = helper::bcmul($goodsItem['skuInfo']['goods_weight'], $goodsItem['total_num']);
                 $totalWeight = helper::bcadd($totalWeight, $goodsWeight);
                 $totalNum = helper::bcadd($totalNum, $goodsItem['total_num']);
             }
