@@ -47,7 +47,7 @@ class Spec extends SpecModel
                 $item['spec_id'] = (int)$result['spec_id'];
             }
             // 规格值写入数据库并生成id
-            $item['valueList'] = SpecValueModel::getNewValueList($item['spec_id'], $item['valueList']);
+            $item['valueList'] = SpecValueModel::getNewValueList((int)$item['spec_id'], $item['valueList']);
         }
         return $specList;
     }

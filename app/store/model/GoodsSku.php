@@ -66,7 +66,7 @@ class GoodsSku extends GoodsSkuModel
         foreach ($skuList as &$skuItem) {
             $skuItem['specValueIds'] = static::getSpecValueIds($newSpecList, $skuItem['skuKeys']);
             $skuItem['goodsProps'] = static::getGoodsProps($newSpecList, $skuItem['skuKeys']);
-            $skuItem['goods_sku_id'] = implode($skuItem['specValueIds'], '_');
+            $skuItem['goods_sku_id'] = implode('_', $skuItem['specValueIds']);
         }
         return $skuList;
     }
@@ -170,5 +170,4 @@ class GoodsSku extends GoodsSkuModel
         }
         return (new static)->addAll($dataset);
     }
-
 }
