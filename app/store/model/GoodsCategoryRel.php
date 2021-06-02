@@ -28,7 +28,11 @@ class GoodsCategoryRel extends GoodsCategoryRelModel
      */
     public static function getCountByCategoryId(int $categoryId)
     {
-        return (new static)->where('category_id', '=', $categoryId)->count();
+        return (new static)->alias('m')
+            ->join('goods', 'goods.goods_id = m.goods_id')
+            ->where('m.category_id', '=', $categoryId)
+            ->where('g.is_delete', '=', 0)
+            ->count();
     }
 
     /**
