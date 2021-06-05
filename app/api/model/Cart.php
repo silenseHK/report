@@ -100,7 +100,7 @@ class Cart extends CartModel
             throwError('很抱歉, 该商品已经下架');
         }
         // 获取SKU信息
-        $skuInfo = GoodsSkuModel::detail($goodsId, $goodsSkuId, $goodsNum);
+        $skuInfo = GoodsSkuModel::detail($goodsId, $goodsSkuId);
         if ($skuInfo['stock_num'] < $goodsNum) {
             throwError('很抱歉, 该商品库存数量不足');
         }
