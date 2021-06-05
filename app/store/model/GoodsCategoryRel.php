@@ -31,7 +31,7 @@ class GoodsCategoryRel extends GoodsCategoryRelModel
         return (new static)->alias('m')
             ->join('goods', 'goods.goods_id = m.goods_id')
             ->where('m.category_id', '=', $categoryId)
-            ->where('g.is_delete', '=', 0)
+            ->where('goods.is_delete', '=', 0)
             ->count();
     }
 
