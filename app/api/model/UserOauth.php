@@ -39,5 +39,4 @@ class UserOauth extends UserOauthModel
     {
         return $this->save($data);
     }
-
 }

@@ -26,20 +26,6 @@ class UserOauth extends BaseModel
     protected $pk = 'id';
 
     /**
-     * 是否存在第三方用户
-     * @param int $userId 用户ID
-     * @param string $oauthType 第三方登陆类型
-     * @return mixed
-     */
-    public function isExistOauthType(int $userId, string $oauthType)
-    {
-        return $this->where('user_id', '=', $userId)
-            ->where('oauth_type', '=', $oauthType)
-            ->where('is_delete', '=', 0)
-            ->value($this->getPk());
-    }
-
-    /**
      * 根据openid获取用户ID
      * @param string $oauthId 第三方用户唯一标识 (openid)
      * @param string $oauthType 第三方登陆类型
@@ -51,6 +37,30 @@ class UserOauth extends BaseModel
             ->where('oauth_type', '=', $oauthType)
             ->where('is_delete', '=', 0)
             ->value('user_id');
+    }
+
+    /**
+     * 根据用户ID获取OpenID
+     * @param int $userId 用户ID
+     * @param string $oauthType 第三方登陆类型
+     * @return mixed
+     */
+    public static function getOauthIdByUserId(int $userId, string $oauthType)
+    {
+        return (new static)->where('user_id', '=', $userId)
+            ->where('oauth_type', '=', $oauthType)
+            ->where('is_delete', '=', 0)
+            ->value('oauth_id');
+    }
+
+    /**
+     * 根据用户ID获取微信小程序OpenID
+     * @param int $userId 用户ID
+     * @return mixed
+     */
+    public static function getMpWeiXinOpenId(int $userId)
+    {
+        return static::getOauthIdByUserId($userId, 'MP-WEIXIN');
     }
 
     /**

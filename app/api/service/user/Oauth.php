@@ -37,22 +37,31 @@ class Oauth extends BaseService
      */
     public function party(int $userId, array $partyData = [])
     {
-        // 是否存在第三方用户
-        $model = new UserOauthModel;
-        $isExistOauthType = $model->isExistOauthType($userId, $partyData['oauth']);
-        if ($isExistOauthType) {
-            return true;
+        try {
+            // 获取oauthId和unionId
+            $oauthInfo = $this->getOauthInfo($partyData);
+        } catch (BaseException $e) {
+            // isBack参数代表需重新获取code, 前端拿到该参数进行页面返回
+            throwError($e->getMessage(), null, ['isBack' => true]);
+            return false;
         }
-        // 获取oauth_id和unionId
-        $oauthInfo = $this->getOauthInfo($partyData);
+        // 是否存在第三方用户
+        $oauthId = UserOauthModel::getOauthIdByUserId($userId, $partyData['oauth']);
         // 如果不存在oauth则写入
-        return $model->add([
-            'user_id' => $userId,
-            'oauth_type' => $partyData['oauth'],
-            'oauth_id' => $oauthInfo['oauth_id'],
-            'unionid' => $oauthInfo['unionid'] ?? '',   // unionid可以不存在
-            'store_id' => $this->storeId
-        ]);
+        if (empty($oauthId)) {
+            return (new UserOauthModel)->add([
+                'user_id' => $userId,
+                'oauth_type' => $partyData['oauth'],
+                'oauth_id' => $oauthInfo['oauth_id'],
+                'unionid' => $oauthInfo['unionid'] ?? '',   // unionid可以不存在
+                'store_id' => $this->storeId
+            ]);
+        }
+        // 如果存在第三方用户, 需判断oauthId是否相同
+        if ($oauthId != $oauthInfo['oauth_id']) {
+            throwError('很抱歉，当前手机号已绑定其他微信号', null, ['isBack' => true]);
+        }
+        return true;
     }
 
     /**
@@ -103,6 +112,4 @@ class Oauth extends BaseService
     {
         return UserOauthModel::getUserIdByOauthId($oauthId, $oauthType);
     }
-
-
 }
