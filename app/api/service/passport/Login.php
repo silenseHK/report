@@ -68,8 +68,14 @@ class Login extends BaseService
      */
     public function mpWxLogin(array $data)
     {
-        // 根据code换取openid
-        $wxSession = OauthService::wxCode2Session($data['code']);
+        try {
+            // 根据code换取openid
+            $wxSession = OauthService::wxCode2Session($data['code']);
+        } catch (BaseException $e) {
+            // showError参数表示让前端显示错误
+            throwError($e->getMessage(), null, ['showError' => true]);
+            return false;
+        }
         // 判断openid是否存在
         $userId = OauthService::getUserIdByOauthId($wxSession['openid'], 'MP-WEIXIN');
         // 获取用户信息
