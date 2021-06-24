@@ -36,6 +36,12 @@
 
     下载地址：https://gitee.com/xany/yoshop2.0-uniapp
 
+2. 后台VUE端（指的是商城后台的前端代码，使用vue2编写，分store模块和admin模块）
+
+    下载地址：https://gitee.com/xany/yoshop2.0-store
+
+    下载地址：https://gitee.com/xany/yoshop2.0-admin
+
 #### 环境要求
 - CentOS 7.0+
 - Nginx 1.10+
