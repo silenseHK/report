@@ -191,7 +191,7 @@ class OrderRefund extends OrderRefundModel
             ]);
             // 记录凭证图片关系
             if (isset($data['images']) && !empty($data['images'])) {
-                $this->saveImages($this['order_refund_id'], $data['images']);
+                $this->saveImages((int)$this['order_refund_id'], $data['images']);
             }
             return true;
         });
