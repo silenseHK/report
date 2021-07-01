@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\service;
 
@@ -100,10 +100,11 @@ class Cart extends BaseService
     {
         // 查找商品记录
         $result = helper::getArrayItemByColumn($goodsList, 'goods_id', $item['goods_id']);
-        // 获取当前选择的商品SKU信息
-        if (!empty($result)) {
-            $result['skuInfo'] = GoodsSkuModel::detail($result['goods_id'], $item['goods_sku_id']);
+        if (empty($result)) {
+            return false;
         }
+        // 获取当前选择的商品SKU信息
+        $result['skuInfo'] = GoodsSkuModel::detail($result['goods_id'], $item['goods_sku_id']);
         // 这里需要用到clone, 因对象是引用传递 后面的值会覆盖前面的
         return clone $result;
     }
