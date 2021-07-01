@@ -8,14 +8,16 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\model;
 
 use app\api\service\User as UserService;
-use app\common\library\helper;
+use app\common\exception\BaseException;
 use app\common\model\UserCoupon as UserCouponModel;
+use app\common\enum\coupon\ExpireType as ExpireTypeEnum;
 use app\common\enum\coupon\ApplyRange as ApplyRangeEnum;
+use app\common\library\helper;
 
 /**
  * 用户优惠券模型
@@ -98,7 +100,7 @@ class UserCoupon extends UserCouponModel
      * 领取优惠券
      * @param int $couponId 优惠券ID
      * @return bool
-     * @throws \app\common\exception\BaseException
+     * @throws BaseException
      */
     public function receive(int $couponId)
     {
@@ -120,15 +122,15 @@ class UserCoupon extends UserCouponModel
      * @param Coupon $coupon
      * @return bool
      */
-    private function add($user, $coupon)
+    private function add($user, Coupon $coupon)
     {
         // 计算有效期
-        if ($coupon['expire_type'] == 10) {
-            $start_time = time();
-            $end_time = $start_time + ($coupon['expire_day'] * 86400);
+        if ($coupon['expire_type'] == ExpireTypeEnum::RECEIVE) {
+            $startTime = time();
+            $endTime = $startTime + ($coupon['expire_day'] * 86400);
         } else {
-            $start_time = $coupon['start_time'];
-            $end_time = $coupon['end_time'];
+            $startTime = $coupon->getData('start_time');
+            $endTime = $coupon->getData('end_time');
         }
         // 整理领取记录
         $data = [
@@ -140,13 +142,14 @@ class UserCoupon extends UserCouponModel
             'min_price' => $coupon['min_price'],
             'expire_type' => $coupon['expire_type'],
             'expire_day' => $coupon['expire_day'],
-            'start_time' => $start_time,
-            'end_time' => $end_time,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
             'apply_range' => $coupon['apply_range'],
             'apply_range_config' => $coupon['apply_range_config'],
             'user_id' => $user['user_id'],
             'store_id' => self::$storeId
         ];
+        // 事务处理
         return $this->transaction(function () use ($data, $coupon) {
             // 添加领取记录
             $status = $this->save($data);
@@ -160,11 +163,11 @@ class UserCoupon extends UserCouponModel
 
     /**
      * 验证优惠券是否可领取
-     * @param $user
-     * @param Coupon $coupon
+     * @param mixed $userInfo 当前登录用户信息
+     * @param Coupon $coupon 优惠券详情
      * @return bool
      */
-    private function checkReceive($user, Coupon $coupon)
+    private function checkReceive($userInfo, Coupon $coupon)
     {
         if (!$coupon) {
             $this->error = '优惠券不存在';
@@ -175,7 +178,7 @@ class UserCoupon extends UserCouponModel
             return false;
         }
         // 验证是否已领取
-        $userCouponIds = $this->getUserCouponIds($user['user_id']);
+        $userCouponIds = $this->getUserCouponIds($userInfo['user_id']);
         if (in_array($coupon['coupon_id'], $userCouponIds)) {
             $this->error = '该优惠券已领取';
             return false;
@@ -226,21 +229,21 @@ class UserCoupon extends UserCouponModel
     /**
      * 判断当前优惠券是否满足订单使用条件
      * @param $couponList
-     * @param $orderGoodsIds
+     * @param array $orderGoodsIds 订单商品ID集
      * @return mixed
      */
     public static function couponListApplyRange(array $couponList, array $orderGoodsIds)
     {
         // 名词解释(is_apply)：允许用于抵扣当前订单
         foreach ($couponList as &$item) {
-            if ($item['apply_range'] == 10) {
+            if ($item['apply_range'] == ApplyRangeEnum::ALL) {
                 // 1. 全部商品
                 $item['is_apply'] = true;
-            } elseif ($item['apply_range'] == 20) {
+            } elseif ($item['apply_range'] == ApplyRangeEnum::SOME) {
                 // 2. 指定商品, 判断订单商品是否存在可用
                 $applyGoodsIds = array_intersect($item['apply_range_config']['applyGoodsIds'], $orderGoodsIds);
                 $item['is_apply'] = !empty($applyGoodsIds);
-            } elseif ($item['apply_range'] == 30) {
+            } elseif ($item['apply_range'] == ApplyRangeEnum::EXCLUDE) {
                 // 2. 排除商品, 判断订单商品是否全部都在排除行列
                 $excludedGoodsIds = array_intersect($item['apply_range_config']['excludedGoodsIds'], $orderGoodsIds);
                 $item['is_apply'] = count($excludedGoodsIds) != count($orderGoodsIds);
@@ -249,5 +252,4 @@ class UserCoupon extends UserCouponModel
         }
         return $couponList;
     }
-
 }
