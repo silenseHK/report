@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\library\storage\engine;
 
@@ -82,7 +82,7 @@ abstract class Basics
     public function setUploadFileByReal(string $filePath)
     {
         // 接收上传的文件
-        $this->file = new UploadedFile($filePath,  basename($filePath));
+        $this->file = new UploadedFile($filePath, basename($filePath));
         if (empty($this->file)) {
             throwError('未找到上传文件的信息');
         }
@@ -161,7 +161,8 @@ abstract class Basics
     public function getSaveFileInfo(): array
     {
         // 自动生成的文件名称
-        $hashName = $this->file->hashName(null);
+        // $hashName = $this->file->hashName(null);
+        $hashName = $this->hashName();
         // 存储目录
         $filePath = $this->getFilePath($hashName);
         // 文件名称
@@ -177,6 +178,17 @@ abstract class Basics
             'file_size' => $this->file->getSize(),       // 文件大小(字节)
             'file_ext' => $fileExt,                      // 文件扩展名
         ];
+    }
+
+    /**
+     * 自动生成文件名
+     * @return string
+     */
+    private function hashName()
+    {
+        return $this->file->hashName(function () {
+            return date('Ymd') . DIRECTORY_SEPARATOR . uniqid((string)mt_rand(), true);
+        });
     }
 
     /**
