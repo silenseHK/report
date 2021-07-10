@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\model;
 
@@ -45,19 +45,31 @@ class Article extends ArticleModel
 
     /**
      * 获取文章详情并累计阅读次数
-     * @param int $articleId
-     * @return ArticleModel|null
+     * @param int $articleId 文章ID
+     * @return static|null
      * @throws BaseException
-     * @throws \think\Exception
      */
-    public static function detail(int $articleId)
+    public static function getDetail(int $articleId)
     {
-        if (!$model = parent::detail($articleId)) {
-            throwError('文章不存在');
+        // 获取文章详情
+        $detail = parent::detail($articleId, ['image']);
+        if (empty($detail) || $detail['is_delete']) {
+            throwError('很抱歉，当前文章不存在');
         }
-        // 累积实际阅读数
-        $model->setInc($articleId, 'actual_views', 1);
-        return $model;
+        // 累积文章实际阅读数
+        static::setIncActualViews($articleId);
+        return $detail;
+    }
+
+    /**
+     * 累积文章实际阅读数
+     * @param int $articleId 文章ID
+     * @param int $num 递增的数量
+     * @return mixed
+     */
+    private static function setIncActualViews(int $articleId, int $num = 1)
+    {
+        return (new static)->setInc($articleId, 'actual_views', $num);
     }
 
     /**

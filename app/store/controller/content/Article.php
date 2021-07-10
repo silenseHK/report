@@ -42,6 +42,8 @@ class Article extends Controller
     public function detail(int $articleId)
     {
         $detail = ArticleModel::detail($articleId);
+        // 获取image (这里不能用with因为编辑页需要image对象)
+        !empty($detail) && $detail['image'];
         return $this->renderSuccess(compact('detail'));
     }
 

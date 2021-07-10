@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\model;
 
@@ -72,11 +72,11 @@ class Article extends BaseModel
     /**
      * 文章详情
      * @param int $articleId
+     * @param array $with
      * @return array|null|static
      */
-    public static function detail(int $articleId)
+    public static function detail(int $articleId, array $with = [])
     {
-        return self::get($articleId, ['image', 'category']);
+        return self::get($articleId, $with);
     }
-
 }

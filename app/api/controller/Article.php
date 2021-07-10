@@ -36,15 +36,13 @@ class Article extends Controller
 
     /**
      * 文章详情
-     * @param $articleId
-     * @return array
+     * @param int $articleId
+     * @return array|\think\response\Json
      * @throws \app\common\exception\BaseException
-     * @throws \think\Exception
      */
     public function detail(int $articleId)
     {
-        $detail = ArticleModel::detail($articleId);
+        $detail = ArticleModel::getDetail($articleId);
         return $this->renderSuccess(compact('detail'));
     }
-
 }
