@@ -37,25 +37,25 @@ class UploadFile extends UploadFileModel
         $params = $this->setQueryDefaultValue($param, [
             'fileType' => -1,                   // 文件类型(-1全部 10图片 20附件 30视频)
             'groupId' => -1,                    // 分组ID(-1全部 0未分组)
-            'fileName' => '',                  // 文件名称
-            'storage' => -1,                    // 存储方式(-1全部 10本地 20七牛 30阿里云 40腾讯云)
+            'fileName' => '',                   // 文件名称
+            'storage' => '',                    // 存储方式(StorageEnum)
             'channel' => -1,                    // 上传来源(-1全部 10商户后台 20用户端)
-            'is_recycle' => false               // 是否在回收站
+            'isRecycle' => false                // 是否在回收站
         ]);
         // 查询对象
         $query = $this->getNewQuery();
         // 文件分组
         $params['groupId'] > -1 && $query->where('group_id', '=', (int)$params['groupId']);
         // 文件类型
-        $params['file_type'] > -1 && $query->where('file_type', '=', (int)$params['file_type']);
+        $params['fileType'] > -1 && $query->where('file_type', '=', (int)$params['fileType']);
         // 存储方式
-        !empty($params['storage']) > -1 && $query->where('storage', '=', $params['storage']);
+        !empty($params['storage']) && $query->where('storage', '=', $params['storage']);
         // 上传来源
         $params['channel'] > -1 && $query->where('channel', '=', (int)$params['channel']);
         // 文件名称
         !empty($params['fileName']) && $query->where('file_name', 'like', "%{$params['fileName']}%");
         // 是否在回收站
-        $query->where('is_recycle', '=', (int)$params['is_recycle']);
+        $query->where('is_recycle', '=', (int)$params['isRecycle']);
         // 查询列表数据
         return $query->where('is_delete', '=', 0)
             ->order(['file_id' => 'desc'])
