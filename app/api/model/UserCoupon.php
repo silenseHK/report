@@ -59,6 +59,8 @@ class UserCoupon extends UserCouponModel
         if ($params['dataType'] === 'isUsable') {
             $filter[] = ['is_use', '=', 0];
             $filter[] = ['is_expire', '=', 0];
+            $filter[] = ['start_time', '<=', time()];
+            $filter[] = ['end_time', '>', time()];
         }
         // 已过期的优惠券
         if ($params['dataType'] === 'isExpire') {
