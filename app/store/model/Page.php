@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\store\model;
 
@@ -33,7 +33,8 @@ class Page extends PageModel
         // 检索查询条件
         $filter = $this->getFilter($param);
         // 获取列表信息
-        return $this->where($filter)
+        return $this->withoutField('page_data')
+            ->where($filter)
             ->where(['is_delete' => 0])
             ->order(['create_time' => 'desc', $this->getPk()])
             ->paginate();
