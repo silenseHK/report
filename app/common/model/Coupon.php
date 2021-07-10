@@ -54,6 +54,16 @@ class Coupon extends BaseModel
     }
 
     /**
+     * 获取器：格式化折扣率
+     * @param $value
+     * @return mixed
+     */
+    public function getDiscountAttr($value)
+    {
+        return $value / 10;
+    }
+
+    /**
      * 获取器：开始时间
      * @param $value
      * @return string
@@ -84,6 +94,16 @@ class Coupon extends BaseModel
     }
 
     /**
+     * 修改器：格式化折扣率
+     * @param $value
+     * @return mixed
+     */
+    public function setDiscountAttr($value)
+    {
+        return $value * 10;
+    }
+
+    /**
      * 修改器：适用范围配置
      * @param $array
      * @return mixed
@@ -102,5 +122,4 @@ class Coupon extends BaseModel
     {
         return self::get($couponId);
     }
-
 }

@@ -138,7 +138,7 @@ class UserCoupon extends UserCouponModel
             'name' => $coupon['name'],
             'coupon_type' => $coupon['coupon_type'],
             'reduce_price' => $coupon['reduce_price'],
-            'discount' => $coupon->getData('discount'),
+            'discount' => $coupon['discount'],
             'min_price' => $coupon['min_price'],
             'expire_type' => $coupon['expire_type'],
             'expire_day' => $coupon['expire_day'],

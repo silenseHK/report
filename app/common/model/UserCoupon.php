@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\model;
 
@@ -60,7 +60,7 @@ class UserCoupon extends BaseModel
     }
 
     /**
-     * 折扣率
+     * 获取器：格式化折扣率
      * @param $value
      * @return mixed
      */
@@ -97,6 +97,16 @@ class UserCoupon extends BaseModel
     public function getApplyRangeConfigAttr($value)
     {
         return $value ? helper::jsonDecode($value) : [];
+    }
+
+    /**
+     * 修改器：格式化折扣率
+     * @param $value
+     * @return mixed
+     */
+    public function setDiscountAttr($value)
+    {
+        return $value * 10;
     }
 
     /**
