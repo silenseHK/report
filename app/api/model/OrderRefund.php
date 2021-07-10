@@ -80,21 +80,22 @@ class OrderRefund extends OrderRefundModel
 
     /**
      * 获取用户售后单列表
-     * @param int|null $state 售后单状态
+     * @param int $state 售后单状态 -1为全部
      * @return \think\Paginator
      * @throws \app\common\exception\BaseException
      * @throws \think\db\exception\DbException
      */
-    public function getList(int $state = null)
+    public function getList(int $state = -1)
     {
         // 检索查询条件
         $filter = [];
         // 售后单状态
-        !is_null($state) && $filter[] = ['status', '=', $state];
+        $state > -1 && $filter[] = ['status', '=', $state];
         // 当前用户ID
         $userId = UserService::getCurrentLoginUserId();
         // 查询列表记录
         return $this->with(['orderGoods.image'])
+            ->where($filter)
             ->where('user_id', '=', $userId)
             ->order(['create_time' => 'desc'])
             ->paginate(15);

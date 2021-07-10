@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\controller;
 
@@ -24,12 +24,12 @@ class Refund extends Controller
 {
     /**
      * 售后单列表
-     * @param int|null $state
+     * @param int $state
      * @return array|\think\response\Json
      * @throws BaseException
      * @throws \think\db\exception\DbException
      */
-    public function list(int $state = null)
+    public function list(int $state = -1)
     {
         $model = new OrderRefundModel;
         $list = $model->getList($state);
