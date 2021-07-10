@@ -112,7 +112,7 @@ class Checkout extends Controller
         if ($this->request->isGet()) {
             return $this->renderSuccess(['order' => $orderInfo]);
         }
-        // 订单结算提交
+        // 验证订单是否存在错误
         if ($Checkout->hasError()) {
             return $this->renderError($Checkout->getError(), ['is_created' => false]);
         }
@@ -154,6 +154,10 @@ class Checkout extends Controller
         $orderInfo = $Checkout->onCheckout($goodsList);
         if ($this->request->isGet()) {
             return $this->renderSuccess(['order' => $orderInfo]);
+        }
+        // 验证订单是否存在错误
+        if ($Checkout->hasError()) {
+            return $this->renderError($Checkout->getError(), ['is_created' => false]);
         }
         // 创建订单
         if (!$Checkout->createOrder($orderInfo)) {
