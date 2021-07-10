@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\service\goods\source;
 
@@ -34,7 +34,7 @@ class Master extends Basics
         $goodsSkuData = [];
         foreach ($goodsList as $goods) {
             // 是否减库存 (下单减库存)
-            $isUpdateStockNum = $goods['deduct_stock_type'] == 10;
+            $isUpdateStockNum = $goods['deduct_stock_type'] == DeductStockTypeEnum::CREATE;
             // 商品的数据
             $isUpdateStockNum && $goodsData[] = [
                 'where' => ['goods_id' => $goods['goods_id']],
@@ -52,9 +52,9 @@ class Master extends Basics
                 ],
             ];
         }
-        // 更新商品信息
+        // 更新商品总库存
         !empty($goodsData) && $this->updateGoods($goodsData);
-        // 更新商品sku信息
+        // 更新商品sku库存
         !empty($goodsSkuData) && $this->updateGoodsSku($goodsSkuData);
         return true;
     }
@@ -70,7 +70,7 @@ class Master extends Basics
         $goodsSkuData = [];
         foreach ($goodsList as $goods) {
             // 是否减库存 (付款减库存)
-            $isUpdateStockNum = $goods['deduct_stock_type'] == 20;
+            $isUpdateStockNum = $goods['deduct_stock_type'] == DeductStockTypeEnum::PAYMENT;
             // 商品的数据
             $goodsDataItm = [
                 'where' => ['goods_id' => $goods['goods_id']],
@@ -99,33 +99,36 @@ class Master extends Basics
     }
 
     /**
-     * 回退商品库存
-     * @param $goodsList
-     * @param $isPayOrder
-     * @return array|false
-     * @throws \Exception
+     * 回退商品库存事件 (用于取消订单时调用)
+     * @param mixed $goodsList 订单商品列表
+     * @param bool $isPayOrder 是否为已支付订单
+     * @return bool|mixed
      */
-    public function backGoodsStock($goodsList, $isPayOrder = false)
+    public function backGoodsStock($goodsList, bool $isPayOrder = false)
     {
+        $goodsData = [];
         $goodsSkuData = [];
         foreach ($goodsList as $goods) {
-            $item = [
-                'where' => [
-                    'goods_id' => $goods['goods_id'],
-                    'goods_sku_id' => $goods['goods_sku_id'],
-                ],
-                'data' => ['stock_num' => ['inc', $goods['total_num']]],
-            ];
-            if ($isPayOrder == true) {
-                // 付款订单全部库存
-                $goodsSkuData[] = $item;
-            } else {
-                // 未付款订单，判断必须为下单减库存时才回退
-                $goods['deduct_stock_type'] == DeductStockTypeEnum::CREATE && $goodsSkuData[] = $item;
+            // 更新条件: 订单已经支付或者订单商品为 "下单减库存"
+            if ($isPayOrder == true || $goods['deduct_stock_type'] == DeductStockTypeEnum::CREATE) {
+                $goodsData[] = [
+                    'where' => ['goods_id' => $goods['goods_id']],
+                    'data' => ['stock_total' => ['inc', $goods['total_num']]]
+                ];
+                $goodsSkuData[] = [
+                    'where' => [
+                        'goods_id' => $goods['goods_id'],
+                        'goods_sku_id' => $goods['goods_sku_id'],
+                    ],
+                    'data' => ['stock_num' => ['inc', $goods['total_num']]],
+                ];
             }
         }
+        // 更新商品总库存
+        !empty($goodsData) && $this->updateGoods($goodsData);
         // 更新商品sku库存
-        return !empty($goodsSkuData) && $this->updateGoodsSku($goodsSkuData);
+        !empty($goodsSkuData) && $this->updateGoodsSku($goodsSkuData);
+        return true;
     }
 
     /**

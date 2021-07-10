@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\service\goods\source;
 
@@ -38,9 +38,9 @@ abstract class Basics extends BaseService
     /**
      * 回退商品库存
      * @param $goodsList
-     * @param $isPayOrder
+     * @param bool $isPayOrder 是否为已支付订单
      * @return mixed
      */
-    abstract function backGoodsStock($goodsList, $isPayOrder);
+    abstract function backGoodsStock($goodsList, bool $isPayOrder = false);
 
 }
