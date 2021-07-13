@@ -187,7 +187,7 @@ abstract class Basics
     private function hashName()
     {
         return $this->file->hashName(function () {
-            return date('Ymd') . DIRECTORY_SEPARATOR . uniqid((string)mt_rand(), true);
+            return date('Ymd') . DIRECTORY_SEPARATOR . md5(uniqid((string)mt_rand(), true));
         });
     }
 
