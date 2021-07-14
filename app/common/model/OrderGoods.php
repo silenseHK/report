@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\model;
 
@@ -84,7 +84,7 @@ class OrderGoods extends BaseModel
      */
     public function setGoodsPropsAttr($value)
     {
-        return helper::jsonEncode($value);
+        return $value ? helper::jsonEncode($value) : '';
     }
 
     /**

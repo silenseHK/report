@@ -12,8 +12,6 @@ declare (strict_types = 1);
 
 namespace app\api\model;
 
-use app\api\service\User as UserService;
-use app\common\exception\BaseException;
 use app\common\model\OrderGoods as OrderGoodsModel;
 
 /**
