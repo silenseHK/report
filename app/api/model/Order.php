@@ -181,22 +181,22 @@ class Order extends OrderModel
         switch ($type) {
             case 'all':
                 break;
-            case 'payment';
+            case 'payment':
                 $filter['pay_status'] = PayStatusEnum::PENDING;
                 $filter['order_status'] = OrderStatusEnum::NORMAL;
                 break;
-            case 'delivery';
+            case 'delivery':
                 $filter['pay_status'] = PayStatusEnum::SUCCESS;
                 $filter['delivery_status'] = DeliveryStatusEnum::NOT_DELIVERED;
                 $filter['order_status'] = OrderStatusEnum::NORMAL;
                 break;
-            case 'received';
+            case 'received':
                 $filter['pay_status'] = PayStatusEnum::SUCCESS;
                 $filter['delivery_status'] = DeliveryStatusEnum::DELIVERED;
                 $filter['receipt_status'] = ReceiptStatusEnum::NOT_RECEIVED;
                 $filter['order_status'] = OrderStatusEnum::NORMAL;
                 break;
-            case 'comment';
+            case 'comment':
                 $filter['is_comment'] = 0;
                 $filter['order_status'] = OrderStatusEnum::COMPLETED;
                 break;
@@ -274,20 +274,20 @@ class Order extends OrderModel
         switch ($type) {
             case 'all':
                 break;
-            case 'payment';
+            case 'payment':
                 $filter['pay_status'] = PayStatusEnum::PENDING;
                 break;
-            case 'received';
+            case 'received':
                 $filter['pay_status'] = PayStatusEnum::SUCCESS;
                 $filter['delivery_status'] = DeliveryStatusEnum::DELIVERED;
                 $filter['receipt_status'] = ReceiptStatusEnum::NOT_RECEIVED;
                 break;
-            case 'delivery';
+            case 'delivery':
                 $filter['pay_status'] = PayStatusEnum::SUCCESS;
                 $filter['delivery_status'] = DeliveryStatusEnum::NOT_DELIVERED;
                 $filter['order_status'] = OrderStatusEnum::NORMAL;
                 break;
-            case 'comment';
+            case 'comment':
                 $filter['is_comment'] = 0;
                 $filter['order_status'] = OrderStatusEnum::COMPLETED;
                 break;
