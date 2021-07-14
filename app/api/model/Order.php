@@ -126,11 +126,14 @@ class Order extends OrderModel
      */
     public function getOrderGoodsListByNow(int $goodsId, string $goodsSkuId, int $goodsNum)
     {
+        // 获取商品列表
         $model = new GoodsModel;
         $goodsList = $model->getListByIdsFromApi([$goodsId]);
         if ($goodsList->isEmpty()) {
             throwError('未找到商品信息');
         }
+        // 隐藏冗余的属性
+        $goodsList->hidden(array_merge($model->hidden, ['content', 'goods_images', 'images']));
         foreach ($goodsList as &$item) {
             // 商品sku信息
             $item['skuInfo'] = GoodsSkuModel::detail($item['goods_id'], $goodsSkuId);

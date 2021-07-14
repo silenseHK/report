@@ -30,8 +30,8 @@ class Goods extends GoodsModel
      * 隐藏字段
      * @var array
      */
-    protected $hidden = [
-        'spec_rel',
+    public $hidden = [
+        'images',
         'delivery',
         'deduct_stock_type',
         'sales_initial',
@@ -62,11 +62,15 @@ class Goods extends GoodsModel
      */
     public function getList(array $param = [], int $listRows = 15)
     {
-        // 获取商品列表
+        // 整理查询参数
         $params = array_merge($param, ['status' => GoodsStatusEnum::ON_SALE]);
+        // 获取商品列表
         $list = parent::getList($params, $listRows);
-        // 隐藏api属性
-        // !$list->isEmpty() && $list->hidden(['goods_images']);
+        if ($list->isEmpty()) {
+            return $list;
+        }
+        // 隐藏冗余的字段
+        $list->hidden(array_merge($this->hidden, ['content', 'goods_images', 'images']));
         // 整理列表数据并返回
         return $this->setGoodsListDataFromApi($list);
     }
