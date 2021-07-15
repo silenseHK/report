@@ -783,6 +783,7 @@ class Checkout extends BaseService
                 'user_id' => $this->user['user_id'],
                 'store_id' => $this->storeId,
                 'goods_id' => $goods['goods_id'],
+                'goods_name' => $goods['goods_name'],
                 'goods_no' => $goods['goods_no'] ?: '',
                 'image_id' => (int)current($goods['goods_images'])['file_id'],
                 'deduct_stock_type' => $goods['deduct_stock_type'],
