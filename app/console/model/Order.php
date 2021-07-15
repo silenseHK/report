@@ -80,7 +80,7 @@ class Order extends OrderModel
     }
 
     /**
-     * 查询截止时间未支付的订单列表
+     * 查询截止时间已完成的订单列表
      * @param int $storeId 商城ID
      * @param array $orderIds 订单ID集
      * @return \think\Collection
@@ -88,7 +88,7 @@ class Order extends OrderModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getListByCompleted(int $storeId, array $orderIds)
+    public function getListByOrderIds(int $storeId, array $orderIds)
     {
         // 查询条件
         $filter = [['order_id', 'in', $orderIds]];
@@ -97,9 +97,9 @@ class Order extends OrderModel
     }
 
     /**
-     * 查询截止时间未支付的订单ID集
+     * 查询截止时间未确认收货的订单ID集
      * @param int $storeId 商城ID
-     * @param int $deadlineTime
+     * @param int $deadlineTime 截止时间
      * @return array
      */
     public function getOrderIdsByReceive(int $storeId, int $deadlineTime)
@@ -116,6 +116,27 @@ class Order extends OrderModel
     }
 
     /**
+     * 查询截止时间确认收货的订单列表
+     * @param int $storeId 商城ID
+     * @param int $deadlineTime 截止时间
+     * @return \think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getOrderListBySettled(int $storeId, int $deadlineTime)
+    {
+        // 查询条件
+        $filter = [
+            ['order_status', '=', OrderStatusEnum::COMPLETED],
+            ['receipt_time', '<=', $deadlineTime],
+            ['is_settled', '=', 0]
+        ];
+        // 查询列表记录
+        return $this->getList($storeId, $filter, ['goods.refund']);
+    }
+
+    /**
      * 批量更新订单状态为已收货
      * @param array $orderIds
      * @return false|int
@@ -128,5 +149,4 @@ class Order extends OrderModel
             'order_status' => OrderStatusEnum::COMPLETED
         ]);
     }
-
 }

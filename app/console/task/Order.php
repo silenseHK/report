@@ -48,6 +48,8 @@ class Order extends Task
             $this->closeEvent();
             // 已发货订单自动确认收货
             $this->receiveEvent();
+            // 已完成订单结算
+            $this->settledEvent();
         });
     }
 
@@ -87,6 +89,23 @@ class Order extends Task
     }
 
     /**
+     * 已完成订单自动结算
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    private function settledEvent()
+    {
+        // 取消n天以前的的未付款订单
+        $refundDays = (int)$this->getTradeSetting()['refund_days'];
+        // 执行自动确认收货
+        if ($refundDays > 0) {
+            $service = new OrderService;
+            $service->settledEvent($this->storeId, $refundDays);
+        }
+    }
+
+    /**
      * 获取商城交易设置
      * @return array|mixed
      * @throws \think\db\exception\DataNotFoundException
@@ -97,5 +116,4 @@ class Order extends Task
     {
         return SettingModel::getItem('trade', $this->storeId)['order'];
     }
-
 }
