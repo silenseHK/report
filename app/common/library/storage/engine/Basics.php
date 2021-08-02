@@ -66,11 +66,25 @@ abstract class Basics
     public function setUploadFile(string $name)
     {
         // 接收上传的文件
-        $this->file = Request::instance()->file($name);
-        if (empty($this->file)) {
-            throwError('未找到上传文件的信息');
+        try {
+            $this->file = Request::file($name);
+        } catch (\Exception $e) {
+            $this->throwFileError($e);
         }
+        empty($this->file) && throwError('未找到上传文件的信息');
         return $this;
+    }
+
+    /**
+     * 文件异常处理
+     * @param \Exception $e
+     * @throws BaseException
+     */
+    private function throwFileError(\Exception $e)
+    {
+        $maxSize = ini_get('upload_max_filesize');
+        $myMsg = $e->getCode() === 1 ? "上传的文件超出了服务器最大限制: {$maxSize}" : false;
+        throwError($myMsg ?: $e->getMessage());
     }
 
     /**
