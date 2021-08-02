@@ -42,7 +42,7 @@ class User extends BaseService
      */
     public static function getLoginUserId()
     {
-        return static::getLoginInfo()['user']['store_user_id'];
+        return (int)static::getLoginInfo()['user']['store_user_id'];
     }
 
     /**

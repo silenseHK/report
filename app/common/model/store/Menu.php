@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\model\store;
 
@@ -82,7 +82,7 @@ class Menu extends BaseModel
         $data = [];
         foreach ($menuList as $key => $item) {
             if ($item['parent_id'] == $parentId) {
-                $children = $this->getTreeData($menuList, $item['menu_id']);
+                $children = $this->getTreeData($menuList, (int)$item['menu_id']);
                 !empty($children) && $item['children'] = $children;
                 $data[] = $item;
                 unset($menuList[$key]);

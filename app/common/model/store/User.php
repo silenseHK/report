@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\model\store;
 
@@ -67,11 +67,6 @@ class User extends BaseModel
      */
     public static function detail($where, array $with = [])
     {
-        $model = (new static)->with($with);
-        if (is_array($where)) {
-            return $model->where($where)->find();
-        }
-        return $model->find($where);
+        return static::get($where, $with);
     }
-
 }

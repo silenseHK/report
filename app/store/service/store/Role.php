@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\store\service\store;
 
@@ -37,7 +37,7 @@ class Role extends BaseService
         // 获取当前登录用户的ID
         $userInfo = UserService::getLoginInfo();
         // 根据当前用户ID获取有权限的菜单列表
-        $permittedMenuList = static::getPermittedMenuList($userInfo['user']['store_user_id']);
+        $permittedMenuList = static::getPermittedMenuList((int)$userInfo['user']['store_user_id']);
         // 生成权限列表
         $permissions = static::buildPermissions($permittedMenuList);
         return [

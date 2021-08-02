@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\store\controller;
 
@@ -46,7 +46,7 @@ class Passport extends Controller
             return $this->renderError($model->getError() ?: '登录失败');
         }
         return $this->renderSuccess([
-            'userId' => $userInfo['store_user_id'],
+            'userId' => (int)$userInfo['store_user_id'],
             'token' => $model->getToken()
         ], '登录成功');
     }

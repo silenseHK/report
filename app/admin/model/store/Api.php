@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\admin\model\store;
 
@@ -117,7 +117,7 @@ class Api extends ApiModel
         $data = [];
         foreach ($list as $key => $item) {
             if ($item['parent_id'] == $parentId) {
-                $children = $this->getTreeData($list, $item['api_id']);
+                $children = $this->getTreeData($list, (int)$item['api_id']);
                 !empty($children) && $item['children'] = $children;
                 $data[] = $item;
                 unset($list[$key]);
