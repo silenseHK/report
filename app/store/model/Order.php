@@ -305,8 +305,7 @@ class Order extends OrderModel
         }
         // 改价的金额差价
         $updatePrice = helper::bcsub($data['order_price'], $this['order_price']);
-        // 旧版写法
-        // helper::bcsub($data['order_price'], helper::bcsub($this['total_price'], $this['coupon_money']));
+        // 更新订单记录
         return $this->save([
                 'order_no' => $this->orderNo(), // 修改订单号, 否则微信支付提示重复
                 'pay_price' => $payPrice,

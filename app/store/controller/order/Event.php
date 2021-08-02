@@ -22,23 +22,6 @@ use app\store\model\Order as OrderModel;
  */
 class Event extends Controller
 {
-    // 订单模型类
-    /* @var OrderModel $model */
-    private $model;
-
-    /**
-     * 构造方法
-     * @throws \app\common\exception\BaseException
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
-     */
-    public function initialize()
-    {
-        parent::initialize();
-        $this->model = new OrderModel;
-    }
-
     /**
      * 确认发货
      * @param int $orderId
