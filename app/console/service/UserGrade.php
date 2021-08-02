@@ -73,8 +73,6 @@ class UserGrade extends BaseService
      */
     private function getUsableList(int $storeId)
     {
-        $list = UserGradeModel::getUsableList($storeId);
-        return $list->isEmpty() ? false : $list;
+        return UserGradeModel::getUsableList($storeId);
     }
-
 }
