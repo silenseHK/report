@@ -24,10 +24,13 @@ use app\store\model\SpecValue as SpecValueModel;
 class Spec extends SpecModel
 {
     /**
-     * 规格组写入数据库并生成id
+     * 规格组写入数据库并生成ID集
      * 此时的$specList是用户端传来的
      * @param array $specList
      * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public static function getNewSpecList(array $specList)
     {
@@ -54,8 +57,8 @@ class Spec extends SpecModel
 
     /**
      * 新增规格组记录
-     * @param $item
-     * @return Spec|\think\Model
+     * @param array $item
+     * @return static|\think\Model
      */
     private static function add(array $item)
     {
@@ -71,20 +74,12 @@ class Spec extends SpecModel
      * 根据规格组名称集获取列表
      * @param array $names
      * @return \think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     private static function getListByNames(array $names)
     {
         return (new static)->where('spec_name', 'in', $names)->select();
     }
-
-    /**
-     * 获取指定管理员的所有规格id
-     * @param int $specId
-     * @return array
-     */
-    public static function getSpecIdsByUserId(int $specId)
-    {
-        return (new static)->where('store_user_id', '=', $specId)->column('spec_id');
-    }
-
 }

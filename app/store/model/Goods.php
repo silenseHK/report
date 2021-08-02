@@ -64,6 +64,9 @@ class Goods extends GoodsModel
      * 添加商品
      * @param array $data
      * @return bool
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public function add(array $data)
     {
@@ -91,6 +94,9 @@ class Goods extends GoodsModel
      * 创建商品数据
      * @param array $data
      * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     private function createData(array $data)
     {
@@ -138,8 +144,11 @@ class Goods extends GoodsModel
 
     /**
      * 编辑商品
-     * @param $data
-     * @return bool|mixed
+     * @param array $data
+     * @return bool
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public function edit(array $data)
     {

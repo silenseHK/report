@@ -67,7 +67,10 @@ class Goods extends Controller
 
     /**
      * 添加商品
-     * @return array|string
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public function add()
     {
@@ -79,9 +82,12 @@ class Goods extends Controller
     }
 
     /**
-     * 商品编辑
-     * @param $goodsId
-     * @return array|string
+     * 编辑商品
+     * @param int $goodsId
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public function edit(int $goodsId)
     {
@@ -122,5 +128,4 @@ class Goods extends Controller
         }
         return $this->renderSuccess('删除成功');
     }
-
 }
