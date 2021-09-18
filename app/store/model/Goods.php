@@ -178,12 +178,6 @@ class Goods extends GoodsModel
      * @param bool $state 为true表示上架
      * @return false|int
      */
-
-    /**
-     * @param array $goodsIds
-     * @param bool $state
-     * @return bool
-     */
     public function setStatus(array $goodsIds, bool $state)
     {
         // 批量更新记录

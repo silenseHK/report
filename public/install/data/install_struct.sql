@@ -757,7 +757,6 @@ CREATE TABLE `yoshop_upload_group` (
 DROP TABLE IF EXISTS `yoshop_user`;
 CREATE TABLE `yoshop_user` (
   `user_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-  `open_id` varchar(255) NOT NULL DEFAULT '' COMMENT '微信openid(唯一标示)',
   `mobile` varchar(20) NOT NULL DEFAULT '' COMMENT '用户手机号',
   `nick_name` varchar(255) NOT NULL DEFAULT '' COMMENT '用户昵称',
   `avatar_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '头像文件ID',
@@ -778,7 +777,6 @@ CREATE TABLE `yoshop_user` (
   `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`user_id`),
-  KEY `openid` (`open_id`) USING BTREE,
   KEY `mobile` (`mobile`),
   KEY `store_id` (`store_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='用户记录表';

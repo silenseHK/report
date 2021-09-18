@@ -49,7 +49,8 @@ class Page extends BaseModel
     public function setPageDataAttr(array $value)
     {
         $json = helper::jsonEncode($value ?: ['items' => []]);
-        return htmlspecialchars_decode($json);
+        return $json;
+        // return htmlspecialchars_decode($json);
     }
 
     /**
