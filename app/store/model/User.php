@@ -105,7 +105,7 @@ class User extends UserModel
         $params = $this->setQueryDefaultValue($param, [
             'search' => '',     // 微信昵称
             'gender' => -1,     // 用户性别
-            'grade' => 0,       // 用户等级
+            'gradeId' => 0,       // 用户等级
         ]);
         // 检索查询条件
         $filter = [];
@@ -114,7 +114,7 @@ class User extends UserModel
         // 用户性别
         $params['gender'] > -1 && $filter[] = ['gender', '=', (int)$params['gender']];
         // 用户等级
-        $params['grade'] > 0 && $filter[] = ['grade_id', '=', (int)$params['grade']];
+        $params['gradeId'] > 0 && $filter[] = ['grade_id', '=', (int)$params['gradeId']];
         // 起止时间
         if (!empty($params['betweenTime'])) {
             $times = between_time($params['betweenTime']);
