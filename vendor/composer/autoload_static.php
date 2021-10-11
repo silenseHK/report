@@ -28,6 +28,10 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
         array (
             'edward\\captcha\\' => 15,
         ),
+        'c' => 
+        array (
+            'cores\\' => 6,
+        ),
         'a' => 
         array (
             'app\\' => 4,
@@ -91,13 +95,17 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
         ),
         'think\\' => 
         array (
-            0 => __DIR__ . '/..' . '/topthink/think-helper/src',
-            1 => __DIR__ . '/..' . '/topthink/think-orm/src',
-            2 => __DIR__ . '/..' . '/topthink/framework/src/think',
+            0 => __DIR__ . '/..' . '/topthink/framework/src/think',
+            1 => __DIR__ . '/..' . '/topthink/think-helper/src',
+            2 => __DIR__ . '/..' . '/topthink/think-orm/src',
         ),
         'edward\\captcha\\' => 
         array (
             0 => __DIR__ . '/..' . '/edward1108/edward-captcha/src',
+        ),
+        'cores\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/cores',
         ),
         'app\\' => 
         array (

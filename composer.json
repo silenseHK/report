@@ -43,7 +43,8 @@
     },
     "autoload": {
         "psr-4": {
-            "app\\": "app"
+            "app\\": "app",
+            "cores\\": "cores"
         },
         "psr-0": {
             "": "extend/"
