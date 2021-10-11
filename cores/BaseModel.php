@@ -20,7 +20,7 @@ use think\db\Query;
  * Class BaseModel
  * @package app\common\model
  */
-class BaseModel extends Model
+abstract class BaseModel extends Model
 {
     // 当前访问的商城ID
     public static $storeId;
@@ -129,7 +129,7 @@ class BaseModel extends Model
      * @test 2019-4-25
      * @param string $alias
      * @param array $join
-     * @return BaseModel
+     * @return static
      */
     public function setBaseQuery($alias = '', $join = [])
     {
