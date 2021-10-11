@@ -12,6 +12,8 @@ declare (strict_types = 1);
 
 namespace app\common\model;
 
+use cores\BaseModel;
+
 /**
  * 商品图片模型
  * Class GoodsImage

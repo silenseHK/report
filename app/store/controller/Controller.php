@@ -12,16 +12,17 @@ declare (strict_types=1);
 
 namespace app\store\controller;
 
+use cores\BaseController;
 use app\store\service\Auth as AuthService;
 use app\common\service\store\User as StoreUserService;
 use app\common\exception\BaseException;
 
 /**
  * 商户后台控制器基类
- * Class BaseController
+ * Class Controller
  * @package app\store\controller
  */
-class Controller extends \app\BaseController
+class Controller extends BaseController
 {
     // 商家登录信息
     protected $store;

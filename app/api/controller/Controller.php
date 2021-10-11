@@ -8,20 +8,20 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\controller;
 
-use app\BaseController;
+use think\response\Json;
+use cores\BaseController;
 use app\api\model\User as UserModel;
 use app\api\model\Store as StoreModel;
 use app\api\service\User as UserService;
 use app\common\exception\BaseException;
-use think\response\Json;
 
 /**
  * API控制器基类
- * Class BaseController
+ * Class Controller
  * @package app\store\controller
  */
 class Controller extends BaseController

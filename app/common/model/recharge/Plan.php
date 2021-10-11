@@ -12,7 +12,7 @@ declare (strict_types = 1);
 
 namespace app\common\model\recharge;
 
-use app\common\model\BaseModel;
+use cores\BaseModel;
 
 /**
  * 用户充值订单模型

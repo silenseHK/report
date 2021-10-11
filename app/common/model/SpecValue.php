@@ -12,6 +12,8 @@ declare (strict_types = 1);
 
 namespace app\common\model;
 
+use cores\BaseModel;
+
 /**
  * 规格/属性(值)模型
  * Class SpecValue

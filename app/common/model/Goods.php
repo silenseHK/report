@@ -12,6 +12,7 @@ declare (strict_types=1);
 
 namespace app\common\model;
 
+use cores\BaseModel;
 use think\Paginator;
 use think\model\Collection;
 use app\common\library\helper;

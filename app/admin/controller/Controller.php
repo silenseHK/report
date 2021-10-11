@@ -12,6 +12,7 @@ declare (strict_types=1);
 
 namespace app\admin\controller;
 
+use cores\BaseController;
 use app\common\exception\BaseException;
 use app\admin\service\admin\User as AdminUserService;
 
@@ -20,7 +21,7 @@ use app\admin\service\admin\User as AdminUserService;
  * Class Controller
  * @package app\admin\controller
  */
-class Controller extends \app\BaseController
+class Controller extends BaseController
 {
     // 商家登录信息
     protected $admin;

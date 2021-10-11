@@ -12,6 +12,7 @@ declare (strict_types = 1);
 
 namespace app\common\model;
 
+use cores\BaseModel;
 use app\common\enum\file\Storage as StorageEnum;
 use app\common\enum\file\FileType as FileTypeEnum;
 

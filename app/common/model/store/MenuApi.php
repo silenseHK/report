@@ -12,7 +12,7 @@ declare (strict_types = 1);
 
 namespace app\common\model\store;
 
-use app\common\model\BaseModel;
+use cores\BaseModel;
 
 /**
  * 商家后台用户角色与菜单权限关系表模型

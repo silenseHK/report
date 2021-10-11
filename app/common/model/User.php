@@ -12,6 +12,7 @@ declare (strict_types=1);
 
 namespace app\common\model;
 
+use cores\BaseModel;
 use app\common\model\user\PointsLog as PointsLogModel;
 use think\model\relation\BelongsTo;
 use think\model\relation\HasMany;

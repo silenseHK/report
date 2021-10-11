@@ -12,7 +12,7 @@ declare (strict_types=1);
 
 namespace app\common\model\user;
 
-use app\common\model\BaseModel;
+use cores\BaseModel;
 use app\common\library\helper;
 
 /**

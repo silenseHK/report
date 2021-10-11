@@ -14,7 +14,7 @@ namespace app\common\model\store;
 
 use think\facade\Cache;
 use app\common\library\helper;
-use app\common\model\BaseModel;
+use cores\BaseModel;
 use app\common\enum\Setting as SettingEnum;
 use app\common\enum\file\Storage as StorageEnum;
 use app\common\enum\order\DeliveryType as DeliveryTypeEnum;

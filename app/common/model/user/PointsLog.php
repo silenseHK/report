@@ -12,7 +12,7 @@ declare (strict_types = 1);
 
 namespace app\common\model\user;
 
-use app\common\model\BaseModel;
+use cores\BaseModel;
 
 /**
  * 用户积分变动明细模型

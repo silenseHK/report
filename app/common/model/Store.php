@@ -12,6 +12,8 @@ declare (strict_types = 1);
 
 namespace app\common\model;
 
+use cores\BaseModel;
+
 /**
  * 商家记录表模型
  * Class Store

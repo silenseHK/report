@@ -12,6 +12,8 @@ declare (strict_types = 1);
 
 namespace app\common\model;
 
+use cores\BaseModel;
+
 /**
  * 模型类：帮助中心
  * Class Help

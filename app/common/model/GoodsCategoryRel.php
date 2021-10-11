@@ -12,6 +12,8 @@ declare (strict_types = 1);
 
 namespace app\common\model;
 
+use cores\BaseModel;
+
 /**
  * 商品与分类关系模型
  * Class GoodsCategoryRel

@@ -12,7 +12,7 @@ declare (strict_types = 1);
 
 namespace app\common\model\admin;
 
-use app\common\model\BaseModel;
+use cores\BaseModel;
 
 /**
  * 超管后台用户模型

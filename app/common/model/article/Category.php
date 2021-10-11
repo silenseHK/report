@@ -12,7 +12,7 @@ declare (strict_types = 1);
 
 namespace app\common\model\article;
 
-use app\common\model\BaseModel;
+use cores\BaseModel;
 
 /**
  * 文章分类模型

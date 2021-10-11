@@ -12,7 +12,7 @@ declare (strict_types=1);
 
 namespace app\common\model\store;
 
-use app\common\model\BaseModel;
+use cores\BaseModel;
 
 /**
  * 商家后台API权限模型

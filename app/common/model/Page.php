@@ -12,6 +12,7 @@ declare (strict_types = 1);
 
 namespace app\common\model;
 
+use cores\BaseModel;
 use app\common\library\helper;
 use app\common\enum\page\PageType as PageTypeEnum;
 

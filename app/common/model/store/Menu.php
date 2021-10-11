@@ -13,7 +13,7 @@ declare (strict_types=1);
 namespace app\common\model\store;
 
 use app\common\library\helper;
-use app\common\model\BaseModel;
+use cores\BaseModel;
 
 /**
  * 商家后台菜单模型

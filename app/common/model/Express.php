@@ -12,6 +12,7 @@ declare (strict_types = 1);
 
 namespace app\common\model;
 
+use cores\BaseModel;
 use app\common\library\express\Kuaidi100;
 use app\common\model\store\Setting as SettingModel;
 use app\common\enum\Setting as SettingEnum;

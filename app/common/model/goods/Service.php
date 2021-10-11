@@ -12,7 +12,7 @@ declare (strict_types = 1);
 
 namespace app\common\model\goods;
 
-use app\common\model\BaseModel;
+use cores\BaseModel;
 
 /**
  * 商品服务与承诺模型

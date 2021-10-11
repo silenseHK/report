@@ -14,17 +14,13 @@ namespace cores;
 
 use think\Model;
 use think\db\Query;
-use think\Paginator;
-use think\model\Collection;
-use cores\extension\ModelExt;
-use app\common\exception\BaseException;
 
 /**
  * 模型基类
  * Class BaseModel
  * @package app\common\model
  */
-abstract class BaseModel extends Model
+class BaseModel extends Model
 {
     // 当前访问的商城ID
     public static $storeId;
@@ -44,55 +40,21 @@ abstract class BaseModel extends Model
     // 错误信息
     protected $error = '';
 
-    // 模型基类扩展
-    /* @var ModelExt $ModelExt */
-    private static $ModelExt;
-
     /**
      * 模型基类初始化
-     * @throws BaseException
      */
     public static function init()
     {
         parent::init();
-        // 绑定ModelExt
-        if (!self::$ModelExt) {
-            self::$ModelExt = ModelExt::getInstance();
-        }
         // 绑定store_id
         self::getStoreId();
     }
 
     /**
-     * 获取当前操作的商城ID
-     * @return int|null
-     */
-    private static function getStoreId()
-    {
-        if (empty(self::$storeId) && in_array(app_name(), ['store', 'api'])) {
-            self::$storeId = getStoreId();
-        }
-        return self::$storeId;
-    }
-
-    /**
-     * 获取当前调用来源的应用名称
-     * 例如：admin, api, store
-     * @return string|bool
-     */
-    protected final static function getCalledModule()
-    {
-        if (preg_match('/app\\\(\w+)/', get_called_class(), $class)) {
-            return $class[1];
-        }
-        return 'common';
-    }
-
-    /**
      * 查找单条记录
-     * @param mixed $data 查询条件
-     * @param array $with 关联查询
-     * @return array|static|null
+     * @param $data
+     * @param array $with
+     * @return array|static|null|false
      */
     public static function get($data, $with = [])
     {
@@ -100,7 +62,7 @@ abstract class BaseModel extends Model
             $query = (new static)->with($with);
             return is_array($data) ? $query->where($data)->find() : $query->find((int)$data);
         } catch (\Exception $e) {
-            return null;
+            return false;
         }
     }
 
@@ -118,12 +80,37 @@ abstract class BaseModel extends Model
     }
 
     /**
+     * 获取当前操作的商城ID
+     * @return int|null
+     */
+    private static function getStoreId()
+    {
+        if (empty(self::$storeId) && in_array(app_name(), ['store', 'api'])) {
+            self::$storeId = getStoreId();
+        }
+        return self::$storeId;
+    }
+
+    /**
+     * 获取当前调用来源的应用名称
+     * 例如：admin, api, store, task
+     * @return string|bool
+     */
+    protected static function getCalledModule()
+    {
+        if (preg_match('/app\\\(\w+)/', get_called_class(), $class)) {
+            return $class[1];
+        }
+        return 'common';
+    }
+
+    /**
      * 设置默认的检索数据
      * @param array $query
      * @param array $default
      * @return array
      */
-    public function setQueryDefaultValue(array $query, array $default = [])
+    protected function setQueryDefaultValue(array $query, array $default = [])
     {
         $data = array_merge($default, $query);
         foreach ($query as $field => $value) {
@@ -139,9 +126,10 @@ abstract class BaseModel extends Model
 
     /**
      * 设置基础查询条件（用于简化基础alias和field）
+     * @test 2019-4-25
      * @param string $alias
      * @param array $join
-     * @return static
+     * @return BaseModel
      */
     public function setBaseQuery($alias = '', $join = [])
     {
@@ -157,7 +145,28 @@ abstract class BaseModel extends Model
     }
 
     /**
-     * 批量更新多条数据(支持带where条件)
+     * 更新数据
+     * 重写\think\Model::update方法, 目的可以返回更新的状态bool
+     * @access public
+     * @param array $data 数据数组
+     * @param array $where 更新条件
+     * @param array $allowField 允许字段
+     * @return bool
+     */
+    public static function updateBase(array $data, array $where = [], array $allowField = []): bool
+    {
+        $model = new static;
+        if (!empty($allowField)) {
+            $model->allowField($allowField);
+        }
+        if (!empty($where)) {
+            $model->setUpdateWhere($where);
+        }
+        return $model->exists(true)->save($data);
+    }
+
+    /**
+     * 批量更新数据(支持带where条件)
      * @param iterable $dataSet [0 => ['data'=>[], 'where'=>[]]]
      * @return array|false
      */
@@ -278,90 +287,6 @@ abstract class BaseModel extends Model
             $field = "$alias.$field";
         }
         return $fields;
-    }
-
-    /**
-     * 更新数据[单条]
-     * @param array|int $where 更新条件默认arra, 也支持传参int, 但必须是主键id
-     * @param array $data 更新的数据内容
-     * @return bool
-     */
-    public static function updateOne($where, array $data): bool
-    {
-        $model = new static;
-        return self::$ModelExt->updateOne($model, $where, $data);
-    }
-
-    /**
-     * 更新数据[批量] 如果只更新单条记录请使用 updateOne方法
-     * @param array $data 更新的数据内容
-     * @param array $where 更新条件
-     * @param array $allowField 允许的字段
-     * @return bool
-     */
-    public static function updateBase(array $data, array $where, array $allowField = []): bool
-    {
-        $model = new static;
-        return self::$ModelExt->updateBase($model, $data, $where, $allowField);
-    }
-
-    /**
-     * 设置模型的更新条件
-     * @access protected
-     * @param mixed $where 更新条件
-     * @return static
-     */
-    public function mySetUpdateWhere($where)
-    {
-        parent::setUpdateWhere($where);
-        return $this;
-    }
-
-    /**
-     * 合并设置项
-     * @param array $confusion 系统默认配置
-     * @param array $variable 用户自定义
-     * @param string $_ 数据来源[后期加载附加数据]
-     * @param false $__ 是否只显示value
-     * @return array
-     */
-    protected static function reorganize(array $confusion, array $variable, string $_ = 'cache', $__ = false)
-    {
-        return self::$ModelExt->reorganize($confusion, $variable, $_, $__);
-    }
-
-    /**
-     * 仅返回values数据
-     * @param array $setting 全部设置
-     * @param bool $setKey 是否设置键值
-     * @return array
-     */
-    public final static function getValues(array $setting, bool $setKey = true)
-    {
-        return self::$ModelExt->getValues($setting, $setKey);
-    }
-
-    /**
-     * 加载关联数据 [列表数据类型]
-     * @param iterable $dataSet 数据集
-     * @param array $with 关联方法名 例如: ['user']; 支持嵌套['user.avatar'] ['user' => 'avatar']
-     * @param bool $isToArray 是否用数组格式输出
-     * @return Collection|Paginator|iterable
-     */
-    public static final function preload(iterable $dataSet, array $with, bool $isToArray = false)
-    {
-        return self::$ModelExt->preload($dataSet, $with, $isToArray);
-    }
-
-    /**
-     * 加载关联数据 [单条数据类型]
-     * @param mixed $model
-     * @param array $with 关联方法名 例如: ['user']; 不支持嵌套
-     * @return Model|static|false
-     */
-    public static final function related($model, array $with)
-    {
-        return self::$ModelExt->related($model, $with);
     }
 
 }

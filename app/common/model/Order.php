@@ -12,6 +12,7 @@ declare (strict_types = 1);
 
 namespace app\common\model;
 
+use cores\BaseModel;
 use app\common\model\store\shop\Order as ShopOrder;
 use app\common\service\Order as OrderService;
 use app\common\service\order\Complete as OrderCompleteService;

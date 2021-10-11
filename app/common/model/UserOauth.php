@@ -12,6 +12,8 @@ declare (strict_types=1);
 
 namespace app\common\model;
 
+use cores\BaseModel;
+
 /**
  * 模型类：第三方用户信息
  * Class UserOauth
