@@ -921,3 +921,16 @@ CREATE TABLE `yoshop_wxapp` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `store_id` (`store_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='微信小程序记录表';
+
+DROP TABLE IF EXISTS `yoshop_order_export`;
+CREATE TABLE `yoshop_order_export` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `start_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '下单时间(开始)',
+  `end_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '下单时间(结束)',
+  `file_path` varchar(255) NOT NULL DEFAULT '' COMMENT 'excel文件路径',
+  `status` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '导出状态(10进行中 20已完成 30失败)',
+  `store_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '商城ID',
+  `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `store_id` (`store_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='订单导出Excel记录表';
