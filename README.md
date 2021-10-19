@@ -95,7 +95,7 @@ php think timer start
 
 #### 安全&缺陷
 
-如果您碰到安装和使用问题可以查阅Issue，或者将操作流程和截图详细发出来，我们看到后会给出解决方案。
+如果您碰到安装和使用问题可以查阅[Issue](https://gitee.com/xany/yoshop2.0/issues?state=all)，或者将操作流程和截图详细发出来，我们看到后会给出解决方案。
 
 如果有BUG或者安全问题，我们会第一时间修复。
 
