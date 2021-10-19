@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Qcloud\\Cos\\' => array($vendorDir . '/qcloud/cos-sdk-v5/src'),
+    'HTMLPurifier' => array($vendorDir . '/ezyang/htmlpurifier/library'),
     'Guzzle\\Tests' => array($vendorDir . '/guzzle/guzzle/tests'),
     'Guzzle' => array($vendorDir . '/guzzle/guzzle/src'),
     '' => array($baseDir . '/extend'),
