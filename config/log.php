@@ -34,8 +34,10 @@ return [
             'processor'      => null,
             // 关闭通道日志写入
             'close'          => false,
+            // 日志时间格式
+            'time_format'    => 'Y-m-d H:i:s',
             // 日志输出格式化
-            'format'         => '[%s][%s] %s',
+            'format'         => '[%s] [%s] %s',
             // 是否实时写入
             'realtime_write' => false,
         ],

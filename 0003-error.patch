@@ -1,0 +1,132 @@
+From 4926fad38dec3cdc769af3873bc38a3409e327f8 Mon Sep 17 00:00:00 2001
+From: Martin <1808402272@qq.com>
+Date: Tue, 19 Oct 2021 16:00:00 +0800
+Subject: [PATCH 03/13] =?UTF-8?q?=E5=AE=8C=E5=96=84error=E6=97=A5=E5=BF=97?=
+ =?UTF-8?q?=E5=86=85=E5=AE=B9?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ .env                      |  2 +-
+ config/log.php            |  4 +++-
+ cores/ExceptionHandle.php | 30 +++++++++++++++++++++++++++---
+ 3 files changed, 31 insertions(+), 5 deletions(-)
+
+diff --git a/.env b/.env
+index 55cf6c2..2042af2 100644
+--- a/.env
++++ b/.env
+@@ -1 +1 @@
+-APP_DEBUG = true
+
+[APP]
+DEFAULT_TIMEZONE = Asia/Shanghai
+
+[DATABASE]
+TYPE = mysql
+HOSTNAME = 127.0.0.1
+DATABASE = yoshop2.0-feel
+USERNAME = root
+PASSWORD = root
+HOSTPORT = 3306
+CHARSET = utf8
+DEBUG = false
+
+[LANG]
+default_lang = zh-cn
+\ No newline at end of file
++APP_DEBUG = false
+
+[APP]
+DEFAULT_TIMEZONE = Asia/Shanghai
+
+[DATABASE]
+TYPE = mysql
+HOSTNAME = 127.0.0.1
+DATABASE = yoshop2.0-feel
+USERNAME = root
+PASSWORD = root
+HOSTPORT = 3306
+CHARSET = utf8
+DEBUG = false
+
+[LANG]
+default_lang = zh-cn
+\ No newline at end of file
+diff --git a/config/log.php b/config/log.php
+index f8c8d9d..b4d9a4b 100644
+--- a/config/log.php
++++ b/config/log.php
+@@ -34,8 +34,10 @@ return [
+             'processor'      => null,
+             // 关闭通道日志写入
+             'close'          => false,
++            // 日志时间格式
++            'time_format'    => 'Y-m-d H:i:s',
+             // 日志输出格式化
+-            'format'         => '[%s][%s] %s',
++            'format'         => '[%s] [%s] %s',
+             // 是否实时写入
+             'realtime_write' => false,
+         ],
+diff --git a/cores/ExceptionHandle.php b/cores/ExceptionHandle.php
+index 2d25b1f..434f3dd 100644
+--- a/cores/ExceptionHandle.php
++++ b/cores/ExceptionHandle.php
+@@ -13,7 +13,9 @@ namespace cores;
+ use Throwable;
+ use think\Response;
+ use think\facade\Log;
++use think\facade\Request;
+ use think\exception\Handle;
++use think\db\exception\PDOException;
+ use app\common\exception\BaseException;
+ 
+ /**
+@@ -105,17 +107,39 @@ class ExceptionHandle extends Handle
+      */
+     private function recordErrorLog(Throwable $e)
+     {
+-        // 生成日志内容
++        // 错误信息
+         $data = [
+             'file' => $e->getFile(),
+             'line' => $e->getLine(),
+             'message' => $this->getMessage($e),
+             'status' => $this->getCode($e),
+         ];
+-        $log = "[{$data['status']}]{$data['message']} [{$data['file']}:{$data['line']}]";
++        // 日志内容
++        $log = '';
++        $log .= $this->getVisitor();
++        $log .= "\r\n" . "[ message ] [{$data['status']}] {$data['message']}";
++        $log .= "\r\n" . "[ file ] {$data['file']}:{$data['line']}";
++        // $log .= "\r\n" . "[ time ] " . format_time(time());
++        $log .= "\r\n" . '[ header ] ' . print_r(Request::header(), true);
++        $log .= "" . '[ param ] ' . print_r(Request::param(), true);
++        // 如果是数据库报错, 则记录sql语句
++        if ($e instanceof PDOException) {
++            $log .= "[ Error SQL ] " . $e->getData()['Database Status']['Error SQL'];
++            $log .= "\r\n";
++        }
+         $log .= "\r\n" . $e->getTraceAsString();
+-
++        $log .= "\r\n" . '--------------------------------------------------------------------------------------------';
+         // 写入日志文件
+         Log::record($log, 'error');
+     }
++
++    /**
++     * 获取请求路径信息
++     * @return string
++     */
++    private function getVisitor()
++    {
++        $data = [Request::ip(), Request::method(), Request::url(true)];
++        return implode(' ', $data);
++    }
+ }
+-- 
+2.28.0.windows.1
+

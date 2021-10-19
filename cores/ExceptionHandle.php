@@ -13,7 +13,9 @@ namespace cores;
 use Throwable;
 use think\Response;
 use think\facade\Log;
+use think\facade\Request;
 use think\exception\Handle;
+use think\db\exception\PDOException;
 use app\common\exception\BaseException;
 
 /**
@@ -105,17 +107,39 @@ class ExceptionHandle extends Handle
      */
     private function recordErrorLog(Throwable $e)
     {
-        // 生成日志内容
+        // 错误信息
         $data = [
             'file' => $e->getFile(),
             'line' => $e->getLine(),
             'message' => $this->getMessage($e),
             'status' => $this->getCode($e),
         ];
-        $log = "[{$data['status']}]{$data['message']} [{$data['file']}:{$data['line']}]";
+        // 日志内容
+        $log = '';
+        $log .= $this->getVisitor();
+        $log .= "\r\n" . "[ message ] [{$data['status']}] {$data['message']}";
+        $log .= "\r\n" . "[ file ] {$data['file']}:{$data['line']}";
+        // $log .= "\r\n" . "[ time ] " . format_time(time());
+        $log .= "\r\n" . '[ header ] ' . print_r(Request::header(), true);
+        $log .= "" . '[ param ] ' . print_r(Request::param(), true);
+        // 如果是数据库报错, 则记录sql语句
+        if ($e instanceof PDOException) {
+            $log .= "[ Error SQL ] " . $e->getData()['Database Status']['Error SQL'];
+            $log .= "\r\n";
+        }
         $log .= "\r\n" . $e->getTraceAsString();
-
+        $log .= "\r\n" . '--------------------------------------------------------------------------------------------';
         // 写入日志文件
         Log::record($log, 'error');
+    }
+
+    /**
+     * 获取请求路径信息
+     * @return string
+     */
+    private function getVisitor()
+    {
+        $data = [Request::ip(), Request::method(), Request::url(true)];
+        return implode(' ', $data);
     }
 }
