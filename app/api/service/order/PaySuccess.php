@@ -12,15 +12,16 @@ declare (strict_types=1);
 
 namespace app\api\service\order;
 
+use think\facade\Event;
 use app\common\service\BaseService;
 use app\api\model\User as UserModel;
 use app\api\model\Order as OrderModel;
 use app\api\model\user\BalanceLog as BalanceLogModel;
 use app\common\service\goods\source\Factory as StockFactory;
 use app\common\enum\OrderType as OrderTypeEnum;
+use app\common\enum\order\PayStatus as PayStatusEnum;
 use app\common\enum\order\PayType as OrderPayTypeEnum;
 use app\common\enum\user\balanceLog\Scene as SceneEnum;
-use think\facade\Event;
 
 /**
  * 订单支付成功服务类
@@ -120,7 +121,7 @@ class PaySuccess extends BaseService
         // 整理订单信息
         $order = [
             'pay_type' => $payType,
-            'pay_status' => 20,
+            'pay_status' => PayStatusEnum::SUCCESS,
             'pay_time' => time()
         ];
         if ($payType == OrderPayTypeEnum::WECHAT) {

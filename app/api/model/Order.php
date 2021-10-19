@@ -56,7 +56,7 @@ class Order extends OrderModel
      */
     public static function getPayDetail(string $orderNo)
     {
-        return self::detail(['order_no' => $orderNo, 'pay_status' => 10, 'is_delete' => 0], ['goods', 'user']);
+        return self::detail(['order_no' => $orderNo, 'pay_status' => PayStatusEnum::PENDING, 'is_delete' => 0], ['goods', 'user']);
     }
 
     /**
@@ -82,7 +82,7 @@ class Order extends OrderModel
     /**
      * 构建支付请求的参数
      * @param self $order 订单信息
-     * @param string $payType 订单支付方式
+     * @param int $payType 订单支付方式
      * @return array
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
@@ -254,7 +254,7 @@ class Order extends OrderModel
                 'order_status' => 30
             ]);
             // 执行订单完成后的操作
-            $OrderCompleteService = new OrderCompleteService(OrderTypeEnum::ORDER);
+            $OrderCompleteService = new OrderCompleteService();
             $OrderCompleteService->complete([$this], static::$storeId);
             return $status;
         });

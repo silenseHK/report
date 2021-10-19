@@ -28,8 +28,8 @@ class WxPay extends WxBase
 
     // 订单模型
     private $modelClass = [
-        OrderTypeEnum::ORDER => 'app\api\service\order\PaySuccess',
-        OrderTypeEnum::RECHARGE => 'app\api\service\recharge\PaySuccess',
+        OrderTypeEnum::ORDER => \app\api\service\order\PaySuccess::class,
+        OrderTypeEnum::RECHARGE => \app\api\service\recharge\PaySuccess::class,
     ];
 
     /**
