@@ -4594,3 +4594,9 @@ INSERT INTO `yoshop_region` VALUES ('3701', '钢城街道', '2922', '620201', '3
 INSERT INTO `yoshop_region` VALUES ('3702', '新城镇', '2922', '620201', '3');
 INSERT INTO `yoshop_region` VALUES ('3703', '峪泉镇', '2922', '620201', '3');
 INSERT INTO `yoshop_region` VALUES ('3704', '文殊镇', '2922', '620201', '3');
+
+INSERT INTO `yoshop_store_api` VALUES ('11185', '删除订单', '/order.event/delete', '11132', '135', '1614556800', '1614556800');
+INSERT INTO `yoshop_store_menu` VALUES ('10141', '20', '删除订单', '', 'delete', '10051', '115', '1614556800', '1614556800');
+INSERT INTO `yoshop_store_menu_api` VALUES ('10661', '10141', '11185', '1614556800');
+INSERT INTO `yoshop_store_menu_api` VALUES ('10662', '10141', '11132', '1614556800');
+INSERT INTO `yoshop_store_menu_api` VALUES ('10663', '10141', '11076', '1614556800');

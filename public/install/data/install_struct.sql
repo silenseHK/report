@@ -352,6 +352,7 @@ CREATE TABLE `yoshop_order` (
   `is_comment` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '是否已评价(0否 1是)',
   `order_source` tinyint(3) unsigned NOT NULL DEFAULT '10' COMMENT '订单来源(10普通订单)',
   `order_source_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '来源记录ID',
+  `platform` varchar(20) NOT NULL DEFAULT '' COMMENT '来源客户端 (APP、H5、小程序等)',
   `user_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
   `is_delete` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否删除',
   `store_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '商城ID',
