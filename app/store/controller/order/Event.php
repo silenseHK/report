@@ -68,4 +68,19 @@ class Event extends Controller
         return $this->renderError($model->getError() ?: '操作失败');
     }
 
+    /**
+     * 删除订单记录
+     * @param int $orderId
+     * @return array|\think\response\Json
+     */
+    public function delete(int $orderId)
+    {
+        // 订单详情
+        $model = OrderModel::detail($orderId);
+        // 确认核销
+        if ($model->setDelete()) {
+            return $this->renderSuccess('删除成功');
+        }
+        return $this->renderError($model->getError() ?: '操作失败');
+    }
 }

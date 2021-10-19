@@ -340,6 +340,15 @@ class Order extends OrderModel
     }
 
     /**
+     * 将订单记录设置为已删除
+     * @return bool
+     */
+    public function setDelete()
+    {
+        return $this->save(['is_delete' => 1]) !== false;
+    }
+
+    /**
      * 获取已付款订单总数 (可指定某天)
      * @param null $startDate
      * @param null $endDate
