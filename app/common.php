@@ -103,15 +103,6 @@ function base_url()
 }
 
 /**
- * 获取当前uploads目录访问地址
- * @return string
- */
-function uploads_url()
-{
-    return base_url() . 'uploads';
-}
-
-/**
  * 获取当前url的子目录路径
  * @return string
  */
@@ -124,6 +115,24 @@ function root_url()
         $rootUrl = $subUrl . ($subUrl === '/' ? '' : '/');
     }
     return $rootUrl;
+}
+
+/**
+ * 获取当前uploads目录访问地址
+ * @return string
+ */
+function uploads_url()
+{
+    return base_url() . 'uploads';
+}
+
+/**
+ * 获取当前temp目录访问地址
+ * @return string
+ */
+function temp_url()
+{
+    return base_url() . 'temp/';
 }
 
 /**

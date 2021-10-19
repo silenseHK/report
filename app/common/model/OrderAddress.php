@@ -63,4 +63,13 @@ class OrderAddress extends BaseModel
         return $this['region']['province'] . $this['region']['city'] . $this['region']['region'] . $this['detail'];
     }
 
+    /**
+     * 获取完整地址
+     * @param $detail
+     * @return string
+     */
+    public static function fullAddress($detail)
+    {
+        return $detail['region']['province'] . $detail['region']['city'] . $detail['region']['region'] . $detail['detail'];
+    }
 }

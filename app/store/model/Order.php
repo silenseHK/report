@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\store\model;
 
@@ -101,7 +101,7 @@ class Order extends OrderModel
         // 设置订单类型条件
         $dataTypeFilter = $this->getFilterDataType($dataType);
         // 获取数据列表
-        return $this->with(['goods.image', 'address', 'user.avatar'])
+        return $this->with(['goods.image', 'address', 'user.avatar', 'express'])
             ->alias('order')
             ->field('order.*')
             ->join('user', 'user.user_id = order.user_id')

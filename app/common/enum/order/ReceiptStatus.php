@@ -27,4 +27,21 @@ class ReceiptStatus extends EnumBasics
     // 已收货
     const RECEIVED = 20;
 
+    /**
+     * 获取枚举数据
+     * @return array
+     */
+    public static function data()
+    {
+        return [
+            self::NOT_RECEIVED => [
+                'name' => '未收货',
+                'value' => self::NOT_RECEIVED,
+            ],
+            self::RECEIVED => [
+                'name' => '已收货',
+                'value' => self::RECEIVED,
+            ],
+        ];
+    }
 }

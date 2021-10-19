@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\model;
 
@@ -71,7 +71,7 @@ class UploadFile extends BaseModel
     {
         // 存储方式本地：拼接当前域名
         if ($data['storage'] === StorageEnum::LOCAL) {
-            $data['domain'] = uploads_url();
+            $data['domain'] = rtrim(uploads_url(), '/');
         }
         return "{$data['domain']}/{$data['file_path']}";
     }
