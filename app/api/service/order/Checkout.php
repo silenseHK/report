@@ -757,6 +757,7 @@ class Checkout extends BaseService
             'order_source_id' => $this->orderSource['source_id'],
             'points_bonus' => $order['pointsBonus'],
             'order_status' => OrderStatusEnum::NORMAL,
+            'platform' => getPlatform(),
             'store_id' => $this->storeId,
         ];
         if ($order['delivery'] == DeliveryTypeEnum::EXPRESS) {

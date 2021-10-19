@@ -14,7 +14,7 @@ declare (strict_types = 1);
 
 /**
  * 获取当前访问的渠道(微信小程序、H5、APP等)
- * @return int|null
+ * @return string|null
  */
 function getPlatform()
 {
