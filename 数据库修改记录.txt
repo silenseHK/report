@@ -1,7 +1,7 @@
 ﻿
 # 订单导出Excel记录表
 # 修改时间：2021-10-19
-## v2.0.2
+## v2.0.3
 DROP TABLE IF EXISTS `yoshop_order_export`;
 CREATE TABLE `yoshop_order_export` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
@@ -18,7 +18,7 @@ CREATE TABLE `yoshop_order_export` (
 
 # 后台删除订单权限
 # 修改时间：2021-10-19
-## v2.0.2
+## v2.0.3
 INSERT INTO `yoshop_store_api` VALUES ('11185', '删除订单', '/order.event/delete', '11132', '135', '1614556800', '1614556800');
 INSERT INTO `yoshop_store_menu` VALUES ('10141', '20', '删除订单', '', 'delete', '10051', '115', '1614556800', '1614556800');
 INSERT INTO `yoshop_store_menu_api` VALUES ('10661', '10141', '11185', '1614556800');
@@ -28,7 +28,7 @@ INSERT INTO `yoshop_store_menu_api` VALUES ('10663', '10141', '11076', '16145568
 
 # 下单来源客户端
 # 修改时间：2021-10-19
-## v2.0.2
+## v2.0.3
 ALTER TABLE `yoshop_order`
 ADD COLUMN `platform`  varchar(20) NOT NULL DEFAULT '' COMMENT '来源客户端 (APP、H5、小程序等)' AFTER `order_source_id`;
 
