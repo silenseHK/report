@@ -158,11 +158,26 @@ class helper
         return \bcdiv($leftOperand, $rightOperand, $scale);
     }
 
+    /**
+     * 浮点数比较
+     * 若二个字符串一样大则返回 0；若左边的数字字符串 (left operand) 比右边 (right operand) 的大则返回 +1；若左边的数字字符串比右边的小则返回 -1
+     * @param $leftOperand
+     * @param $rightOperand
+     * @param int $scale
+     * @return int
+     */
     public static function bccomp($leftOperand, $rightOperand, $scale = 2)
     {
         return \bccomp($leftOperand, $rightOperand, $scale);
     }
 
+    /**
+     * 比较两个数值是否相等
+     * @param $leftOperand
+     * @param $rightOperand
+     * @param int $scale
+     * @return bool
+     */
     public static function bcequal($leftOperand, $rightOperand, $scale = 2)
     {
         return self::bccomp($leftOperand, $rightOperand, $scale) === 0;

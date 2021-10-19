@@ -78,7 +78,7 @@ class Order extends OrderModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function createOrder(int $planId = null, float $customMoney = 0.00)
+    public function createOrder(?int $planId = null, float $customMoney = 0.00)
     {
         // 确定充值方式
         $rechargeType = $planId > 0 ? RechargeTypeEnum::PLAN : RechargeTypeEnum::CUSTOM;
@@ -200,23 +200,52 @@ class Order extends OrderModel
 
     /**
      * 表单验证
-     * @param $rechargeType
-     * @param $planId
-     * @param $customMoney
+     * @param int $rechargeType
+     * @param int $planId
+     * @param float $customMoney
      * @return bool
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
-    private function validateForm($rechargeType, $planId, $customMoney)
+    private function validateForm(int $rechargeType, int $planId, float $customMoney)
     {
         if (empty($planId) && $customMoney <= 0) {
             $this->error = '请选择充值套餐或输入充值金额';
             return false;
         }
         // 验证自定义的金额
-        if ($rechargeType == RechargeTypeEnum::CUSTOM && $customMoney <= 0) {
-            $this->error = '请选择充值套餐或输入充值金额';
+        if ($rechargeType == RechargeTypeEnum::CUSTOM && !$this->validateFormCustom($customMoney)) {
             return false;
         }
         return true;
     }
 
+    /**
+     * 表单验证 [自定义充值]
+     * @param float $customMoney 充值金额
+     * @return bool
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    private function validateFormCustom(float $customMoney)
+    {
+        // 充值设置
+        $setting = SettingModel::getItem('recharge');
+        if ($setting['is_custom'] == false) {
+            $this->error = '很抱歉，当前不允许充值自定义金额';
+            return false;
+        }
+        if ($customMoney <= 0) {
+            $this->error = '请输入正确的充值金额';
+            return false;
+        }
+        // 验证最低充值金额
+        if (helper::bccomp($customMoney, $setting['lowest_money']) === -1) {
+            $this->error = "很抱歉，当前最低充值金额不能低于{$setting['lowest_money']}元";
+            return false;
+        }
+        return true;
+    }
 }

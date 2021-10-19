@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\model\store;
 
@@ -250,7 +250,8 @@ class Setting extends BaseModel
                 'values' => [
                     'is_entrance' => 1,   // 是否允许用户充值
                     'is_custom' => 1,     // 是否允许自定义金额
-                    'is_match_plan' => 1, // 自定义金额是否自动匹配合适的套餐
+                    'lowest_money' => 10,   // 最低充值金额
+                    'is_match_plan' => 1,   // 自定义金额是否自动匹配合适的套餐
                     'describe' => "1. 账户充值仅限微信在线方式支付，充值金额实时到账；\n" .
                         "2. 账户充值套餐赠送的金额即时到账；\n" .
                         "3. 账户余额有效期：自充值日起至用完即止；\n" .

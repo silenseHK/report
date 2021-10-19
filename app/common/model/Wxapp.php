@@ -8,11 +8,12 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\model;
 
 use cores\BaseModel;
+
 use think\facade\Cache;
 use app\common\exception\BaseException;
 
@@ -31,27 +32,28 @@ class Wxapp extends BaseModel
 
     /**
      * 获取小程序信息
-     * @param null $storeId
+     * @param int|null $storeId
      * @return array|static|null
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public static function detail($storeId = null)
+    public static function detail(?int $storeId = null)
     {
-        return (new static)->find($storeId);
+        $storeId = $storeId ?: static::$storeId;
+        return (new static)->where(['store_id' => $storeId])->find();
     }
 
     /**
      * 从缓存中获取小程序信息
-     * @param null $storeId
+     * @param int|null $storeId
      * @return array
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public static function getWxappCache($storeId = null)
+    public static function getWxappCache(?int $storeId = null)
     {
         // 小程序id
         is_null($storeId) && $storeId = static::$storeId;
@@ -65,5 +67,4 @@ class Wxapp extends BaseModel
         }
         return $data;
     }
-
 }

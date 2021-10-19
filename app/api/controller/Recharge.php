@@ -55,5 +55,4 @@ class Recharge extends Controller
         $message = ['success' => '充值成功', 'error' => '订单未支付'];
         return $this->renderSuccess(compact('payment', 'message'));
     }
-
 }
