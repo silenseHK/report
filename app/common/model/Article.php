@@ -36,7 +36,7 @@ class Article extends BaseModel
      */
     public function image()
     {
-        return $this->hasOne('uploadFile', 'file_id', 'image_id')
+        return $this->hasOne('UploadFile', 'file_id', 'image_id')
             ->bind(['image_url' => 'preview_url']);
     }
 

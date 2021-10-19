@@ -40,7 +40,7 @@ class User extends BaseModel
      */
     public function avatar()
     {
-        return $this->hasOne('uploadFile', 'file_id', 'avatar_id')
+        return $this->hasOne('UploadFile', 'file_id', 'avatar_id')
             ->bind(['avatar_url' => 'preview_url']);
     }
 
