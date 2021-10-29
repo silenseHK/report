@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\store\model;
 
@@ -92,8 +92,8 @@ class Coupon extends CouponModel
         elseif ($data['expire_type'] == ExpireTypeEnum::FIXED_TIME) {
             $times = between_time($data['betweenTime']);
             $data['start_time'] = $times['start_time'];
-            $data['end_time'] = $times['end_time'];
-            $data['expire_day'] = 0;
+            $data['end_time'] = $times['end_time'] + (86400 - 1);
+            $data['expire_day'] = 1;
         }
         // 适用范围
         if ($data['apply_range'] == ApplyRangeEnum::ALL) {
@@ -110,5 +110,4 @@ class Coupon extends CouponModel
     {
         return $this->save(['is_delete' => 1]) !== false;
     }
-
 }
