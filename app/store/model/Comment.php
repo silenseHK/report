@@ -84,7 +84,7 @@ class Comment extends CommentModel
         // 评价详情
         $detail = static::detail($commentId, ['images.file']);
         // 图片ID集
-        $detail['imageIds'] = helper::getArrayColumn($detail, 'image_id');
+        $detail['imageIds'] = helper::getArrayColumn($detail['images'], 'image_id');
         // 图片列表
         $detail['imageList'] = helper::getArrayColumn($detail['images'], 'file');
         return $detail;
