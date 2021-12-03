@@ -57,25 +57,16 @@ class Payment extends Basics
 
     /**
      * 短信通知商家
-     * @return bool
+     * @return void
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function onSendSms()
+    private function onSendSms(): void
     {
         $orderInfo = $this->param['order'];
-        return $this->sendSms(SettingSmsScene::ORDER_PAY, ['order_no' => $orderInfo['order_no']]);
+        $this->sendSms(SettingSmsScene::ORDER_PAY, ['order_no' => $orderInfo['order_no']]);
     }
 
-    /**
-     * 格式化商品名称
-     * @param $goodsData
-     * @return string
-     */
-    private function getFormatGoodsName($goodsData)
-    {
-        return $this->getSubstr($goodsData[0]['goods_name']);
-    }
 }

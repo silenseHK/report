@@ -8,12 +8,13 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\service;
 
 use app\common\library\helper;
 use app\common\model\Goods as GoodsModel;
+use app\common\model\GoodsSku as GoodsSkuModel;
 
 /**
  * 商品服务类
@@ -24,37 +25,36 @@ class Goods extends BaseService
 {
     /**
      * 设置商品数据
-     * @param $data
-     * @param bool $isMultiple
-     * @param string $goodsIndex
+     * @param mixed $data 源数据
+     * @param bool $isMultiple 是否为列表数据
+     * @param array $hidden 隐藏的属性
+     * @param string $goodsIndex 商品ID字段名称
      * @return mixed
      */
-    public static function setGoodsData($data, $isMultiple = true, $goodsIndex = 'goods_id')
+    public static function setGoodsData($data, bool $isMultiple = true, array $hidden = [], string $goodsIndex = 'goods_id')
     {
         if (!$isMultiple) $dataSource = [&$data]; else $dataSource = &$data;
         // 获取商品列表
         $model = new GoodsModel;
         $goodsData = $model->getListByIds(helper::getArrayColumn($dataSource, $goodsIndex));
-        $goodsList = helper::arrayColumn2Key($goodsData, 'goods_id');
+        // 设置隐藏的属性
+        $goodsData->hidden(array_merge(['images'], $hidden));
         // 整理列表数据
+        $goodsList = helper::arrayColumn2Key($goodsData, 'goods_id');
         foreach ($dataSource as &$item) {
-            $item['goods'] = isset($goodsList[$item[$goodsIndex]]) ? $goodsList[$item[$goodsIndex]] : null;
+            $item['goods'] = $goodsList[$item[$goodsIndex]] ?? null;
         }
-        return $data;
+        return $dataSource->hidden($hidden);
     }
 
     /**
-     * 商品多规格信息
-     * @param GoodsModel|null $model
-     * @return null|array
+     * 获取商品的指定的某个SKU信息
+     * @param int $goodsId
+     * @param string $goodsSkuId
+     * @return GoodsSkuModel|array|null
      */
-    public static function getSpecData($model = null)
+    public static function getSkuInfo(int $goodsId, string $goodsSkuId)
     {
-        // 商品sku数据
-        if (!is_null($model) && $model['spec_type'] == 20) {
-            return $model->getManySpecData($model['spec_rel'], $model['skuList']);
-        }
-        return null;
+        return GoodsSkuModel::detail($goodsId, $goodsSkuId);
     }
-
 }

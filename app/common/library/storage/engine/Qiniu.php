@@ -13,6 +13,7 @@ declare (strict_types = 1);
 namespace app\common\library\storage\engine;
 
 use Qiniu\Auth;
+use Qiniu\Http\Error;
 use Qiniu\Storage\UploadManager;
 use Qiniu\Storage\BucketManager;
 
@@ -40,7 +41,7 @@ class Qiniu extends Basics
         $uploadMgr = new UploadManager();
         // 调用 UploadManager 的 putFile 方法进行文件的上传
         list(, $error) = $uploadMgr->putFile($token, $this->getSaveFileInfo()['file_path'], $realPath);
-        /* @var $error \Qiniu\Http\Error */
+        /* @var $error Error */
         if ($error !== null) {
             $this->error = $error->message();
             return false;
@@ -51,15 +52,15 @@ class Qiniu extends Basics
     /**
      * 删除文件
      * @param string $filePath
-     * @return bool|mixed
+     * @return bool
      */
-    public function delete(string $filePath)
+    public function delete(string $filePath): bool
     {
         // 构建鉴权对象
         $auth = new Auth($this->config['access_key'], $this->config['secret_key']);
         // 初始化 UploadManager 对象并进行文件的上传
         $bucketMgr = new BucketManager($auth);
-        /* @var $error \Qiniu\Http\Error */
+        /* @var $error Error */
         $error = $bucketMgr->delete($this->config['bucket'], $filePath);
         if ($error !== null) {
             $this->error = $error->message();
@@ -67,5 +68,4 @@ class Qiniu extends Basics
         }
         return true;
     }
-
 }

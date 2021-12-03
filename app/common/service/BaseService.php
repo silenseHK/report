@@ -8,10 +8,11 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\service;
 
+use cores\traits\ErrorTrait;
 use think\facade\Request;
 
 /**
@@ -21,12 +22,11 @@ use think\facade\Request;
  */
 class BaseService
 {
+    use ErrorTrait;
+
     // 请求管理类
     /* @var $request \think\Request */
     protected $request;
-
-    // 错误信息
-    protected $error;
 
     // 当前访问的商城ID
     protected $storeId;
@@ -39,7 +39,9 @@ class BaseService
     {
         // 请求管理类
         $this->request = Request::instance();
-        // 执行构造方法
+        // 获取当前操作的商城ID
+        $this->getStoreId();
+        // 执行子类的构造方法
         $this->initialize();
     }
 
@@ -48,38 +50,17 @@ class BaseService
      */
     protected function initialize()
     {
-        // 获取当前操作的商城ID
-        $this->getStoreId();
     }
 
     /**
      * 获取当前操作的商城ID
      * @return int|null
      */
-    protected function getStoreId()
+    protected function getStoreId(): ?int
     {
         if (empty($this->storeId) && in_array(app_name(), ['store', 'api'])) {
             $this->storeId = getStoreId();
         }
         return $this->storeId;
     }
-
-    /**
-     * 获取错误信息
-     * @return mixed
-     */
-    public function getError()
-    {
-        return empty($this->error) ? false : $this->error;
-    }
-
-    /**
-     * 是否存在错误
-     * @return bool
-     */
-    public function hasError()
-    {
-        return !empty($this->error);
-    }
-
 }

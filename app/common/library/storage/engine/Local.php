@@ -24,7 +24,7 @@ class Local extends Basics
 {
     /**
      * 上传图片文件
-     * @return array|bool
+     * @return bool
      */
     public function upload()
     {
@@ -51,7 +51,7 @@ class Local extends Basics
      * 验证上传的文件
      * @return bool
      */
-    private function validate()
+    private function validate(): bool
     {
         $FileValidate = new FileValidate;
         if (!$FileValidate->check([$this->validateRuleScene => $this->file])) {
@@ -72,5 +72,4 @@ class Local extends Basics
         $realPath = realpath(web_path() . "uploads/{$filePath}");
         return $realPath === false || unlink($realPath);
     }
-
 }

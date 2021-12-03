@@ -205,51 +205,6 @@ class WxPay extends WxBase
     }
 
     /**
-     * 企业付款到零钱API
-     * @param string $orderNo 订单号
-     * @param string $openid 微信用户openid
-     * @param string $amount 支付金额
-     * @param string $desc 描述
-     * @return bool
-     * @throws BaseException
-     * @throws \cores\exception\BaseException
-     */
-    public function transfers(string $orderNo, string $openid, string $amount, string $desc): bool
-    {
-        // API参数
-        $params = [
-            'mch_appid' => $this->appId,
-            'mchid' => $this->config['mchid'],
-            'nonce_str' => md5(uniqid()),
-            'partner_trade_no' => $orderNo,
-            'openid' => $openid,
-            'check_name' => 'NO_CHECK',
-            'amount' => $amount * 100,
-            'desc' => $desc,
-            'spbill_create_ip' => \request()->ip(),
-        ];
-        // 生成签名
-        $params['sign'] = $this->makeSign($params);
-        // 请求API
-        $url = 'https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers';
-        $result = $this->post($url, $this->toXml($params), true, $this->getCertPem());
-        // 请求失败
-        if (empty($result)) {
-            throwError('企业付款到零钱API请求失败');
-        }
-        // 格式化返回结果
-        $prepay = $this->fromXml($result);
-        // 请求失败
-        if ($prepay['return_code'] === 'FAIL') {
-            throwError("return_msg: {$prepay['return_msg']}");
-        }
-        if ($prepay['result_code'] === 'FAIL') {
-            throwError("err_code_des: {$prepay['err_code_des']}");
-        }
-        return true;
-    }
-
-    /**
      * 获取cert证书文件
      * @return string[]
      * @throws \cores\exception\BaseException
@@ -284,9 +239,9 @@ class WxPay extends WxBase
     /**
      * 返回状态给微信服务器
      * @param boolean $returnCode
-     * @param string $msg
+     * @param string|null $msg
      */
-    private function returnCode($returnCode = true, $msg = null)
+    private function returnCode(bool $returnCode = true, string $msg = null)
     {
         // 返回状态
         $return = [

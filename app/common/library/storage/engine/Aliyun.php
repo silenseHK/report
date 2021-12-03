@@ -24,9 +24,9 @@ class Aliyun extends Basics
 {
     /**
      * 执行上传
-     * @return bool|mixed
+     * @return bool
      */
-    public function upload()
+    public function upload(): bool
     {
         try {
             $ossClient = new OssClient(
@@ -49,10 +49,10 @@ class Aliyun extends Basics
 
     /**
      * 删除文件
-     * @param string $fileName
-     * @return bool|mixed
+     * @param string $filePath
+     * @return bool
      */
-    public function delete(string $fileName)
+    public function delete(string $filePath): bool
     {
         try {
             $ossClient = new OssClient(
@@ -61,7 +61,7 @@ class Aliyun extends Basics
                 $this->config['domain'],
                 true
             );
-            $ossClient->deleteObject($this->config['bucket'], $fileName);
+            $ossClient->deleteObject($this->config['bucket'], $filePath);
         } catch (OssException $e) {
             $this->error = $e->getMessage();
             return false;

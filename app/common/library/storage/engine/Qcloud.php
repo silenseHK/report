@@ -74,15 +74,15 @@ class Qcloud extends Basics
 
     /**
      * 删除文件
-     * @param string $fileName
+     * @param string $filePath
      * @return bool|mixed
      */
-    public function delete(string $fileName)
+    public function delete(string $filePath)
     {
         try {
             $result = $this->cosClient->deleteObject(array(
                 'Bucket' => $this->config['bucket'],
-                'Key' => $fileName
+                'Key' => $filePath
             ));
             return true;
         } catch (\Exception $e) {

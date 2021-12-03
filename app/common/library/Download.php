@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\library;
 
@@ -22,9 +22,9 @@ class Download
      * @param string $url
      * @param string $prefix
      * @return string
-     * @throws BaseException
+     * @throws \cores\exception\BaseException
      */
-    public function saveTempImage(int $storeId, string $url, string $prefix = 'temp')
+    public function saveTempImage(int $storeId, string $url, string $prefix = 'temp'): string
     {
         $savePath = $this->getSavePath($storeId, $prefix, $url);
         if (!file_exists($savePath)) {
@@ -39,14 +39,12 @@ class Download
      * 写入文件
      * @param string $savePath
      * @param string $result
-     * @return false|int
      */
     private function fwrite(string $savePath, string $result)
     {
         $fp = fopen($savePath, 'w');
-        $status = fwrite($fp, $result);
+        fwrite($fp, $result);
         fclose($fp);
-        return $status;
     }
 
     /**
@@ -59,7 +57,6 @@ class Download
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
         $result = curl_exec($ch);
         curl_close($ch);
         return $result;
@@ -72,7 +69,7 @@ class Download
      * @param string $url
      * @return string
      */
-    private function getSavePath(int $storeId, string $prefix, string $url)
+    private function getSavePath(int $storeId, string $prefix, string $url): string
     {
         $dirPath = $this->getDirPath($storeId);
         return $dirPath . '/' . $prefix . '_' . md5($url) . '.png';
@@ -83,11 +80,10 @@ class Download
      * @param int $storeId
      * @return string
      */
-    private function getDirPath(int $storeId)
+    private function getDirPath(int $storeId): string
     {
         $dirPath = runtime_root_path() . "image/{$storeId}";
         !is_dir($dirPath) && mkdir($dirPath, 0755, true);
         return $dirPath;
     }
-
 }

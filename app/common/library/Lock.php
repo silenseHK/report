@@ -24,10 +24,10 @@ class Lock
 
     /**
      * 加锁
-     * @param $uniqueId
+     * @param string $uniqueId
      * @return bool
      */
-    public static function lockUp($uniqueId)
+    public static function lockUp(string $uniqueId): bool
     {
         static::$resource[$uniqueId] = fopen(static::getFilePath($uniqueId), 'w+');
         return flock(static::$resource[$uniqueId], LOCK_EX);
@@ -35,10 +35,10 @@ class Lock
 
     /**
      * 解锁
-     * @param $uniqueId
+     * @param string $uniqueId
      * @return bool
      */
-    public static function unLock($uniqueId)
+    public static function unLock(string $uniqueId): bool
     {
         if (!isset(static::$resource[$uniqueId])) return false;
         flock(static::$resource[$uniqueId], LOCK_UN);
@@ -48,10 +48,10 @@ class Lock
 
     /**
      * 获取锁文件的路径
-     * @param $uniqueId
+     * @param string $uniqueId
      * @return string
      */
-    private static function getFilePath($uniqueId)
+    private static function getFilePath(string $uniqueId): string
     {
         $dirPath = runtime_root_path() . 'lock/';
         !is_dir($dirPath) && mkdir($dirPath, 0755, true);
@@ -60,10 +60,10 @@ class Lock
 
     /**
      * 删除锁文件
-     * @param $uniqueId
+     * @param string $uniqueId
      * @return bool
      */
-    private static function deleteFile($uniqueId)
+    private static function deleteFile(string $uniqueId): bool
     {
         $filePath = static::getFilePath($uniqueId);
         return file_exists($filePath) && unlink($filePath);

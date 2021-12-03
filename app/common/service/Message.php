@@ -42,11 +42,10 @@ class Message extends BaseService
      * @param int $storeId 商城ID
      * @return bool
      */
-    public static function send(string $sceneName, array $param, int $storeId)
+    public static function send(string $sceneName, array $param, int $storeId): bool
     {
         if (!isset(self::$sceneList[$sceneName])) return false;
         $class = self::$sceneList[$sceneName];
         return (new $class($storeId))->send($param);
     }
-
 }

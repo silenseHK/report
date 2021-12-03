@@ -175,7 +175,7 @@ abstract class Basics
     public function getSaveFileInfo(): array
     {
         // 自动生成的文件名称
-        // $hashName = $this->file->hashName(null);
+        //$hashName = $this->file->hashName(null);
         $hashName = $this->hashName();
         // 存储目录
         $filePath = $this->getFilePath($hashName);
@@ -198,7 +198,7 @@ abstract class Basics
      * 自动生成文件名
      * @return string
      */
-    private function hashName()
+    private function hashName(): string
     {
         return $this->file->hashName(function () {
             return date('Ymd') . DIRECTORY_SEPARATOR . md5(uniqid((string)mt_rand(), true));
@@ -235,5 +235,4 @@ abstract class Basics
     {
         return dirname($filePath);
     }
-
 }

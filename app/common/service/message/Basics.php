@@ -59,7 +59,7 @@ abstract class Basics extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    protected function sendSms(string $sceneValue, array $templateParams, array $sceneConfig = [])
+    protected function sendSms(string $sceneValue, array $templateParams, array $sceneConfig = []): bool
     {
         // 短信通知设置
         $smsConfig = SettingModel::getItem('sms', $this->storeId);

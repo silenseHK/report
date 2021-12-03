@@ -223,4 +223,15 @@ class helper
         }
         return false;
     }
+
+    /**
+     * 记录info日志
+     * @param string $name
+     * @param array $content
+     */
+    public static function logInfo(string $name, array $content)
+    {
+        $content['name'] = $name;
+        log_record($content, 'info');
+    }
 }

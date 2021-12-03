@@ -8,11 +8,12 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\library\express;
 
 use think\facade\Cache;
+use cores\traits\ErrorTrait;
 use app\common\library\helper;
 
 /**
@@ -22,11 +23,11 @@ use app\common\library\helper;
  */
 class Kuaidi100
 {
-    /* @var array $config 微信支付配置 */
-    private $config;
+    use ErrorTrait;
 
-    /* @var string $error 错误信息 */
-    private $error;
+    // 微信支付配置
+    /* @var array $config */
+    private $config;
 
     /**
      * 构造方法
@@ -40,16 +41,16 @@ class Kuaidi100
 
     /**
      * 执行查询
-     * @param $code
-     * @param $expressNo
+     * @param string $code
+     * @param string $expressNo
      * @return bool
      */
-    public function query($code, $expressNo)
+    public function query(string $code, string $expressNo): bool
     {
         // 缓存索引
         $cacheIndex = "express_{$code}_$expressNo";
-        if ($data = Cache::get($cacheIndex)) {
-            return $data;
+        if ($cacheData = Cache::get($cacheIndex)) {
+            return $cacheData;
         }
         // 参数设置
         $postData = [
@@ -67,21 +68,11 @@ class Kuaidi100
         $express = helper::jsonDecode($result);
         // 记录错误信息
         if (isset($express['returnCode']) || !isset($express['data'])) {
-            $this->error = isset($express['message']) ? $express['message'] : '查询失败';
+            $this->error = $express['message'] ?? '查询失败';
             return false;
         }
         // 记录缓存, 时效5分钟
         Cache::set($cacheIndex, $express['data'], 300);
         return $express['data'];
     }
-
-    /**
-     * 返回错误信息
-     * @return string
-     */
-    public function getError()
-    {
-        return $this->error;
-    }
-
 }

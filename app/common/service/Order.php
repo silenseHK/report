@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\service;
 
@@ -25,12 +25,12 @@ use app\common\service\goods\source\Factory as FactoryStock;
 class Order extends BaseService
 {
     /**
-     * 生成订单号
+     * 生成订单号`
      * @return string
      */
-    public static function createOrderNo()
+    public static function createOrderNo(): string
     {
-        return date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+        return date('Ymd') . substr(implode('', array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
     }
 
     /**

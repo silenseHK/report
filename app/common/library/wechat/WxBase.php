@@ -13,6 +13,7 @@ declare (strict_types=1);
 namespace app\common\library\wechat;
 
 use think\facade\Cache;
+use cores\traits\ErrorTrait;
 use app\common\library\helper;
 use app\common\exception\BaseException;
 
@@ -23,10 +24,10 @@ use app\common\exception\BaseException;
  */
 class WxBase
 {
+    use ErrorTrait;
+
     protected $appId;
     protected $appSecret;
-
-    protected $error;
 
     /**
      * 构造函数
@@ -48,7 +49,7 @@ class WxBase
     /**
      * 获取access_token
      * @return mixed
-     * @throws BaseException
+     * @throws \cores\exception\BaseException
      */
     protected function getAccessToken()
     {
@@ -79,7 +80,7 @@ class WxBase
      * @param string $url 请求地址
      * @param array $data
      * @return string $result
-     * @throws BaseException
+     * @throws \cores\exception\BaseException
      */
     protected function get(string $url, array $data = [])
     {
@@ -103,13 +104,13 @@ class WxBase
     /**
      * 模拟POST请求
      * @param string $url 请求地址
-     * @param array $data 请求数据
+     * @param mixed $data 请求数据
      * @param false $useCert 是否引入微信支付证书
      * @param array $sslCert 证书路径
      * @return mixed|bool|string
-     * @throws BaseException
+     * @throws \cores\exception\BaseException
      */
-    protected function post(string $url, $data = [], $useCert = false, $sslCert = [])
+    protected function post(string $url, $data = [], bool $useCert = false, array $sslCert = [])
     {
         $header = [
             'Content-type: application/json;'
@@ -142,9 +143,9 @@ class WxBase
      * @param $url
      * @param array $data
      * @return mixed
-     * @throws BaseException
+     * @throws \cores\exception\BaseException
      */
-    protected function post2($url, $data = [])
+    protected function post2($url, array $data = [])
     {
         $header = [
             'Content-Type: application/x-www-form-urlencoded'
@@ -169,7 +170,7 @@ class WxBase
      * @param $data
      * @return string
      */
-    protected function jsonEncode($data)
+    protected function jsonEncode($data): string
     {
         return helper::jsonEncode($data, JSON_UNESCAPED_UNICODE);
     }
@@ -183,14 +184,4 @@ class WxBase
     {
         return helper::jsonDecode($json);
     }
-
-    /**
-     * 返回错误信息
-     * @return mixed
-     */
-    public function getError()
-    {
-        return $this->error;
-    }
-
 }

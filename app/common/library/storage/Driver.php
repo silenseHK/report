@@ -43,10 +43,10 @@ class Driver
      * 构造方法
      * Driver constructor.
      * @param $config
-     * @param null|string $storage 指定存储方式，如不指定则为系统默认
+     * @param string|null $storage 指定存储方式，如不指定则为系统默认
      * @throws Exception
      */
-    public function __construct($config, $storage = null)
+    public function __construct($config, string $storage = null)
     {
         $this->config = $config;
         // 实例化当前存储引擎
@@ -58,7 +58,7 @@ class Driver
      * @param string $name
      * @return mixed
      */
-    public function setUploadFile($name = 'iFile')
+    public function setUploadFile(string $name = 'iFile')
     {
         return $this->engine->setUploadFile($name);
     }
@@ -78,7 +78,7 @@ class Driver
      * @param string $name
      * @return mixed
      */
-    public function setRootName($name = '')
+    public function setRootName(string $name = '')
     {
         return $this->engine->setRootName($name);
     }
@@ -131,11 +131,11 @@ class Driver
 
     /**
      * 获取当前的存储引擎
-     * @param null|string $storage 指定存储方式，如不指定则为系统默认
+     * @param string|null $storage 指定存储方式，如不指定则为系统默认
      * @return mixed
      * @throws Exception
      */
-    private function getEngineClass($storage = null)
+    private function getEngineClass(string $storage = null)
     {
         $storage = is_null($storage) ? $this->config['default'] : $storage;
         if (!isset(self::ENGINE_CLASS_LIST[$storage])) {
@@ -144,5 +144,4 @@ class Driver
         $class = self::ENGINE_CLASS_LIST[$storage];
         return new $class($storage, $this->config['engine'][$storage]);
     }
-
 }
