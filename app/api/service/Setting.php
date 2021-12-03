@@ -56,8 +56,6 @@ class Setting extends BaseService
      */
     public function getOtherSetting(): array
     {
-        // 分销中心是否开启
-        $data['isEnabledDealer'] = DealerSettingModel::isEnabled();
         // H5端访问地址
         $data['h5Url'] = H5SettingModel::getH5Url();
         return $data;
