@@ -344,12 +344,15 @@ function get_guid_v4(bool $trim = true): string
 
 /**
  * 时间戳转换日期
- * @param $timeStamp
+ * @param int|string $timeStamp 时间戳
+ * @param bool $withTime 是否关联时间
  * @return false|string
  */
-function format_time($timeStamp)
+function format_time($timeStamp, bool $withTime = true)
 {
-    return date('Y-m-d H:i:s', $timeStamp);
+    $format = 'Y-m-d';
+    $withTime && $format .= ' H:i:s';
+    return $timeStamp ? date($format, $timeStamp) : '';
 }
 
 /**
