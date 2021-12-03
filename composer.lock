@@ -1626,13 +1626,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/tencentyun/cos-php-sdk-v5/zipball/1b32aa422f6dffe4ea411e5095e4b0da9135551b",
                 "reference": "1b32aa422f6dffe4ea411e5095e4b0da9135551b",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "guzzle/guzzle": "~3.7",
@@ -1664,6 +1658,10 @@
                 "php",
                 "qcloud"
             ],
+            "support": {
+                "issues": "https://github.com/tencentyun/cos-php-sdk-v5/issues",
+                "source": "https://github.com/tencentyun/cos-php-sdk-v5/tree/1.3"
+            },
             "time": "2019-09-02T12:08:44+00:00"
         },
         {
