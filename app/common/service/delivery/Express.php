@@ -56,7 +56,7 @@ class Express extends BaseService
      * 验证用户收货地址是否在配送范围
      * @return bool
      */
-    public function isIntraRegion()
+    public function isIntraRegion(): bool
     {
         if (!$this->cityId) return false;
         foreach ($this->data as $item) {
@@ -110,7 +110,7 @@ class Express extends BaseService
      * @return float|int|mixed
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException\
+     * @throws \think\db\exception\ModelNotFoundException
      */
     private function getFinalFreight()
     {
@@ -140,7 +140,7 @@ class Express extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function freeshipping()
+    private function freeshipping(): bool
     {
         // 订单商品总金额
         $orderTotalPrice = helper::getArrayColumnSum($this->goodsList, 'total_price');

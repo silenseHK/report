@@ -68,5 +68,4 @@ class Payment extends Basics
         $orderInfo = $this->param['order'];
         $this->sendSms(SettingSmsScene::ORDER_PAY, ['order_no' => $orderInfo['order_no']]);
     }
-
 }

@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\service\message\passport;
 
@@ -33,14 +33,10 @@ class Captcha extends Basics
      */
     public function send(array $param)
     {
-        // 短信api参数
-        $sceneConfig = ['acceptPhone' => $param['mobile']];
-        $templateParams = ['code' => $param['code']];
         // 发送短信
-        if (!$this->sendSms(SettingSmsScene::CAPTCHA, $templateParams, $sceneConfig)) {
+        if (!$this->sendSms(SettingSmsScene::CAPTCHA, $param['mobile'], ['code' => $param['code']])) {
             throwError('短信发送失败：' . $this->getError());
         }
         return true;
     }
-
 }

@@ -194,10 +194,29 @@ class Setting extends BaseModel
                     'engine' => [
                         // 阿里云
                         'aliyun' => [
+                            'name' => '阿里云短信',
+                            'website' => 'https://dysms.console.aliyun.com/dysms.htm',
                             'AccessKeyId' => '',
                             'AccessKeySecret' => '',
                             'sign' => '萤火商城'   // 短信签名
-                        ]
+                        ],
+                        // 腾讯云
+                        'qcloud' => [
+                            'name' => '腾讯云短信',
+                            'website' => 'https://console.cloud.tencent.com/smsv2',
+                            'SdkAppID' => '',
+                            'AccessKeyId' => '',
+                            'AccessKeySecret' => '',
+                            'sign' => '萤火商城'   // 短信签名
+                        ],
+                        // 七牛云
+                        'qiniu' => [
+                            'name' => '七牛云短信',
+                            'website' => 'https://portal.qiniu.com/sms/dashboard',
+                            'AccessKey' => '',
+                            'SecretKey' => '',
+                            'sign' => '萤火商城'   // 短信签名
+                        ],
                     ],
                     // 短信通知场景
                     'scene' => [

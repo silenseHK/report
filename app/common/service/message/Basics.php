@@ -8,13 +8,15 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\service\message;
 
-use app\common\model\store\Setting as SettingModel;
-use app\common\library\sms\Driver as SmsDriver;
+use cores\traits\ErrorTrait;
 use app\common\service\BaseService;
+use app\common\library\sms\Driver as SmsDriver;
+use app\common\model\store\Setting as SettingModel;
+use app\common\model\wxapp\Setting as WxappSettingModel;
 
 /**
  * 消息通知服务[基类]
@@ -23,12 +25,13 @@ use app\common\service\BaseService;
  */
 abstract class Basics extends BaseService
 {
+    use ErrorTrait;
+
     // 参数列表
     protected $param = [];
+
     // 商城ID
     protected $storeId;
-    // 错误信息
-    protected $error = '';
 
     /**
      * 构造方法
@@ -49,28 +52,70 @@ abstract class Basics extends BaseService
     abstract public function send(array $param);
 
     /**
-     * 发送短信提醒
-     * @param string $sceneValue
-     * @param array $templateParams
-     * @param array $sceneConfig
+     * 发送短信通知
+     * @param string $sceneValue 短信发送场景
+     * @param string $acceptPhone 接收的手机号
+     * @param array $templateParams 短信模板参数
      * @return bool
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    protected function sendSms(string $sceneValue, array $templateParams, array $sceneConfig = []): bool
+    protected function sendSms(string $sceneValue, string $acceptPhone, array $templateParams): bool
     {
         // 短信通知设置
-        $smsConfig = SettingModel::getItem('sms', $this->storeId);
+        $smsConfig = $this->getSmsConfig();
         // 短信服务
         $SmsDriver = new SmsDriver($smsConfig);
-        // 发送短信
-        if (!$SmsDriver->sendSms($sceneValue, $templateParams, $sceneConfig)) {
-            $this->error = $SmsDriver->getError();
+        try {
+            // 判断短信服务是否开启
+            $this->isEnableSms($smsConfig, $sceneValue);
+            // 获取短信模板ID
+            $templateCode = $this->getSmsTemplateCode($smsConfig, $sceneValue);
+            // 执行发送短信
+            $SmsDriver->sendSms($acceptPhone, $templateCode, $templateParams);
+            return true;
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
             return false;
         }
-        return true;
+    }
+
+    /**
+     * 获取短信通知设置
+     * @return array|mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    private function getSmsConfig()
+    {
+        return SettingModel::getItem('sms', $this->storeId);
+    }
+
+    /**
+     * 判断短信服务是否开启
+     * @param array $smsConfig 短信设置
+     * @param string $sceneValue 短信发送场景
+     * @throws \cores\exception\BaseException
+     */
+    private function isEnableSms(array $smsConfig, string $sceneValue)
+    {
+        if (!$smsConfig['scene'][$sceneValue]['isEnable']) {
+            throwError('短信通知服务未开启，请在商户后台中设置');
+        }
+    }
+
+    /**
+     * 获取短信模板ID
+     * @param array $smsConfig 短信设置
+     * @param string $sceneValue 短信发送场景
+     * @return string
+     */
+    private function getSmsTemplateCode(array $smsConfig, string $sceneValue): string
+    {
+        return $smsConfig['scene'][$sceneValue]['templateCode'];
     }
 
     /**
@@ -84,14 +129,4 @@ abstract class Basics extends BaseService
     {
         return str_substr($content, $length);
     }
-
-    /**
-     * 获取错误信息
-     * @return mixed
-     */
-    public function getError()
-    {
-        return $this->error;
-    }
-
 }
