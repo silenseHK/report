@@ -62,6 +62,12 @@ class UserCoupon extends UserCouponModel
             $filter[] = ['start_time', '<=', time()];
             $filter[] = ['end_time', '>', time()];
         }
+        // 未使用的优惠券
+        if ($params['dataType'] === 'isUnused') {
+            $filter[] = ['is_use', '=', 0];
+            $filter[] = ['is_expire', '=', 0];
+            $filter[] = ['end_time', '>', time()];
+        }
         // 已过期的优惠券
         if ($params['dataType'] === 'isExpire') {
             $filter[] = ['is_expire', '=', 1];
