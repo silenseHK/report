@@ -23,7 +23,7 @@ class helper
      * @param array $columns
      * @return array
      */
-    public static function pick($source, array $columns)
+    public static function pick($source, array $columns): array
     {
         $dataset = [];
         foreach ($source as $key => $item) {
@@ -53,7 +53,7 @@ class helper
      * @param $columns
      * @return array
      */
-    public static function getArrayColumns($source, $columns)
+    public static function getArrayColumns($source, $columns): array
     {
         $columnArr = [];
         foreach ($source as $item) {
@@ -72,7 +72,7 @@ class helper
      * @param $index
      * @return array
      */
-    public static function arrayColumn2Key($source, $index)
+    public static function arrayColumn2Key($source, $index): array
     {
         $data = [];
         foreach ($source as $item) {
@@ -116,10 +116,10 @@ class helper
      * 在二维数组中查找指定值
      * @param array $array 二维数组
      * @param string $searchIdx 查找的索引
-     * @param string $searchVal 查找的值
+     * @param mixed $searchVal 查找的值
      * @return bool
      */
-    public static function arraySearch($array, $searchIdx, $searchVal)
+    public static function arraySearch(array $array, string $searchIdx, $searchVal): bool
     {
         foreach ($array as $item) {
             if ($item[$searchIdx] == $searchVal) return $item;

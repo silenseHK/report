@@ -12,8 +12,9 @@ declare (strict_types = 1);
 
 namespace app\store\controller;
 
-use app\common\exception\BaseException;
+use think\response\Json;
 use app\store\model\Goods as GoodsModel;
+use app\common\exception\BaseException;
 
 /**
  * 商品管理控制器
@@ -24,10 +25,10 @@ class Goods extends Controller
 {
     /**
      * 商品列表
-     * @return array
+     * @return Json
      * @throws \think\db\exception\DbException
      */
-    public function list()
+    public function list(): Json
     {
         // 获取列表记录
         $model = new GoodsModel;
@@ -38,9 +39,9 @@ class Goods extends Controller
     /**
      * 根据商品ID集获取列表记录
      * @param array $goodsIds
-     * @return array
+     * @return Json
      */
-    public function listByIds(array $goodsIds)
+    public function listByIds(array $goodsIds): Json
     {
         // 获取列表记录
         $model = new GoodsModel;
@@ -51,13 +52,13 @@ class Goods extends Controller
     /**
      * 商品详情
      * @param int $goodsId
-     * @return array
+     * @return Json
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function detail(int $goodsId)
+    public function detail(int $goodsId): Json
     {
         // 获取商品详情
         $model = new GoodsModel;
@@ -67,12 +68,12 @@ class Goods extends Controller
 
     /**
      * 添加商品
-     * @return array
+     * @return Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function add()
+    public function add(): Json
     {
         $model = new GoodsModel;
         if ($model->add($this->postForm())) {
@@ -84,12 +85,12 @@ class Goods extends Controller
     /**
      * 编辑商品
      * @param int $goodsId
-     * @return array
+     * @return Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function edit(int $goodsId)
+    public function edit(int $goodsId): Json
     {
         // 商品详情
         $model = GoodsModel::detail($goodsId);
@@ -104,9 +105,9 @@ class Goods extends Controller
      * 修改商品状态(上下架)
      * @param array $goodsIds 商品id集
      * @param bool $state 为true表示上架
-     * @return array
+     * @return Json
      */
-    public function state(array $goodsIds, bool $state)
+    public function state(array $goodsIds, bool $state): Json
     {
         $model = new GoodsModel;
         if (!$model->setStatus($goodsIds, $state)) {
@@ -120,7 +121,7 @@ class Goods extends Controller
      * @param array $goodsIds
      * @return array
      */
-    public function delete(array $goodsIds)
+    public function delete(array $goodsIds): Json
     {
         $model = new GoodsModel;
         if (!$model->setDelete($goodsIds)) {

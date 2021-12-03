@@ -32,7 +32,7 @@ class Spec extends SpecModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public static function getNewSpecList(array $specList)
+    public static function getNewSpecList(array $specList): array
     {
         // 规格组名称合集
         $names = helper::getArrayColumn($specList, 'spec_name');

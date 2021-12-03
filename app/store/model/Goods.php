@@ -150,7 +150,7 @@ class Goods extends GoodsModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function edit(array $data)
+    public function edit(array $data): bool
     {
         // 创建商品数据
         $data = $this->createData($data);
