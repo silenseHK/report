@@ -1,7 +1,32 @@
 ﻿
-# 订单导出Excel记录表
+# v2.0.4
+# 修改时间：2021-11-29
+ALTER TABLE `yoshop_wxapp` COMMENT='微信小程序记录表（已废弃）';
+
+CREATE TABLE `yoshop_wxapp_setting` (
+  `key` varchar(30) NOT NULL DEFAULT '' COMMENT '设置项标示',
+  `describe` varchar(255) NOT NULL DEFAULT '' COMMENT '设置项描述',
+  `values` mediumtext NOT NULL COMMENT '设置内容(json格式)',
+  `store_id` int unsigned NOT NULL DEFAULT '0' COMMENT '商城ID',
+  `update_time` int unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  UNIQUE KEY `unique_key` (`key`,`store_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='微信小程序设置表';
+
+
+CREATE TABLE `yoshop_h5_setting` (
+  `key` varchar(30) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '设置项标示',
+  `describe` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '设置项描述',
+  `values` mediumtext CHARACTER SET utf8 NOT NULL COMMENT '设置内容(json格式)',
+  `store_id` int unsigned NOT NULL DEFAULT '0' COMMENT '商城ID',
+  `update_time` int unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  UNIQUE KEY `unique_key` (`key`,`store_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='H5端设置表';
+
+
+--------------------------------------------
+
+# v2.0.3
 # 修改时间：2021-10-19
-## v2.0.3
 DROP TABLE IF EXISTS `yoshop_order_export`;
 CREATE TABLE `yoshop_order_export` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
@@ -16,9 +41,8 @@ CREATE TABLE `yoshop_order_export` (
 ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='订单导出Excel记录表';
 
 
-# 后台删除订单权限
+# v2.0.3
 # 修改时间：2021-10-19
-## v2.0.3
 INSERT INTO `yoshop_store_api` VALUES ('11185', '删除订单', '/order.event/delete', '11132', '135', '1614556800', '1614556800');
 INSERT INTO `yoshop_store_menu` VALUES ('10141', '20', '删除订单', '', 'delete', '10051', '115', '1614556800', '1614556800');
 INSERT INTO `yoshop_store_menu_api` VALUES ('10661', '10141', '11185', '1614556800');
@@ -26,30 +50,27 @@ INSERT INTO `yoshop_store_menu_api` VALUES ('10662', '10141', '11132', '16145568
 INSERT INTO `yoshop_store_menu_api` VALUES ('10663', '10141', '11076', '1614556800');
 
 
-# 下单来源客户端
+# v2.0.3
 # 修改时间：2021-10-19
-## v2.0.3
 ALTER TABLE `yoshop_order`
 ADD COLUMN `platform`  varchar(20) NOT NULL DEFAULT '' COMMENT '来源客户端 (APP、H5、小程序等)' AFTER `order_source_id`;
 
 --------------------------------------------
 
-# 第三方用户信息表 - 添加索引
+
+# v2.0.1
 # 修改时间：2021-3-26
-# 当前版本号：v2.0.1
 ALTER TABLE `yoshop_user_oauth` ADD INDEX `oauth_type_2` (`oauth_type`, `oauth_id`) USING BTREE ;
 
 
-# 第三方用户信息表 - 添加字段：是否删除
+# v2.0.1
 # 修改时间：2021-3-26
-# 当前版本号：v2.0.1
 ALTER TABLE `yoshop_user_oauth`
 ADD COLUMN `is_delete`  tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否删除' AFTER `store_id` ;
 
 
-# 省市区数据表 - 补充部分城市缺失的3级区划 (东莞市、中山市、三沙市、儋州市、嘉峪关市)
+# v2.0.1
 # 修改时间：2021-6-2
-# 当前版本号：v2.0.1
 INSERT INTO `yoshop_region` VALUES ('3620', '东城街道', '2051', '﻿44190', '3');
 INSERT INTO `yoshop_region` VALUES ('3621', '南城街道', '2051', '441900', '3');
 INSERT INTO `yoshop_region` VALUES ('3622', '万江街道', '2051', '441900', '3');

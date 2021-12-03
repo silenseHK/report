@@ -189,7 +189,7 @@ class helper
      * @param int $options
      * @return string
      */
-    public static function jsonEncode($data, int $options = JSON_UNESCAPED_UNICODE)
+    public static function jsonEncode($data, int $options = JSON_UNESCAPED_UNICODE): string
     {
         return json_encode($data, $options);
     }
@@ -199,7 +199,7 @@ class helper
      * @param $json
      * @return array
      */
-    public static function jsonDecode($json)
+    public static function jsonDecode($json): array
     {
         return json_decode($json, true);
     }
@@ -209,7 +209,7 @@ class helper
      * @param $path
      * @return bool
      */
-    public static function checkWriteable($path)
+    public static function checkWriteable($path): bool
     {
         try {
             !is_dir($path) && mkdir($path, 0755);
@@ -223,5 +223,4 @@ class helper
         }
         return false;
     }
-
 }

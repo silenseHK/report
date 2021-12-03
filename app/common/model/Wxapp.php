@@ -13,12 +13,11 @@ declare (strict_types=1);
 namespace app\common\model;
 
 use cores\BaseModel;
-
 use think\facade\Cache;
 use app\common\exception\BaseException;
 
 /**
- * 微信小程序模型
+ * 微信小程序模型 (当前类已废弃，请勿使用)
  * Class Wxapp
  * @package app\common\model
  */

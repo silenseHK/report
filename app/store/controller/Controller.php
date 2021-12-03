@@ -16,6 +16,7 @@ use cores\BaseController;
 use app\store\service\Auth as AuthService;
 use app\common\service\store\User as StoreUserService;
 use app\common\exception\BaseException;
+use think\response\Json;
 
 /**
  * 商户后台控制器基类
@@ -94,7 +95,7 @@ class Controller extends BaseController
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function checkPrivilege()
+    private function checkPrivilege(): bool
     {
         // 在开发模式下, 建议把此处代码暂时屏蔽, 开发完成后在超管后台新增菜单和api
         if (!AuthService::getInstance()->checkPrivilege('/' . $this->routeUri)) {
@@ -124,7 +125,7 @@ class Controller extends BaseController
      * @return bool
      * @throws BaseException
      */
-    private function checkLogin()
+    private function checkLogin(): bool
     {
         // 验证当前请求是否在白名单
         if (in_array($this->routeUri, $this->allowAllAction)) {
@@ -141,7 +142,7 @@ class Controller extends BaseController
      * 获取当前store_id
      * @return int|null
      */
-    protected function getStoreId()
+    protected function getStoreId(): ?int
     {
         // app/store/common.php
         return getStoreId();
@@ -152,9 +153,9 @@ class Controller extends BaseController
      * @param int|null $status 状态码
      * @param string $message
      * @param array $data
-     * @return array
+     * @return Json
      */
-    protected function renderData(int $status = null, string $message = '', array $data = [])
+    protected function renderData(int $status = null, string $message = '', array $data = []): Json
     {
         is_null($status) && $status = config('status.success');
         return json(compact('status', 'message', 'data'));
@@ -164,9 +165,9 @@ class Controller extends BaseController
      * 返回操作成功json
      * @param array|string $data
      * @param string $message
-     * @return array
+     * @return Json
      */
-    protected function renderSuccess($data = [], string $message = 'success')
+    protected function renderSuccess($data = [], string $message = 'success'): Json
     {
         if (is_string($data)) {
             $message = $data;
@@ -179,9 +180,9 @@ class Controller extends BaseController
      * 返回操作失败json
      * @param string $message
      * @param array $data
-     * @return array
+     * @return Json
      */
-    protected function renderError(string $message = 'error', array $data = [])
+    protected function renderError(string $message = 'error', array $data = []): Json
     {
         return $this->renderData(config('status.error'), $message, $data);
     }
@@ -198,10 +199,10 @@ class Controller extends BaseController
 
     /**
      * 获取post数据 (数组)
-     * @param $key
+     * @param string $key
      * @return mixed
      */
-    protected function postForm($key = 'form')
+    protected function postForm(string $key = 'form')
     {
         return $this->postData($key);
     }
@@ -221,7 +222,7 @@ class Controller extends BaseController
      * @return bool
      * @throws BaseException
      */
-    private function checkMethodRules()
+    private function checkMethodRules(): bool
     {
         if (!isset($this->methodRules[$this->action])) {
             return true;

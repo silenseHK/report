@@ -8,50 +8,46 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
-namespace app\store\controller\client;
+namespace app\store\controller\client\wxapp;
 
 use app\store\controller\Controller;
-use app\store\model\Wxapp as WxappModel;
+use app\store\model\wxapp\Setting as SettingModel;
+use think\response\Json;
 
 /**
- * 微信小程序管理
- * Class Wxapp
- * @package app\store\controller
+ * 微信小程序设置
+ * Class Setting
+ * @package app\store\controller\apps\wxapp
  */
-class Wxapp extends Controller
+class Setting extends Controller
 {
     /**
-     * 微信小程序详情
-     * @return array
+     * 获取微信小程序设置 (指定)
+     * @param string $key
+     * @return Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function detail()
+    public function detail(string $key): Json
     {
-        // 当前小程序信息
-        $detail = WxappModel::detail($this->storeId);
+        $detail = SettingModel::getItem($key);
         return $this->renderSuccess(compact('detail'));
     }
 
     /**
-     * 微信小程序设置
-     * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
+     * 更新设置项
+     * @param string $key
+     * @return Json
      */
-    public function setting()
+    public function update(string $key): Json
     {
-        // 当前小程序信息
-        $model = WxappModel::detail($this->storeId);
-        // 更新小程序设置
-        if ($model->edit($this->postForm())) {
+        $model = new SettingModel;
+        if ($model->edit($key, $this->postForm())) {
             return $this->renderSuccess('更新成功');
         }
         return $this->renderError($model->getError() ?: '更新失败');
     }
-
 }
