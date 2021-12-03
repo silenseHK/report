@@ -21,13 +21,6 @@ use think\facade\Request;
  */
 class AppService extends Service
 {
-    /**
-     * 是否记录访问日志
-     * 建议在当前运行时出错或者需要debug时开启
-     * @var bool
-     */
-    private $enabled = false;
-
     // 服务注册
     public function register()
     {
@@ -38,9 +31,8 @@ class AppService extends Service
     public function boot()
     {
         // 记录访问日志
-        if ($this->enabled && !is_debug()) {
-            $log = '';
-            $log .= $this->getVisitor();
+        if (env('access_log') && !is_debug()) {
+            $log = $this->getVisitor();
             $log .= "\r\n" . '[ header ] ' . print_r(Request::header(), true);
             $log .= "" . '[ param ] ' . print_r(Request::param(), true);
             $log .= "\r\n" . '--------------------------------------------------------------------------------------------';
@@ -52,7 +44,7 @@ class AppService extends Service
      * 获取请求路径信息
      * @return string
      */
-    private function getVisitor()
+    private function getVisitor(): string
     {
         $data = [Request::ip(), Request::method(), Request::url(true)];
         return implode(' ', $data);

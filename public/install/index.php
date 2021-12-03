@@ -21,7 +21,7 @@ if (phpversion() < '7.1') {
 set_time_limit(0);
 
 // 设置系统路径
-define('IN_INSTALL', TRUE);
+define('IN_INSTALL', true);
 define('INSTALL_PATH', str_replace('\\', '/', dirname(__FILE__)));
 define('ROOT_PATH', dirname(INSTALL_PATH, 2));
 
@@ -92,7 +92,7 @@ if ($s == 3) {
 
         // 连接证数据库
         try {
-            $dsn = "mysql:host=$dbhost;port=$dbport;charset=utf8";
+            $dsn = "mysql:host={$dbhost};port={$dbport};charset=utf8";
             $pdo = new PDO($dsn, $dbuser, $dbpwd);
             $pdo->query("SET NAMES utf8"); // 设置数据库编码
         } catch (Exception $e) {
@@ -186,6 +186,7 @@ if ($s == 63832) {
     $dbhost = $_GET['dbhost'] ?? '';
     $dbuser = $_GET['dbuser'] ?? '';
     $dbpwd = $_GET['dbpwd'] ?? '';
+    $dbport = $_GET['dbport'] ?? '';
     try {
         $dsn = "mysql:host=$dbhost;charset=utf8";
         $pdo = new PDO($dsn, $dbuser, $dbpwd);

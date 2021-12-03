@@ -24,11 +24,21 @@
                         <span class="cnote">数据库服务器地址, 一般为 localhost</span></td>
                 </tr>
                 <tr>
-                    <td height="40" align="right">数据库名称：</td>
-                    <td><input type="text" name="dbname" id="dbname" class="input" value="yoshop2_db"/></td>
+                    <td width="30%" height="40" align="right">数据库端口号：</td>
+                    <td>
+                        <input type="text" name="dbport" id="dbport" class="input" value="3306"/>
+                        <span class="cnote">数据库端口号, 一般为 3306</span>
+                    </td>
                 </tr>
                 <tr>
-                    <td height="40" align="right">数据库用户：</td>
+                    <td height="40" align="right">数据库名称：</td>
+                    <td>
+                        <input type="text" name="dbname" id="dbname" class="input" value="yoshop2_db"/>
+                        <span class="cnote">数据库的名称，如果没有请先新增</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td height="40" align="right">数据库用户名：</td>
                     <td><input type="text" name="dbuser" id="dbuser" class="input" value="root"/></td>
                 </tr>
                 <tr>

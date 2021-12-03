@@ -121,13 +121,14 @@ function CheckPwd() {
         data: {
             s: 63832,
             dbhost: $("#dbhost").val(),
+            dbport: $("#dbport").val(),
             dbuser: $("#dbuser").val(),
             dbpwd: $("#dbpwd").val(),
         },
         type: 'get',
         dataType: 'html',
         success: function (data) {
-            if (data == 'true') {
+            if (data === 'true') {
                 $('#cpwdTxt').html('<span class="correct">可用</span>');
                 $('#cpwd').val("true");
             } else {

@@ -13,7 +13,10 @@ declare (strict_types=1);
 namespace app\api\model;
 
 use think\facade\Cache;
+use edward\captcha\facade\CaptchaApi;
+use app\api\service\User as UserService;
 use app\common\model\User as UserModel;
+use cores\exception\BaseException;
 
 /**
  * 用户模型类
@@ -36,20 +39,17 @@ class User extends UserModel
 
     /**
      * 获取器：隐藏手机号中间四位
-     * @param $value
-     * @return mixed
+     * @param string $value
+     * @return string
      */
-    public function getMobileAttr($value)
+    public function getMobileAttr(string $value): string
     {
-        if (strlen($value) === 11) {
-            return hide_mobile($value);
-        }
-        return $value;
+        return strlen($value) === 11 ? hide_mobile($value) : $value;
     }
 
     /**
      * 获取用户信息
-     * @param $token
+     * @param string $token
      * @return bool|static
      */
     public static function getUserByToken(string $token)
@@ -62,5 +62,4 @@ class User extends UserModel
         }
         return false;
     }
-
 }
