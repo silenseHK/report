@@ -38,7 +38,7 @@ class GoodsSku extends GoodsSkuModel
      * @param array $skuList
      * @return array
      */
-    public static function getGoodsPrices(array $skuList)
+    public static function getGoodsPrices(array $skuList): array
     {
         $goodsPriceArr = helper::getArrayColumn($skuList, 'goods_price');
         return [min($goodsPriceArr), max($goodsPriceArr)];
@@ -49,7 +49,7 @@ class GoodsSku extends GoodsSkuModel
      * @param array $skuList
      * @return array
      */
-    public static function getLinePrices(array $skuList)
+    public static function getLinePrices(array $skuList): array
     {
         $linePriceArr = helper::getArrayColumn($skuList, 'line_price');
         return [min($linePriceArr), max($linePriceArr)];
@@ -61,7 +61,7 @@ class GoodsSku extends GoodsSkuModel
      * @param array $skuList
      * @return array
      */
-    public static function getNewSkuList(array $newSpecList, array $skuList)
+    public static function getNewSkuList(array $newSpecList, array $skuList): array
     {
         foreach ($skuList as &$skuItem) {
             $skuItem['specValueIds'] = static::getSpecValueIds($newSpecList, $skuItem['skuKeys']);
@@ -77,11 +77,12 @@ class GoodsSku extends GoodsSkuModel
      * @param array $skuKeys
      * @return array
      */
-    private static function getSpecValueIds(array $newSpecList, array $skuKeys)
+    private static function getSpecValueIds(array $newSpecList, array $skuKeys): array
     {
         $goodsSkuIdArr = [];
         foreach ($skuKeys as $skuKey) {
-            $specValueItem = $newSpecList[$skuKey['groupKey']]['valueList'][$skuKey['valueKey']];
+            $groupItem = helper::arraySearch($newSpecList, 'key', $skuKey['groupKey']);
+            $specValueItem = helper::arraySearch($groupItem['valueList'], 'key', $skuKey['valueKey']);
             $goodsSkuIdArr[] = $specValueItem['spec_value_id'];
         }
         return $goodsSkuIdArr;
@@ -93,12 +94,12 @@ class GoodsSku extends GoodsSkuModel
      * @param array $skuKeys
      * @return array
      */
-    private static function getGoodsProps(array $newSpecList, array $skuKeys)
+    private static function getGoodsProps(array $newSpecList, array $skuKeys): array
     {
         $goodsPropsArr = [];
         foreach ($skuKeys as $skuKey) {
-            $groupItem = $newSpecList[$skuKey['groupKey']];
-            $specValueItem = $groupItem['valueList'][$skuKey['valueKey']];
+            $groupItem = helper::arraySearch($newSpecList, 'key', $skuKey['groupKey']);
+            $specValueItem = helper::arraySearch($groupItem['valueList'], 'key', $skuKey['valueKey']);
             $goodsPropsArr[] = [
                 'group' => ['name' => $groupItem['spec_name'], 'id' => $groupItem['spec_id']],
                 'value' => ['name' => $specValueItem['spec_value'], 'id' => $specValueItem['spec_value_id']]
