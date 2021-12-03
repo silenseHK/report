@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\library\sms\engine;
 
@@ -64,7 +64,7 @@ class Aliyun extends Server
         // $params['SmsUpExtendCode'] = "1234567";
 
         // *** 需用户填写部分结束, 以下代码若无必要无需更改 ***
-        if (!empty($params['TemplateParam']) && is_array($params['TemplateParam'])) {
+        if (!empty($params['TemplateParam'])) {
             $params['TemplateParam'] = helper::jsonEncode($params['TemplateParam']);
         }
 

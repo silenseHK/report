@@ -46,7 +46,7 @@ class Setting extends BaseModel
      * @param $value
      * @return string
      */
-    public function setValuesAttr($value)
+    public function setValuesAttr($value): string
     {
         return helper::jsonEncode($value);
     }
@@ -101,7 +101,8 @@ class Setting extends BaseModel
             // 写入缓存中
             Cache::tag('cache')->set("setting_{$storeId}", $data);
         }
-        return $model->getMergeData($data);
+        // 合并默认设置
+        return array_merge_multiple($model->defaultData(), $data);
     }
 
     /**
@@ -118,20 +119,10 @@ class Setting extends BaseModel
     }
 
     /**
-     * 合并用户设置与默认数据
-     * @param array $actualData
-     * @return array
-     */
-    private function getMergeData(array $actualData): array
-    {
-        return array_merge_multiple($this->defaultData(), $actualData);
-    }
-
-    /**
      * 默认配置
      * @return array
      */
-    public function defaultData()
+    public function defaultData(): array
     {
         return [
             // 配送设置
@@ -290,5 +281,4 @@ class Setting extends BaseModel
             ]
         ];
     }
-
 }
