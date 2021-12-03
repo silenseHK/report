@@ -13,6 +13,7 @@ declare (strict_types=1);
 namespace app\store\model\order;
 
 use app\common\model\order\Export as ExportModel;
+use think\db\exception\DbException;
 
 /**
  * 订单导出Excel记录模型
@@ -23,10 +24,10 @@ class Export extends ExportModel
 {
     /**
      * 获取导出记录
-     * @return mixed
-     * @throws \think\db\exception\DbException
+     * @return \think\Paginator
+     * @throws DbException
      */
-    public function getList()
+    public function getList(): \think\Paginator
     {
         // 获取列表记录
         $list = $this->order(['create_time' => 'desc'])->paginate(10);
@@ -42,7 +43,7 @@ class Export extends ExportModel
      * @param $data
      * @return bool
      */
-    public function add($data)
+    public function add($data): bool
     {
         return $this->save($data);
     }

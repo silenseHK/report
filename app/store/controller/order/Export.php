@@ -12,10 +12,11 @@ declare (strict_types=1);
 
 namespace app\store\controller\order;
 
+use think\response\Json;
 use app\store\controller\Controller;
 use app\store\model\order\Export as ExportModel;
 use app\store\service\order\Export as ExportService;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 
 /**
  * 订单导出记录控制器
@@ -26,10 +27,10 @@ class Export extends Controller
 {
     /**
      * 执行订单导出excel
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      */
-    public function exportOrder()
+    public function exportOrder(): Json
     {
         $model = new ExportService;
         if (!$model->exportOrder($this->request->param())) {
@@ -40,10 +41,10 @@ class Export extends Controller
 
     /**
      * 订单导出记录
-     * @return array|\think\response\Json
+     * @return Json
      * @throws \think\db\exception\DbException
      */
-    public function list()
+    public function list(): Json
     {
         $model = new ExportModel;
         $list = $model->getList();

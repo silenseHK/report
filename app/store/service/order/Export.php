@@ -14,20 +14,20 @@ namespace app\store\service\order;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use app\store\model\Order as OrderModel;
-use app\store\model\order\Export as ExportModel;
-use app\store\model\OrderAddress as OrderAddressModel;
+use app\store\model\{Order as OrderModel, order\Export as ExportModel, OrderAddress as OrderAddressModel};
 use app\common\library\helper;
 use app\common\service\BaseService;
-use app\common\enum\order\PayType as PayTypeEnum;
-use app\common\enum\order\PayStatus as PayStatusEnum;
-use app\common\enum\order\OrderSource as OrderSourceEnum;
-use app\common\enum\order\OrderStatus as OrderStatusEnum;
-use app\common\enum\order\DeliveryType as DeliveryTypeEnum;
-use app\common\enum\order\ReceiptStatus as ReceiptStatusEnum;
-use app\common\enum\order\DeliveryStatus as DeliveryStatusEnum;
-use app\common\enum\order\export\ExportStatus as ExportStatusEnum;
-use app\common\exception\BaseException;
+use app\common\enum\order\{
+    PayType as PayTypeEnum,
+    PayStatus as PayStatusEnum,
+    OrderSource as OrderSourceEnum,
+    OrderStatus as OrderStatusEnum,
+    DeliveryType as DeliveryTypeEnum,
+    ReceiptStatus as ReceiptStatusEnum,
+    DeliveryStatus as DeliveryStatusEnum,
+    export\ExportStatus as ExportStatusEnum
+};
+use cores\exception\BaseException;
 
 /**
  * 服务层：订单导出Excel
@@ -81,10 +81,10 @@ class Export extends BaseService
      * 输出并写入到excel文件
      * @param array $columns 列名
      * @param array $excelList 表格内容
-     * @return bool
+     * @return string
      * @throws BaseException
      */
-    private function outputExcel(array $columns, array $excelList)
+    private function outputExcel(array $columns, array $excelList): string
     {
         // 生成工作表
         $spreadsheet = new Spreadsheet();
@@ -108,7 +108,7 @@ class Export extends BaseService
         }
         // 生成文件路径
         $fileName = 'order-' . time() . '.xlsx';
-        $filePath = 'temp/' . $this->getStoreId() . '/';
+        $filePath = $this->getExportPath();
         // 保存到文件
         try {
             $writer = new Xlsx($spreadsheet);
@@ -119,8 +119,24 @@ class Export extends BaseService
         return $filePath . $fileName;
     }
 
-    // 记录导出记录
-    private function record(array $param, string $filePath)
+    /**
+     * 获取导出的文件夹路径
+     * @return string
+     */
+    private function getExportPath(): string
+    {
+        $filePath = 'temp/' . $this->getStoreId() . '/';
+        !is_dir($filePath) && mkdir($filePath, 0755, true);
+        return $filePath;
+    }
+
+    /**
+     * 写入订单导出记录
+     * @param array $param
+     * @param string $filePath
+     * @return void
+     */
+    private function record(array $param, string $filePath): void
     {
         // 生成记录数据
         $data = [
@@ -136,7 +152,7 @@ class Export extends BaseService
         }
         // 新增记录
         $model = new ExportModel;
-        return $model->add($data);
+        $model->add($data);
     }
 
     /**
@@ -144,7 +160,7 @@ class Export extends BaseService
      * @param array $onlyFields
      * @return array
      */
-    private function getColumns(array $onlyFields)
+    private function getColumns(array $onlyFields): array
     {
         return array_values(helper::pick($this->dictionary(), $onlyFields));
     }
@@ -153,7 +169,7 @@ class Export extends BaseService
      * 订单记录字典
      * @return string[]
      */
-    private function dictionary()
+    private function dictionary(): array
     {
         return [
             'order_id' => '订单ID',
@@ -260,7 +276,7 @@ class Export extends BaseService
      * @param $order
      * @return string
      */
-    private function filterGoodsInfo($order)
+    private function filterGoodsInfo($order): string
     {
         $content = '';
         foreach ($order['goods'] as $key => $goods) {
@@ -277,7 +293,7 @@ class Export extends BaseService
      * @param $value
      * @return string
      */
-    private function filterValue($value)
+    private function filterValue($value): string
     {
         return $value;
         //return "\t" . $value . "\t";
