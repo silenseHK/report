@@ -222,19 +222,29 @@ class Setting extends BaseModel
                     'scene' => [
                         // 短信验证码
                         SettingSmsSceneEnum::CAPTCHA => [
-                            'name' => '短信验证码',  // 场景名称
+                            'name' => '短信验证码 (通知用户)',    // 场景名称
                             'isEnable' => false,     // 是否开启
-                            'templateCode' => '',   // 模板ID
-                            'content' => '验证码${code}，您正在进行身份验证，打死不要告诉别人哦！'
+                            'templateCode' => '',    // 模板ID
+                            'content' => '验证码%s，您正在进行身份验证，打死不要告诉别人哦！',
+                            'variables' => [
+                                'aliyun' => ['${code}'],
+                                'qiniu' => ['${code}'],
+                                'qcloud' => ['{1}'],
+                            ]
                         ],
                         // 新付款订单
                         SettingSmsSceneEnum::ORDER_PAY => [
-                            'name' => '新付款订单',  // 场景名称
+                            'name' => '新付款订单 (通知商家)',   // 场景名称
                             'isEnable' => false,    // 是否开启
                             'templateCode' => '',   // 模板ID
                             'acceptPhone' => '',    // 接收手机号
-                            'content' => '您有一条新订单，订单号为：${order_no}，请注意查看'
-                        ]
+                            'content' => '您有一条新订单，订单号为：%s，请注意查看',
+                            'variables' => [
+                                'aliyun' => ['${order_no}'],
+                                'qiniu' => ['${order_no}'],
+                                'qcloud' => ['{1}'],
+                            ]
+                        ],
                     ]
                 ],
             ],
