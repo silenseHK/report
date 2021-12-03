@@ -85,19 +85,8 @@ class RoleMenu extends RoleMenuModel
      * @param array $roleIds 角色ID集
      * @return array
      */
-    public static function getMenuIds(array $roleIds)
+    public static function getMenuIds(array $roleIds): array
     {
         return (new self)->where('role_id', 'in', $roleIds)->column('menu_id');
     }
-
-    /**
-     * 删除记录
-     * @param array $where
-     * @return int
-     */
-    public static function deleteAll(array $where)
-    {
-        return (new static)->where($where)->delete();
-    }
-
 }
