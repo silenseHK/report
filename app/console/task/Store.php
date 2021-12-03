@@ -27,7 +27,6 @@ class Store extends Task
      */
     public function handle()
     {
-        echo 'StoreTask' . PHP_EOL;
         // 遍历商城列表并执行定时任务
         $storeIds = StoreModel::getStoreIds();
         foreach ($storeIds as $storeId) {

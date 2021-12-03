@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\console\task;
 
@@ -33,7 +33,7 @@ class Task
     {
         if (!$this->hasTaskId($storeId, $key)) {
             $this->setTaskId($storeId, $key, $expire);
-            return $callback();
+            return call_user_func($callback);
         }
     }
 
@@ -41,9 +41,9 @@ class Task
      * 获取任务ID
      * @param int $storeId
      * @param string $key
-     * @return mixed
+     * @return bool
      */
-    protected function hasTaskId(int $storeId, string $key)
+    protected function hasTaskId(int $storeId, string $key): bool
     {
         return Cache::has("Listener:$storeId:$key");
     }
@@ -56,9 +56,8 @@ class Task
      * @param int $expire 任务ID过期时长(单位:秒)
      * @return bool
      */
-    protected function setTaskId(int $storeId, string $key, int $expire = 60)
+    protected function setTaskId(int $storeId, string $key, int $expire = 60): bool
     {
         return Cache::set("Listener:$storeId:$key", true, $expire);
     }
-
 }

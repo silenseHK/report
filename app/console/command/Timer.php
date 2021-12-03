@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\console\command;
 
@@ -85,6 +85,7 @@ class Timer extends Command
         return $this->timer = \Workerman\Lib\Timer::add($this->interval, function () use (&$task) {
             try {
                 // 这里执行系统预设的定时任务事件
+                echo 'timer...' . PHP_EOL;
                 Event::trigger('StoreTask');
             } catch (\Throwable $e) {
                 echo 'ERROR: ' . $e->getMessage() . PHP_EOL;
@@ -97,7 +98,7 @@ class Timer extends Command
      * 停止/删除定时器
      * @return bool
      */
-    public function stop()
+    public function stop(): bool
     {
         return \Workerman\Lib\Timer::del($this->timer);
     }
