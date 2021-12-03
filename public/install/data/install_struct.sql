@@ -942,7 +942,7 @@ CREATE TABLE `yoshop_wxapp_setting` (
   `store_id` int unsigned NOT NULL DEFAULT '0' COMMENT '商城ID',
   `update_time` int unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   UNIQUE KEY `unique_key` (`key`,`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8 COMMENT='微信小程序设置表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信小程序设置表';
 
 CREATE TABLE `yoshop_h5_setting` (
   `key` varchar(30) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '设置项标示',
@@ -951,6 +951,6 @@ CREATE TABLE `yoshop_h5_setting` (
   `store_id` int unsigned NOT NULL DEFAULT '0' COMMENT '商城ID',
   `update_time` int unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   UNIQUE KEY `unique_key` (`key`,`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8 COMMENT='H5端设置表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='H5端设置表';
 
 
