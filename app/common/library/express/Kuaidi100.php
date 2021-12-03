@@ -48,7 +48,7 @@ class Kuaidi100
     {
         // 缓存索引
         $cacheIndex = "express_{$code}_$expressNo";
-        if ($data = Cache::instance()->get($cacheIndex)) {
+        if ($data = Cache::get($cacheIndex)) {
             return $data;
         }
         // 参数设置
@@ -71,7 +71,7 @@ class Kuaidi100
             return false;
         }
         // 记录缓存, 时效5分钟
-        Cache::instance()->set($cacheIndex, $express['data'], 300);
+        Cache::set($cacheIndex, $express['data'], 300);
         return $express['data'];
     }
 

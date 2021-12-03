@@ -53,7 +53,7 @@ class WxBase
     protected function getAccessToken()
     {
         $cacheKey = $this->appId . '@access_token';
-        if (!Cache::instance()->get($cacheKey)) {
+        if (!Cache::get($cacheKey)) {
             // 请求API获取 access_token
             $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$this->appId}&secret={$this->appSecret}";
             $result = $this->get($url);
@@ -69,9 +69,9 @@ class WxBase
                 'result' => $result
             ]);
             // 写入缓存
-            Cache::instance()->set($cacheKey, $response['access_token'], 6000);
+            Cache::set($cacheKey, $response['access_token'], 6000);
         }
-        return Cache::instance()->get($cacheKey);
+        return Cache::get($cacheKey);
     }
 
     /**

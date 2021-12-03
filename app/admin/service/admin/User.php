@@ -31,7 +31,7 @@ class User extends BaseService
     public static function getLoginInfo()
     {
         if (($token = self::getToken()) !== false) {
-            return Cache::instance()->get($token);
+            return Cache::get($token);
         }
         return false;
     }
@@ -46,7 +46,7 @@ class User extends BaseService
         // 生成token
         $token = self::makeToken((int)$userInfo['admin_user_id']);
         // 记录缓存, 7天
-        Cache::instance()->set($token, [
+        Cache::set($token, [
             'user' => [
                 'admin_user_id' => (int)$userInfo['admin_user_id'],
                 'user_name' => $userInfo['user_name'],
@@ -62,7 +62,7 @@ class User extends BaseService
      */
     public static function logout()
     {
-        Cache::instance()->delete(self::getToken());
+        Cache::delete(self::getToken());
         return true;
     }
 
@@ -73,7 +73,7 @@ class User extends BaseService
      */
     public static function update(array $userInfo)
     {
-        return Cache::instance()->set(self::getToken(), [
+        return Cache::set(self::getToken(), [
             'user' => [
                 'admin_user_id' => $userInfo['admin_user_id'],
                 'user_name' => $userInfo['user_name'],
