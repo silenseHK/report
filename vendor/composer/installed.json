@@ -51,64 +51,6 @@
             "install-path": "../aliyuncs/oss-sdk-php"
         },
         {
-            "name": "edward1108/edward-captcha",
-            "version": "1.1",
-            "version_normalized": "1.1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Edward1108/edward-captcha.git",
-                "reference": "426ceee34507c30d4b21e0dd349b571371aef700"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Edward1108/edward-captcha/zipball/426ceee34507c30d4b21e0dd349b571371aef700",
-                "reference": "426ceee34507c30d4b21e0dd349b571371aef700",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0",
-                "topthink/framework": "^6.0.0"
-            },
-            "time": "2020-07-22T06:49:35+00:00",
-            "type": "library",
-            "extra": {
-                "think": {
-                    "services": [
-                        "edward\\captcha\\CaptchaService"
-                    ],
-                    "config": {
-                        "captcha": "src/config.php"
-                    }
-                }
-            },
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "edward\\captcha\\": "src/"
-                },
-                "files": [
-                    "src/helper.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "edward",
-                    "email": "xuyuanhua1987@163.com"
-                }
-            ],
-            "description": "ThinkPHP6验证码(图片、短信)支持api友好化",
-            "homepage": "https://github.com/Edward1108/edward-captcha",
-            "support": {
-                "issues": "https://github.com/Edward1108/edward-captcha/issues",
-                "source": "https://github.com/Edward1108/edward-captcha/tree/master"
-            },
-            "install-path": "../edward1108/edward-captcha"
-        },
-        {
             "name": "ezyang/htmlpurifier",
             "version": "v4.13.0",
             "version_normalized": "4.13.0.0",

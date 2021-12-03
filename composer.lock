@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cf40a283306f6aa7e8efb2cf562da734",
+    "content-hash": "0f9f50572ec0a76614af87a4b1acdb01",
     "packages": [
         {
             "name": "aliyuncs/oss-sdk-php",
@@ -52,61 +52,6 @@
             "description": "Aliyun OSS SDK for PHP",
             "homepage": "http://www.aliyun.com/product/oss/",
             "time": "2019-11-15T11:05:42+00:00"
-        },
-        {
-            "name": "edward1108/edward-captcha",
-            "version": "1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Edward1108/edward-captcha.git",
-                "reference": "426ceee34507c30d4b21e0dd349b571371aef700"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Edward1108/edward-captcha/zipball/426ceee34507c30d4b21e0dd349b571371aef700",
-                "reference": "426ceee34507c30d4b21e0dd349b571371aef700",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0",
-                "topthink/framework": "^6.0.0"
-            },
-            "type": "library",
-            "extra": {
-                "think": {
-                    "services": [
-                        "edward\\captcha\\CaptchaService"
-                    ],
-                    "config": {
-                        "captcha": "src/config.php"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "edward\\captcha\\": "src/"
-                },
-                "files": [
-                    "src/helper.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "edward",
-                    "email": "xuyuanhua1987@163.com"
-                }
-            ],
-            "description": "ThinkPHP6验证码(图片、短信)支持api友好化",
-            "homepage": "https://github.com/Edward1108/edward-captcha",
-            "support": {
-                "issues": "https://github.com/Edward1108/edward-captcha/issues",
-                "source": "https://github.com/Edward1108/edward-captcha/tree/master"
-            },
-            "time": "2020-07-22T06:49:35+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",

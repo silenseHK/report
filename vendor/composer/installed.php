@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '3c61d97d46a61a4d12312a4ccf194bfb127a2afa',
+        'reference' => '8c86675460affa759294bac5d9ca3530b972921c',
         'name' => 'topthink/think',
         'dev' => true,
     ),
@@ -17,15 +17,6 @@
             'install_path' => __DIR__ . '/../aliyuncs/oss-sdk-php',
             'aliases' => array(),
             'reference' => '053d7ba9e798e4c09b9c5c1edab153d25ea9643a',
-            'dev_requirement' => false,
-        ),
-        'edward1108/edward-captcha' => array(
-            'pretty_version' => '1.1',
-            'version' => '1.1.0.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../edward1108/edward-captcha',
-            'aliases' => array(),
-            'reference' => '426ceee34507c30d4b21e0dd349b571371aef700',
             'dev_requirement' => false,
         ),
         'ezyang/htmlpurifier' => array(
@@ -472,7 +463,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '3c61d97d46a61a4d12312a4ccf194bfb127a2afa',
+            'reference' => '8c86675460affa759294bac5d9ca3530b972921c',
             'dev_requirement' => false,
         ),
         'topthink/think-helper' => array(

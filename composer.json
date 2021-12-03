@@ -40,7 +40,6 @@
         "kosinix/grafika": "dev-master",
         "myclabs/php-enum": "^1.6",
         "lvht/geohash": "^1.1",
-        "edward1108/edward-captcha": "^1.1",
         "phpoffice/phpspreadsheet": "^1.18",
         "overtrue/easy-sms": "^2.0"
     },
