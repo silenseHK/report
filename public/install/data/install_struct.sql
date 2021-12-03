@@ -934,3 +934,23 @@ CREATE TABLE `yoshop_order_export` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `store_id` (`store_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='订单导出Excel记录表';
+
+CREATE TABLE `yoshop_wxapp_setting` (
+  `key` varchar(30) NOT NULL DEFAULT '' COMMENT '设置项标示',
+  `describe` varchar(255) NOT NULL DEFAULT '' COMMENT '设置项描述',
+  `values` mediumtext NOT NULL COMMENT '设置内容(json格式)',
+  `store_id` int unsigned NOT NULL DEFAULT '0' COMMENT '商城ID',
+  `update_time` int unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  UNIQUE KEY `unique_key` (`key`,`store_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8 COMMENT='微信小程序设置表';
+
+CREATE TABLE `yoshop_h5_setting` (
+  `key` varchar(30) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '设置项标示',
+  `describe` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '设置项描述',
+  `values` mediumtext CHARACTER SET utf8 NOT NULL COMMENT '设置内容(json格式)',
+  `store_id` int unsigned NOT NULL DEFAULT '0' COMMENT '商城ID',
+  `update_time` int unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  UNIQUE KEY `unique_key` (`key`,`store_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8 COMMENT='H5端设置表';
+
+
