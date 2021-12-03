@@ -31,10 +31,9 @@ use think\exception\HttpResponseException;
  */
 function pre($content, bool $export = false)
 {
-    header('Content-type: text/html; charset=utf-8');
     $output = $export ? var_export($content, true) : print_r($content, true);
     echo "<pre>{$output}</pre>";
-    die;
+    app_end();
 }
 
 /**

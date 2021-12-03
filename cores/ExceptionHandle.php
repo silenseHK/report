@@ -17,6 +17,7 @@ use think\facade\Log;
 use think\facade\Request;
 use think\exception\Handle;
 use think\db\exception\PDOException;
+use think\exception\HttpResponseException;
 use cores\exception\BaseException;
 
 /**
@@ -55,6 +56,9 @@ class ExceptionHandle extends Handle
      */
     public function render($request, Throwable $e): Response
     {
+        if ($e instanceof HttpResponseException) {
+            return $e->getResponse();
+        }
         // 手动触发的异常 BaseException
         if ($e instanceof BaseException) {
             $this->status = $e->status;
