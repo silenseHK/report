@@ -39,6 +39,8 @@ class Controller extends BaseController
         $this->storeId = $this->getStoreId();
         // 验证当前商城状态
         $this->checkStore();
+        // 验证当前客户端状态
+        $this->checkClient();
     }
 
     /**
@@ -46,7 +48,7 @@ class Controller extends BaseController
      * @return int|null
      * @throws BaseException
      */
-    protected function getStoreId()
+    protected function getStoreId(): ?int
     {
         $storeId = getStoreId();    // app/api/common.php
         if (empty($storeId)) {
@@ -57,10 +59,10 @@ class Controller extends BaseController
 
     /**
      * 验证当前商城状态
-     * @return bool
+     * @return void
      * @throws BaseException
      */
-    private function checkStore()
+    private function checkStore(): void
     {
         // 获取当前商城信息
         $store = StoreModel::detail($this->storeId);
@@ -70,7 +72,23 @@ class Controller extends BaseController
         if ($store['is_recycle'] || $store['is_delete']) {
             throwError('当前商城已删除');
         }
-        return true;
+    }
+
+    /**
+     * 验证当前客户端是否允许访问
+     * @throws BaseException
+     */
+    private function checkClient()
+    {
+        $client = getPlatform();
+        $settingClass = [
+            'H5' => [\app\api\model\h5\Setting::class, 'checkStatus', 'H5端']
+        ];
+        if (!isset($settingClass[$client])) {
+            return;
+        }
+        $status = call_user_func([$settingClass[$client][0], $settingClass[$client][1]]);
+        $status === false && throwError('很抱歉，当前' . $settingClass[$client][2] . '端暂不支持访问');
     }
 
     /**

@@ -21,5 +21,15 @@ use app\common\model\h5\Setting as SettingModel;
  */
 class Setting extends SettingModel
 {
-
+    /**
+     * 验证当前是否允许访问
+     * @return bool
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public static function checkStatus(): bool
+    {
+        return (bool)static::getItem('basic', static::$storeId)['enabled'];
+    }
 }
