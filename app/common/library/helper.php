@@ -187,9 +187,9 @@ class helper
      * 数组转为json
      * @param $data
      * @param int $options
-     * @return string
+     * @return false|string
      */
-    public static function jsonEncode($data, int $options = JSON_UNESCAPED_UNICODE): string
+    public static function jsonEncode($data, int $options = JSON_UNESCAPED_UNICODE)
     {
         return json_encode($data, $options);
     }
@@ -197,9 +197,9 @@ class helper
     /**
      * json转义为数组
      * @param $json
-     * @return array
+     * @return array|mixed
      */
-    public static function jsonDecode($json): array
+    public static function jsonDecode($json)
     {
         return json_decode($json, true);
     }

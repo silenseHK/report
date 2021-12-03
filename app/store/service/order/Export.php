@@ -45,7 +45,7 @@ class Export extends BaseService
      * @return bool
      * @throws BaseException
      */
-    public function exportOrder(array $param)
+    public function exportOrder(array $param): bool
     {
         // 根据条件查询订单列表
         $orderList = $this->getOrderList($param);
@@ -196,7 +196,7 @@ class Export extends BaseService
      * @param array $onlyFields
      * @return array
      */
-    private function getExcelList(array $orderList, array $onlyFields)
+    private function getExcelList(array $orderList, array $onlyFields): array
     {
         // 获取订单表格数据
         $excelList = $this->getOrderDataForExcel($orderList);
@@ -213,7 +213,7 @@ class Export extends BaseService
      * @param $orderList
      * @return array
      */
-    private function getOrderDataForExcel($orderList)
+    private function getOrderDataForExcel($orderList): array
     {
         // 表格内容
         $dataArray = [];
@@ -233,8 +233,8 @@ class Export extends BaseService
                 'user_info' => $this->filterValue($order['user']['nick_name']),
                 'buyer_remark' => $this->filterValue($order['buyer_remark']),
                 'delivery_type' => DeliveryTypeEnum::data()[$order['delivery_type']]['name'],
-                'receipt_name' => $this->filterValue($order['address']['name']),
-                'receipt_phone' => $this->filterValue($order['address']['phone']),
+                'receipt_name' => !empty($order['address']) ? $this->filterValue($order['address']['name']) : '',
+                'receipt_phone' => !empty($order['address']) ? $this->filterValue($order['address']['phone']) : '',
                 'receipt_address' => !empty($order['address']) ? OrderAddressModel::fullAddress($order['address']) : '',
                 'express_company' => !empty($order['express']) ? $order['express']['express_name'] : '',
                 'express_no' => $this->filterValue($order['express_no']),
@@ -282,5 +282,4 @@ class Export extends BaseService
         return $value;
         //return "\t" . $value . "\t";
     }
-
 }
