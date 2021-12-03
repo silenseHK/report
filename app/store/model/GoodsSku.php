@@ -41,7 +41,7 @@ class GoodsSku extends GoodsSkuModel
     public static function getGoodsPrices(array $skuList): array
     {
         $goodsPriceArr = helper::getArrayColumn($skuList, 'goods_price');
-        return [min($goodsPriceArr), max($goodsPriceArr)];
+        return empty($goodsPriceArr) ? [0, 0] : [min($goodsPriceArr), max($goodsPriceArr)];
     }
 
     /**
@@ -52,7 +52,7 @@ class GoodsSku extends GoodsSkuModel
     public static function getLinePrices(array $skuList): array
     {
         $linePriceArr = helper::getArrayColumn($skuList, 'line_price');
-        return [min($linePriceArr), max($linePriceArr)];
+        return empty($linePriceArr) ? [0, 0] : [min($linePriceArr), max($linePriceArr)];
     }
 
     /**
