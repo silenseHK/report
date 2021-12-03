@@ -57,10 +57,23 @@ class Setting extends BaseModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public static function getItem(string $key, int $storeId = null): array
+    public static function getItem(string $key, ?int $storeId = null): array
     {
         $data = static::getAll($storeId);
         return isset($data[$key]) ? $data[$key]['values'] : [];
+    }
+
+    /**
+     * 获取H5访问url
+     * @param int|null $storeId
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public static function getH5Url(?int $storeId = null)
+    {
+        return static::getItem('basic', $storeId)['baseUrl'];
     }
 
     /**
