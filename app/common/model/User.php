@@ -13,10 +13,10 @@ declare (strict_types=1);
 namespace app\common\model;
 
 use cores\BaseModel;
-use app\common\model\user\PointsLog as PointsLogModel;
-use think\model\relation\BelongsTo;
-use think\model\relation\HasMany;
 use think\model\relation\HasOne;
+use think\model\relation\HasMany;
+use think\model\relation\BelongsTo;
+use app\common\model\user\PointsLog as PointsLogModel;
 
 /**
  * 用户模型类
@@ -38,7 +38,7 @@ class User extends BaseModel
      * 关联用户头像表
      * @return HasOne
      */
-    public function avatar()
+    public function avatar(): HasOne
     {
         return $this->hasOne('UploadFile', 'file_id', 'avatar_id')
             ->bind(['avatar_url' => 'preview_url']);
@@ -48,7 +48,7 @@ class User extends BaseModel
      * 关联会员等级表
      * @return BelongsTo
      */
-    public function grade()
+    public function grade(): BelongsTo
     {
         $module = self::getCalledModule();
         return $this->belongsTo("app\\{$module}\\model\\user\\Grade", 'grade_id');
@@ -58,7 +58,7 @@ class User extends BaseModel
      * 关联收货地址表
      * @return HasMany
      */
-    public function address()
+    public function address(): HasMany
     {
         return $this->hasMany('UserAddress');
     }
@@ -67,7 +67,7 @@ class User extends BaseModel
      * 关联收货地址表 (默认地址)
      * @return BelongsTo
      */
-    public function addressDefault()
+    public function addressDefault(): BelongsTo
     {
         return $this->belongsTo('UserAddress', 'address_id');
     }
@@ -75,9 +75,9 @@ class User extends BaseModel
     /**
      * 获取器：显示性别
      * @param $value
-     * @return mixed
+     * @return string
      */
-    public function getGenderAttr($value)
+    public function getGenderAttr($value): string
     {
         return $this->gender[$value];
     }
@@ -86,9 +86,9 @@ class User extends BaseModel
      * 获取用户信息
      * @param $where
      * @param array $with
-     * @return array|null|static
+     * @return array|\think\Model|null
      */
-    public static function detail($where, $with = [])
+    public static function detail($where, array $with = [])
     {
         $filter = ['is_delete' => 0];
         if (is_array($where)) {
@@ -102,7 +102,7 @@ class User extends BaseModel
     /**
      * 累积用户的实际消费金额
      * @param int $userId
-     * @param $expendMoney
+     * @param float $expendMoney
      * @return mixed
      */
     public static function setIncUserExpend(int $userId, float $expendMoney)
@@ -113,7 +113,7 @@ class User extends BaseModel
     /**
      * 累积用户可用余额
      * @param int $userId
-     * @param $money
+     * @param float $money
      * @return mixed
      */
     public static function setIncBalance(int $userId, float $money)
@@ -124,7 +124,7 @@ class User extends BaseModel
     /**
      * 消减用户可用余额
      * @param int $userId
-     * @param $money
+     * @param float $money
      * @return mixed
      */
     public static function setDecBalance(int $userId, float $money)
@@ -137,18 +137,31 @@ class User extends BaseModel
      * @param int $gradeId
      * @return bool
      */
-    public static function checkExistByGradeId(int $gradeId)
+    public static function checkExistByGradeId(int $gradeId): bool
     {
         $model = new static;
         return (bool)$model->where('grade_id', '=', (int)$gradeId)
             ->where('is_delete', '=', 0)
-            ->value('user_id');
+            ->value($model->getPk());
+    }
+
+    /**
+     * 指定的手机号是否已存在
+     * @param string $mobile
+     * @return bool
+     */
+    public static function checkExistByMobile(string $mobile): bool
+    {
+        $model = new static;
+        return (bool)$model->where('mobile', '=', $mobile)
+            ->where('is_delete', '=', 0)
+            ->value($model->getPk());
     }
 
     /**
      * 累积用户总消费金额
      * @param int $userId
-     * @param $money
+     * @param float $money
      * @return mixed
      */
     public static function setIncPayMoney(int $userId, float $money)
@@ -161,7 +174,7 @@ class User extends BaseModel
      * @param array $data
      * @return bool
      */
-    public function onBatchIncExpendMoney(array $data)
+    public function onBatchIncExpendMoney(array $data): bool
     {
         foreach ($data as $userId => $expendMoney) {
             static::setIncUserExpend($userId, (float)$expendMoney);
@@ -174,7 +187,7 @@ class User extends BaseModel
      * @param array $data
      * @return bool
      */
-    public function onBatchIncPoints(array $data)
+    public function onBatchIncPoints(array $data): bool
     {
         foreach ($data as $userId => $value) {
             $this->setInc($userId, 'points', $value);
@@ -200,5 +213,4 @@ class User extends BaseModel
         // 更新用户可用积分
         return (new static)->setInc($userId, 'points', $points);
     }
-
 }

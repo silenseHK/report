@@ -12,9 +12,11 @@ declare (strict_types = 1);
 
 namespace app\api\controller;
 
+use app\api\model\User as UserModel;
 use app\common\exception\BaseException;
 use app\api\model\UserCoupon as UserCouponModel;
 use app\api\service\User as UserService;
+use think\response\Json;
 
 /**
  * 用户管理
@@ -25,10 +27,10 @@ class User extends Controller
 {
     /**
      * 当前用户详情
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      */
-    public function info()
+    public function info(): Json
     {
         // 当前用户信息
         $userInfo = UserService::getCurrentLoginUser(true);
@@ -41,10 +43,10 @@ class User extends Controller
 
     /**
      * 账户资产
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      */
-    public function assets()
+    public function assets(): Json
     {
         // 当前用户信息
         $userInfo = UserService::getCurrentLoginUser(true);
@@ -58,5 +60,19 @@ class User extends Controller
                 'coupon' => $model->getCount($userInfo['user_id']),    // 优惠券数量(可用)
             ]
         ]);
+    }
+
+    /**
+     * 手机号绑定
+     * @return Json
+     * @throws \cores\exception\BaseException
+     */
+    public function bindMobile(): Json
+    {
+        $model = new UserModel;
+        if (!$model->bindMobile($this->postForm())) {
+            return $this->renderSuccess($model->getError() ?: '操作失败');
+        }
+        return $this->renderSuccess('恭喜您，手机号绑定成功');
     }
 }
