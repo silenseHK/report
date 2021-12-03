@@ -26,7 +26,7 @@ class Local extends Basics
      * 上传图片文件
      * @return bool
      */
-    public function upload()
+    public function upload(): bool
     {
         // 验证文件类型
         if (!$this->validate()) {
@@ -64,9 +64,9 @@ class Local extends Basics
     /**
      * 删除文件
      * @param string $filePath
-     * @return bool|mixed
+     * @return bool
      */
-    public function delete(string $filePath)
+    public function delete(string $filePath): bool
     {
         // 文件所在目录
         $realPath = realpath(web_path() . "uploads/{$filePath}");

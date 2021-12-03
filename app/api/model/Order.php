@@ -31,7 +31,7 @@ use app\common\enum\order\DeliveryType as DeliveryTypeEnum;
 use app\common\enum\order\ReceiptStatus as ReceiptStatusEnum;
 use app\common\enum\order\DeliveryStatus as DeliveryStatusEnum;
 use app\common\library\helper;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 
 /**
  * 订单模型
@@ -54,7 +54,7 @@ class Order extends OrderModel
      * @param string $orderNo 订单号
      * @return null|static
      */
-    public static function getPayDetail(string $orderNo)
+    public static function getPayDetail(string $orderNo): ?Order
     {
         return self::detail(['order_no' => $orderNo, 'pay_status' => PayStatusEnum::PENDING, 'is_delete' => 0], ['goods', 'user']);
     }
@@ -64,7 +64,7 @@ class Order extends OrderModel
      * @param int $payType
      * @return bool
      */
-    public function onPay(int $payType = OrderPayTypeEnum::WECHAT)
+    public function onPay(int $payType = OrderPayTypeEnum::WECHAT): bool
     {
         // 判断订单状态
         $orderSource = OrderSourceFactory::getFactory($this['order_source']);
@@ -89,7 +89,7 @@ class Order extends OrderModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function onOrderPayment(self $order, int $payType)
+    public function onOrderPayment(self $order, int $payType): array
     {
         if ($payType == OrderPayTypeEnum::WECHAT) {
             return $this->onPaymentByWechat($order);
@@ -106,7 +106,7 @@ class Order extends OrderModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    protected function onPaymentByWechat(self $order)
+    protected function onPaymentByWechat(self $order): array
     {
         return PaymentService::wechat(
             $order['order_id'],
@@ -154,7 +154,7 @@ class Order extends OrderModel
      * @param string $orderNo 订单号
      * @return bool
      */
-    public function onPaymentByBalance(string $orderNo)
+    public function onPaymentByBalance(string $orderNo): bool
     {
         // 获取订单详情
         $service = new OrderPaySuccesService($orderNo);
@@ -173,7 +173,7 @@ class Order extends OrderModel
      * @throws BaseException
      * @throws \think\db\exception\DbException
      */
-    public function getList($type = 'all')
+    public function getList(string $type = 'all'): \think\Paginator
     {
         // 筛选条件
         $filter = [];
@@ -266,7 +266,7 @@ class Order extends OrderModel
      * @return int
      * @throws BaseException
      */
-    public function getCount($type = 'all')
+    public function getCount(string $type = 'all')
     {
         // 筛选条件
         $filter = [];
@@ -332,7 +332,7 @@ class Order extends OrderModel
      * @return Order|array|null
      * @throws BaseException
      */
-    public static function getDetail(int $orderId, $with = [])
+    public static function getDetail(int $orderId, array $with = [])
     {
         // 查询订单记录
         $order = static::detail([
@@ -351,7 +351,7 @@ class Order extends OrderModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private static function isAllowRefund(self $order)
+    private static function isAllowRefund(self $order): bool
     {
         // 必须是已发货的订单
         if ($order['delivery_status'] != DeliveryStatusEnum::DELIVERED) {
@@ -378,7 +378,7 @@ class Order extends OrderModel
      * @return array
      * @throws BaseException
      */
-    public function getTodoCounts()
+    public function getTodoCounts(): array
     {
         return [
             'payment' => $this->getCount('payment'),
@@ -386,23 +386,4 @@ class Order extends OrderModel
             'received' => $this->getCount('received')
         ];
     }
-
-    /**
-     * 设置错误信息
-     * @param $error
-     */
-    protected function setError($error)
-    {
-        empty($this->error) && $this->error = $error;
-    }
-
-    /**
-     * 是否存在错误
-     * @return bool
-     */
-    public function hasError()
-    {
-        return !empty($this->error);
-    }
-
 }

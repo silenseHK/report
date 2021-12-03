@@ -12,9 +12,11 @@ declare (strict_types=1);
 
 namespace app\common\library\storage\engine;
 
-use app\common\exception\BaseException;
+use Exception;
 use think\facade\Request;
 use think\file\UploadedFile;
+use cores\traits\ErrorTrait;
+use app\common\exception\BaseException;
 
 /**
  * 存储引擎抽象类
@@ -23,6 +25,8 @@ use think\file\UploadedFile;
  */
 abstract class Basics
 {
+    use ErrorTrait;
+
     // 当前存储引擎
     protected $storage;
 
@@ -42,9 +46,6 @@ abstract class Basics
     // 保存的根文件夹名称
     protected $rootDirName;
 
-    // 错误信息
-    protected $error;
-
     /**
      * 构造函数
      * Server constructor.
@@ -61,14 +62,14 @@ abstract class Basics
      * 设置上传的文件信息 (外部用户上传)
      * @param string $name
      * @return $this
-     * @throws BaseException
+     * @throws \cores\exception\BaseException
      */
-    public function setUploadFile(string $name)
+    public function setUploadFile(string $name): Basics
     {
         // 接收上传的文件
         try {
             $this->file = Request::file($name);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->throwFileError($e);
         }
         empty($this->file) && throwError('未找到上传文件的信息');
@@ -77,10 +78,10 @@ abstract class Basics
 
     /**
      * 文件异常处理
-     * @param \Exception $e
-     * @throws BaseException
+     * @param Exception $e
+     * @throws \cores\exception\BaseException
      */
-    private function throwFileError(\Exception $e)
+    private function throwFileError(Exception $e)
     {
         $maxSize = ini_get('upload_max_filesize');
         $myMsg = $e->getCode() === 1 ? "上传的文件超出了服务器最大限制: {$maxSize}" : false;
@@ -91,9 +92,9 @@ abstract class Basics
      * 设置上传的文件信息 (系统内部上传)
      * @param string $filePath 文件路径
      * @return $this
-     * @throws BaseException
+     * @throws \cores\exception\BaseException
      */
-    public function setUploadFileByReal(string $filePath)
+    public function setUploadFileByReal(string $filePath): Basics
     {
         // 接收上传的文件
         $this->file = new UploadedFile($filePath, basename($filePath));
@@ -106,9 +107,9 @@ abstract class Basics
     /**
      * 设置上传文件的验证规则
      * @param string $scene
-     * @return mixed
+     * @return Basics
      */
-    public function setValidationScene(string $scene = '')
+    public function setValidationScene(string $scene = ''): Basics
     {
         $this->validateRuleScene = $scene;
         return $this;
@@ -119,7 +120,7 @@ abstract class Basics
      * @param string $disk
      * @return $this
      */
-    public function setDisk(string $disk)
+    public function setDisk(string $disk): Basics
     {
         $this->disk = $disk;
         return $this;
@@ -131,7 +132,7 @@ abstract class Basics
      * @param string $name
      * @return $this
      */
-    public function setRootDirName(string $name)
+    public function setRootDirName(string $name): Basics
     {
         $this->rootDirName = $name;
         return $this;

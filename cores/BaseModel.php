@@ -14,6 +14,7 @@ namespace cores;
 
 use think\Model;
 use think\db\Query;
+use cores\traits\ErrorTrait;
 
 /**
  * 模型基类
@@ -22,6 +23,8 @@ use think\db\Query;
  */
 abstract class BaseModel extends Model
 {
+    use ErrorTrait;
+
     // 当前访问的商城ID
     public static $storeId;
 
@@ -215,15 +218,6 @@ abstract class BaseModel extends Model
     public static function deleteAll(array $where): bool
     {
         return (new static)->where($where)->delete();
-    }
-
-    /**
-     * 返回错误信息
-     * @return string
-     */
-    public function getError()
-    {
-        return empty($this->error) ? false : $this->error;
     }
 
     /**

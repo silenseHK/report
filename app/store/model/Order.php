@@ -201,10 +201,10 @@ class Order extends OrderModel
     /**
      * 确认发货(单独订单)
      * @param $data
-     * @return array|bool|false
+     * @return bool|false
      * @throws \Exception
      */
-    public function delivery($data)
+    public function delivery($data): bool
     {
         // 转义为订单列表
         $orderList = [$this];
@@ -232,7 +232,7 @@ class Order extends OrderModel
      * @param $orderList
      * @return bool
      */
-    private function sendDeliveryMessage($orderList)
+    private function sendDeliveryMessage($orderList): bool
     {
         // 发送消息通知
         foreach ($orderList as $item) {
@@ -246,7 +246,7 @@ class Order extends OrderModel
      * @param $orderList
      * @return bool
      */
-    private function updateToDelivery($orderList)
+    private function updateToDelivery($orderList): bool
     {
         // 整理更新的数据
         $data = [];
@@ -271,7 +271,7 @@ class Order extends OrderModel
      * @param $orderList
      * @return bool
      */
-    private function verifyDelivery($orderList)
+    private function verifyDelivery($orderList): bool
     {
         foreach ($orderList as $order) {
             if (
@@ -291,7 +291,7 @@ class Order extends OrderModel
      * @param array $data
      * @return bool
      */
-    public function updatePrice(array $data)
+    public function updatePrice(array $data): bool
     {
         if ($this['pay_status'] != PayStatusEnum::PENDING) {
             $this->error = '该订单不合法';
@@ -343,7 +343,7 @@ class Order extends OrderModel
      * 将订单记录设置为已删除
      * @return bool
      */
-    public function setDelete()
+    public function setDelete(): bool
     {
         return $this->save(['is_delete' => 1]) !== false;
     }
@@ -352,9 +352,9 @@ class Order extends OrderModel
      * 获取已付款订单总数 (可指定某天)
      * @param null $startDate
      * @param null $endDate
-     * @return int|string
+     * @return int
      */
-    public function getPayOrderTotal($startDate = null, $endDate = null)
+    public function getPayOrderTotal($startDate = null, $endDate = null): int
     {
         $filter = [
             ['pay_status', '=', PayStatusEnum::SUCCESS],
@@ -371,7 +371,7 @@ class Order extends OrderModel
      * 获取未发货订单数量
      * @return int
      */
-    public function getNotDeliveredOrderTotal()
+    public function getNotDeliveredOrderTotal(): int
     {
         $filter = [
             ['pay_status', '=', PayStatusEnum::SUCCESS],
@@ -385,7 +385,7 @@ class Order extends OrderModel
      * 获取未付款订单数量
      * @return int
      */
-    public function getNotPayOrderTotal()
+    public function getNotPayOrderTotal(): int
     {
         $filter = [
             ['pay_status', '=', PayStatusEnum::PENDING],
@@ -399,7 +399,7 @@ class Order extends OrderModel
      * @param array $filter
      * @return int
      */
-    private function getOrderTotal(array $filter = [])
+    private function getOrderTotal(array $filter = []): int
     {
         // 获取订单总数量
         return $this->where($filter)
@@ -411,9 +411,9 @@ class Order extends OrderModel
      * 获取某天的总销售额
      * @param null $startDate
      * @param null $endDate
-     * @return float|int
+     * @return float
      */
-    public function getOrderTotalPrice($startDate = null, $endDate = null)
+    public function getOrderTotalPrice($startDate = null, $endDate = null): float
     {
         // 查询对象
         $query = $this->getNewQuery();
@@ -445,5 +445,4 @@ class Order extends OrderModel
             ->group('user_id')
             ->count();
     }
-
 }

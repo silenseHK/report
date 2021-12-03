@@ -52,9 +52,6 @@ class Checkout extends BaseService
     // 订单结算商品列表
     private $goodsList = [];
 
-    // 错误信息
-    protected $error;
-
     /**
      * 订单结算api参数
      * @var array
@@ -110,7 +107,7 @@ class Checkout extends BaseService
      * @param $param
      * @return array
      */
-    public function setParam($param)
+    public function setParam($param): array
     {
         $this->param = array_merge($this->param, $param);
         return $this->getParam();
@@ -120,7 +117,7 @@ class Checkout extends BaseService
      * 获取结算台请求的参数
      * @return array
      */
-    public function getParam()
+    public function getParam(): array
     {
         return $this->param;
     }
@@ -130,7 +127,7 @@ class Checkout extends BaseService
      * @param $data
      * @return $this
      */
-    public function setCheckoutRule($data)
+    public function setCheckoutRule($data): Checkout
     {
         $this->checkoutRule = array_merge($this->checkoutRule, $data);
         return $this;
@@ -141,7 +138,7 @@ class Checkout extends BaseService
      * @param $data
      * @return $this
      */
-    public function setOrderSource($data)
+    public function setOrderSource($data): Checkout
     {
         $this->orderSource = array_merge($this->orderSource, $data);
         return $this;
@@ -155,8 +152,9 @@ class Checkout extends BaseService
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
+     * @throws \cores\exception\BaseException
      */
-    public function onCheckout($goodsList)
+    public function onCheckout($goodsList): array
     {
         // 订单确认-立即购买
         $this->goodsList = $goodsList;
@@ -170,8 +168,9 @@ class Checkout extends BaseService
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
+     * @throws \cores\exception\BaseException
      */
-    private function checkout()
+    private function checkout(): array
     {
         // 整理订单数据
         $this->orderData = $this->getOrderData();
@@ -216,12 +215,12 @@ class Checkout extends BaseService
 
     /**
      * 计算订单可用积分抵扣
-     * @return bool
+     * @return void
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function setOrderPoints()
+    private function setOrderPoints(): void
     {
         // 设置默认的商品积分抵扣信息
         $this->setDefaultGoodsPoints();
@@ -229,11 +228,11 @@ class Checkout extends BaseService
         $setting = SettingModel::getItem('points');
         // 条件：后台开启下单使用积分抵扣
         if (!$setting['is_shopping_discount'] || !$this->checkoutRule['isUsePoints']) {
-            return false;
+            return;
         }
         // 条件：订单金额满足[?]元
         if (helper::bccomp($setting['discount']['full_order_price'], $this->orderData['orderTotalPrice']) === 1) {
-            return false;
+            return;
         }
         // 计算订单商品最多可抵扣的积分数量
         $this->setOrderGoodsMaxPointsNum();
@@ -242,7 +241,7 @@ class Checkout extends BaseService
         // 实际可抵扣的积分数量
         $actualPointsNum = min($maxPointsNumCount, $this->user['points']);
         if ($actualPointsNum < 1) {
-            return false;
+            return;
         }
         // 计算订单商品实际抵扣的积分数量和金额
         $GoodsDeduct = new PointsDeductService($this->goodsList);
@@ -254,17 +253,16 @@ class Checkout extends BaseService
         $this->orderData['pointsNum'] = $actualPointsNum;
         // 允许积分抵扣
         $this->orderData['isAllowPoints'] = true;
-        return true;
     }
 
     /**
      * 计算订单商品最多可抵扣的积分数量
-     * @return bool
+     * @return void
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function setOrderGoodsMaxPointsNum()
+    private function setOrderGoodsMaxPointsNum(): void
     {
         // 积分设置
         $setting = SettingModel::getItem('points');
@@ -279,14 +277,13 @@ class Checkout extends BaseService
             // 最多可抵扣的积分数量
             $goods['max_points_num'] = helper::bcdiv($maxPointsMoney, $setting['discount']['discount_ratio'], 0);
         }
-        return true;
     }
 
     /**
      * 设置默认的商品积分抵扣信息
-     * @return bool
+     * @return void
      */
-    private function setDefaultGoodsPoints()
+    private function setDefaultGoodsPoints(): void
     {
         foreach ($this->goodsList as &$goods) {
             // 最多可抵扣的积分数量
@@ -296,7 +293,6 @@ class Checkout extends BaseService
             // 实际抵扣的金额
             $goods['points_money'] = 0.00;
         }
-        return true;
     }
 
     /**
@@ -306,7 +302,7 @@ class Checkout extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function getOrderData()
+    private function getOrderData(): array
     {
         // 系统支持的配送方式 (后台设置)
         $deliveryType = SettingModel::getItem(SettingEnum::DELIVERY)['delivery_type'];
@@ -343,7 +339,7 @@ class Checkout extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function getSetting()
+    private function getSetting(): array
     {
         // 系统支持的配送方式 (后台设置)
         $deliveryType = SettingModel::getItem(SettingEnum::DELIVERY)['delivery_type'];
@@ -373,16 +369,15 @@ class Checkout extends BaseService
         // 当前用户可用的优惠券列表
         $couponList = UserCouponModel::getUserCouponList($this->user['user_id'], $orderTotalPrice);
         // 判断当前优惠券是否满足订单使用条件 (优惠券适用范围)
-        $couponList = UserCouponModel::couponListApplyRange($couponList, $orderGoodsIds);
-        return $couponList;
+        return UserCouponModel::couponListApplyRange($couponList, $orderGoodsIds);
 
     }
 
     /**
      * 验证订单商品的状态
-     * @return bool
+     * @return void
      */
-    private function validateGoodsList()
+    private function validateGoodsList(): void
     {
         $Checkout = CheckoutFactory::getFactory(
             $this->user,
@@ -391,7 +386,6 @@ class Checkout extends BaseService
         );
         $status = $Checkout->validateGoodsList();
         $status == false && $this->setError($Checkout->getError());
-        return $status;
     }
 
     /**
@@ -416,12 +410,12 @@ class Checkout extends BaseService
 
     /**
      * 计算订单积分赠送数量
-     * @return bool
+     * @return void
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function setOrderPointsBonus()
+    private function setOrderPointsBonus(): void
     {
         // 初始化商品积分赠送数量
         foreach ($this->goodsList as &$goods) {
@@ -431,7 +425,7 @@ class Checkout extends BaseService
         $setting = SettingModel::getItem('points');
         // 条件：后台开启开启购物送积分
         if (!$setting['is_shopping_gift']) {
-            return false;
+            return;
         }
         // 设置商品积分赠送数量
         foreach ($this->goodsList as &$goods) {
@@ -442,14 +436,13 @@ class Checkout extends BaseService
         }
         //  订单积分赠送数量
         $this->orderData['pointsBonus'] = helper::getArrayColumnSum($this->goodsList, 'points_bonus');
-        return true;
     }
 
     /**
      * 计算订单商品的实际付款金额
-     * @return bool
+     * @return void
      */
-    private function setOrderGoodsPayPrice()
+    private function setOrderGoodsPayPrice(): void
     {
         // 商品总价 - 优惠抵扣
         foreach ($this->goodsList as &$goods) {
@@ -461,14 +454,13 @@ class Checkout extends BaseService
             }
             $goods['total_pay_price'] = helper::number2($value);
         }
-        return true;
     }
 
     /**
      * 设置订单商品会员折扣价
-     * @return bool
+     * @return void
      */
-    private function setOrderGoodsGradeMoney()
+    private function setOrderGoodsGradeMoney(): void
     {
         // 设置默认数据
         helper::setDataAttribute($this->goodsList, [
@@ -484,14 +476,14 @@ class Checkout extends BaseService
 
         // 是否开启会员等级折扣
         if (!$this->checkoutRule['isUserGrade']) {
-            return false;
+            return;
         }
         // 会员等级状态
         if (!(
             $this->user['grade_id'] > 0 && !empty($this->user['grade'])
             && !$this->user['grade']['is_delete'] && $this->user['grade']['status']
         )) {
-            return false;
+            return;
         }
         // 计算抵扣金额
         foreach ($this->goodsList as &$goods) {
@@ -519,17 +511,16 @@ class Checkout extends BaseService
                 ], false);
             }
         }
-        return true;
     }
 
     /**
      * 设置订单优惠券抵扣信息
      * @param array $couponList 当前用户可用的优惠券列表
      * @param int $couponId 当前选择的优惠券id
-     * @return bool
-     * @throws BaseException
+     * @return void
+     * @throws \cores\exception\BaseException
      */
-    private function setOrderCouponMoney(array $couponList, int $couponId)
+    private function setOrderCouponMoney(array $couponList, int $couponId): void
     {
         // 设置默认数据：订单信息
         helper::setDataAttribute($this->orderData, [
@@ -542,7 +533,7 @@ class Checkout extends BaseService
         ], true);
         // 验证选择的优惠券ID是否合法
         if (!$this->verifyOrderCouponId($couponId, $couponList)) {
-            return false;
+            return;
         }
         // 获取优惠券信息
         $couponInfo = $this->getCouponInfo($couponId, $couponList);
@@ -557,17 +548,16 @@ class Checkout extends BaseService
         // 记录订单优惠券信息
         $this->orderData['couponId'] = $couponId;
         $this->orderData['couponMoney'] = helper::number2($CouponMoney->getActualReducedMoney() / 100);
-        return true;
     }
 
     /**
      * 验证用户选择的优惠券ID是否合法
-     * @param $couponId
+     * @param int $couponId
      * @param $couponList
      * @return bool
-     * @throws BaseException
+     * @throws \cores\exception\BaseException
      */
-    private function verifyOrderCouponId($couponId, $couponList)
+    private function verifyOrderCouponId(int $couponId, $couponList): bool
     {
         // 是否开启优惠券折扣
         if (!$this->checkoutRule['isCoupon']) {
@@ -602,12 +592,12 @@ class Checkout extends BaseService
 
     /**
      * 订单配送-快递配送
-     * @return bool
+     * @return void
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function setOrderExpress()
+    private function setOrderExpress(): void
     {
         // 设置默认数据：配送费用
         helper::setDataAttribute($this->goodsList, [
@@ -626,7 +616,6 @@ class Checkout extends BaseService
         // 订单总运费金额
         $this->orderData['isIntraRegion'] = $isIntraRegion;
         $this->orderData['expressPrice'] = $ExpressService->getDeliveryFee();
-        return true;
     }
 
     /**
@@ -634,7 +623,7 @@ class Checkout extends BaseService
      * @param array $order 订单信息
      * @return bool
      */
-    public function createOrder(array $order)
+    public function createOrder(array $order): bool
     {
         // 表单验证
         if (!$this->validateOrderForm($order)) {
@@ -659,7 +648,7 @@ class Checkout extends BaseService
      * @throws BaseException
      * @throws \Exception
      */
-    private function createOrderEvent($order)
+    private function createOrderEvent($order): bool
     {
         // 新增订单记录
         $status = $this->add($order, $this->param['remark']);
@@ -691,7 +680,7 @@ class Checkout extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function onOrderPayment()
+    public function onOrderPayment(): array
     {
         return PaymentService::orderPayment($this->model, $this->param['payType']);
     }
@@ -701,7 +690,7 @@ class Checkout extends BaseService
      * @param array $order 订单信息
      * @return bool
      */
-    private function validateOrderForm(array $order)
+    private function validateOrderForm(array $order): bool
     {
         if ($order['delivery'] == DeliveryTypeEnum::EXPRESS) {
             if (empty($order['address'])) {
@@ -724,7 +713,7 @@ class Checkout extends BaseService
      * @param $order
      * @return bool
      */
-    private function isExistPointsDeduction($order)
+    private function isExistPointsDeduction($order): bool
     {
         return $order['isAllowPoints'] && $order['isUsePoints'];
     }
@@ -733,9 +722,9 @@ class Checkout extends BaseService
      * 新增订单记录
      * @param $order
      * @param string $remark
-     * @return false|int
+     * @return bool|false
      */
-    private function add($order, $remark = '')
+    private function add($order, string $remark = ''): bool
     {
         // 当前订单是否存在和使用积分抵扣
         $isExistPointsDeduction = $this->isExistPointsDeduction($order);
@@ -770,9 +759,9 @@ class Checkout extends BaseService
     /**
      * 保存订单商品信息
      * @param $order
-     * @return int
+     * @return void
      */
-    private function saveOrderGoods($order)
+    private function saveOrderGoods($order): void
     {
         // 当前订单是否存在和使用积分抵扣
         $isExistPointsDeduction = $this->isExistPointsDeduction($order);
@@ -812,27 +801,27 @@ class Checkout extends BaseService
             $item['goods_source_id'] = isset($goods['goods_source_id']) ? $goods['goods_source_id'] : 0;
             $goodsList[] = $item;
         }
-        return $this->model->goods()->saveAll($goodsList) !== false;
+        $this->model->goods()->saveAll($goodsList) !== false;
     }
 
     /**
      * 更新商品库存 (针对下单减库存的商品)
      * @param $order
-     * @return mixed
+     * @return void
      */
-    private function updateGoodsStockNum($order)
+    private function updateGoodsStockNum($order): void
     {
-        return StockFactory::getFactory($this->model['order_source'])->updateGoodsStock($order['goodsList']);
+        StockFactory::getFactory($this->model['order_source'])->updateGoodsStock($order['goodsList']);
     }
 
     /**
      * 记录收货地址
      * @param $address
-     * @return false|\think\Model
+     * @return void
      */
-    private function saveOrderAddress($address)
+    private function saveOrderAddress($address): void
     {
-        return $this->model->address()->save([
+        $this->model->address()->save([
             'user_id' => $this->user['user_id'],
             'store_id' => $this->storeId,
             'name' => $address['name'],
@@ -843,32 +832,4 @@ class Checkout extends BaseService
             'detail' => $address['detail'],
         ]);
     }
-
-    /**
-     * 设置错误信息
-     * @param $error
-     */
-    protected function setError($error)
-    {
-        empty($this->error) && $this->error = $error;
-    }
-
-    /**
-     * 获取错误信息
-     * @return mixed
-     */
-    public function getError()
-    {
-        return $this->error ?: '';
-    }
-
-    /**
-     * 是否存在错误
-     * @return bool
-     */
-    public function hasError()
-    {
-        return !empty($this->error);
-    }
-
 }

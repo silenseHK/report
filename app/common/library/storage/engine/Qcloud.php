@@ -53,9 +53,9 @@ class Qcloud extends Basics
 
     /**
      * 执行上传
-     * @return bool|mixed
+     * @return bool
      */
-    public function upload()
+    public function upload(): bool
     {
         // 上传文件
         // putObject(上传接口，最大支持上传5G文件)
@@ -75,9 +75,9 @@ class Qcloud extends Basics
     /**
      * 删除文件
      * @param string $filePath
-     * @return bool|mixed
+     * @return bool
      */
-    public function delete(string $filePath)
+    public function delete(string $filePath): bool
     {
         try {
             $result = $this->cosClient->deleteObject(array(
@@ -90,5 +90,4 @@ class Qcloud extends Basics
             return false;
         }
     }
-
 }
