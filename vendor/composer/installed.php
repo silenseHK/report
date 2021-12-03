@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'e26cf97397531f5238981d4e8fa3e26056202cb7',
+        'reference' => 'd47d03901df3775835529be3426db7138e4b0c05',
         'name' => 'topthink/think',
         'dev' => true,
     ),
@@ -28,146 +28,14 @@
             'reference' => '08e27c97e4c6ed02f37c5b2b20488046c8d90d75',
             'dev_requirement' => false,
         ),
-        'guzzle/batch' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/cache' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/common' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/guzzle' => array(
-            'pretty_version' => 'v3.9.3',
-            'version' => '3.9.3.0',
+        'guzzlehttp/command' => array(
+            'pretty_version' => '1.2.1',
+            'version' => '1.2.1.0',
             'type' => 'library',
-            'install_path' => __DIR__ . '/../guzzle/guzzle',
+            'install_path' => __DIR__ . '/../guzzlehttp/command',
             'aliases' => array(),
-            'reference' => '0645b70d953bc1c067bbc8d5bc53194706b628d9',
+            'reference' => '04b06e7f5ef37d814aeb3f4b6015b65a9d4412c5',
             'dev_requirement' => false,
-        ),
-        'guzzle/http' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/inflection' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/iterator' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/log' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/parser' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/plugin' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/plugin-async' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/plugin-backoff' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/plugin-cache' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/plugin-cookie' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/plugin-curlauth' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/plugin-error-response' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/plugin-history' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/plugin-log' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/plugin-md5' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/plugin-mock' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/plugin-oauth' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/service' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
-        ),
-        'guzzle/stream' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => 'v3.9.3',
-            ),
         ),
         'guzzlehttp/guzzle' => array(
             'pretty_version' => '7.4.0',
@@ -176,6 +44,15 @@
             'install_path' => __DIR__ . '/../guzzlehttp/guzzle',
             'aliases' => array(),
             'reference' => '868b3571a039f0ebc11ac8f344f4080babe2cb94',
+            'dev_requirement' => false,
+        ),
+        'guzzlehttp/guzzle-services' => array(
+            'pretty_version' => '1.3.1',
+            'version' => '1.3.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../guzzlehttp/guzzle-services',
+            'aliases' => array(),
+            'reference' => '3731f120ce6856f4c71fff7cb2a27e263fe69f84',
             'dev_requirement' => false,
         ),
         'guzzlehttp/promises' => array(
@@ -194,6 +71,15 @@
             'install_path' => __DIR__ . '/../guzzlehttp/psr7',
             'aliases' => array(),
             'reference' => '089edd38f5b8abba6cb01567c2a8aaa47cec4c72',
+            'dev_requirement' => false,
+        ),
+        'guzzlehttp/uri-template' => array(
+            'pretty_version' => 'v1.0.1',
+            'version' => '1.0.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../guzzlehttp/uri-template',
+            'aliases' => array(),
+            'reference' => 'b945d74a55a25a949158444f09ec0d3c120d69e2',
             'dev_requirement' => false,
         ),
         'kosinix/grafika' => array(
@@ -368,12 +254,12 @@
             'dev_requirement' => false,
         ),
         'qcloud/cos-sdk-v5' => array(
-            'pretty_version' => 'v1.3.4',
-            'version' => '1.3.4.0',
+            'pretty_version' => 'v2.4.3',
+            'version' => '2.4.3.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../qcloud/cos-sdk-v5',
             'aliases' => array(),
-            'reference' => '1b32aa422f6dffe4ea411e5095e4b0da9135551b',
+            'reference' => '1f6fd3f66fe73276a3539f6dd398438c28b82b40',
             'dev_requirement' => false,
         ),
         'qiniu/php-sdk' => array(
@@ -403,15 +289,6 @@
             'reference' => '6f981ee24cf69ee7ce9736146d1c57c2780598a8',
             'dev_requirement' => false,
         ),
-        'symfony/event-dispatcher' => array(
-            'pretty_version' => 'v2.8.52',
-            'version' => '2.8.52.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../symfony/event-dispatcher',
-            'aliases' => array(),
-            'reference' => 'a77e974a5fecb4398833b0709210e3d5e334ffb0',
-            'dev_requirement' => false,
-        ),
         'symfony/polyfill-mbstring' => array(
             'pretty_version' => 'v1.17.1',
             'version' => '1.17.1.0',
@@ -437,7 +314,7 @@
             'install_path' => __DIR__ . '/../symfony/polyfill-php80',
             'aliases' => array(),
             'reference' => '4a5b6bba3259902e386eb80dd1956181ee90b5b2',
-            'dev_requirement' => true,
+            'dev_requirement' => false,
         ),
         'symfony/var-dumper' => array(
             'pretty_version' => 'v4.4.10',
@@ -463,7 +340,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'e26cf97397531f5238981d4e8fa3e26056202cb7',
+            'reference' => 'd47d03901df3775835529be3426db7138e4b0c05',
             'dev_requirement' => false,
         ),
         'topthink/think-helper' => array(

@@ -35,7 +35,7 @@
         "topthink/think-worker": "^3.0",
         "qiniu/php-sdk": "^7.2",
         "aliyuncs/oss-sdk-php": "^2.3",
-        "qcloud/cos-sdk-v5": "^1.2",
+        "qcloud/cos-sdk-v5": "^2.4",
         "kosinix/grafika": "dev-master",
         "myclabs/php-enum": "^1.6",
         "lvht/geohash": "^1.1",

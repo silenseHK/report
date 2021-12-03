@@ -7,12 +7,13 @@ namespace Composer\Autoload;
 class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
 {
     public static $files = array (
-        '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
-        '35fab96057f1bf5e7aba31a8a6d5fdde' => __DIR__ . '/..' . '/topthink/think-orm/stubs/load_stubs.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
+        '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '35fab96057f1bf5e7aba31a8a6d5fdde' => __DIR__ . '/..' . '/topthink/think-orm/stubs/load_stubs.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
         'abede361264e2ae69ec1eee813a101af' => __DIR__ . '/..' . '/markbaker/complex/classes/src/functions/abs.php',
@@ -74,9 +75,9 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
         '4888a6f58c08148ebe17682f9ce9b2a8' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/Operations/divideby.php',
         'eef6fa3879d3efa347cd24d5eb348f85' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/Operations/divideinto.php',
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
-        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '841780ea2e1d6545ea3a253239d59c05' => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu/functions.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
+        'cd5441689b14144e5573bf989ee47b34' => __DIR__ . '/..' . '/qcloud/cos-sdk-v5/src/Common.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -114,11 +115,11 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
             'Symfony\\Polyfill\\Php72\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Component\\VarDumper\\' => 28,
-            'Symfony\\Component\\EventDispatcher\\' => 34,
         ),
         'Q' => 
         array (
             'Qiniu\\' => 6,
+            'Qcloud\\Cos\\' => 11,
         ),
         'P' => 
         array (
@@ -148,8 +149,11 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
         ),
         'G' => 
         array (
+            'GuzzleHttp\\UriTemplate\\' => 23,
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
+            'GuzzleHttp\\Command\\Guzzle\\' => 26,
+            'GuzzleHttp\\Command\\' => 19,
             'GuzzleHttp\\' => 11,
             'Grafika\\' => 8,
             'GatewayWorker\\' => 14,
@@ -219,13 +223,13 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
         array (
             0 => __DIR__ . '/..' . '/symfony/var-dumper',
         ),
-        'Symfony\\Component\\EventDispatcher\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/event-dispatcher',
-        ),
         'Qiniu\\' => 
         array (
             0 => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu',
+        ),
+        'Qcloud\\Cos\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/qcloud/cos-sdk-v5/src',
         ),
         'Psr\\SimpleCache\\' => 
         array (
@@ -284,6 +288,10 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
         array (
             0 => __DIR__ . '/..' . '/league/flysystem/src',
         ),
+        'GuzzleHttp\\UriTemplate\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/uri-template/src',
+        ),
         'GuzzleHttp\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
@@ -291,6 +299,14 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
         'GuzzleHttp\\Promise\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
+        ),
+        'GuzzleHttp\\Command\\Guzzle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/guzzle-services/src',
+        ),
+        'GuzzleHttp\\Command\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/command/src',
         ),
         'GuzzleHttp\\' => 
         array (
@@ -311,29 +327,11 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
     );
 
     public static $prefixesPsr0 = array (
-        'Q' => 
-        array (
-            'Qcloud\\Cos\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/qcloud/cos-sdk-v5/src',
-            ),
-        ),
         'H' => 
         array (
             'HTMLPurifier' => 
             array (
                 0 => __DIR__ . '/..' . '/ezyang/htmlpurifier/library',
-            ),
-        ),
-        'G' => 
-        array (
-            'Guzzle\\Tests' => 
-            array (
-                0 => __DIR__ . '/..' . '/guzzle/guzzle/tests',
-            ),
-            'Guzzle' => 
-            array (
-                0 => __DIR__ . '/..' . '/guzzle/guzzle/src',
             ),
         ),
     );
