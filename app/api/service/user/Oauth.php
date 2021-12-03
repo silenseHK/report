@@ -12,11 +12,11 @@ declare (strict_types=1);
 
 namespace app\api\service\user;
 
-use app\api\model\Wxapp as WxappModel;
-use app\common\exception\BaseException;
-use app\common\library\wechat\WxUser;
-use app\common\service\BaseService;
 use app\api\model\UserOauth as UserOauthModel;
+use app\api\model\wxapp\Setting as WxappSettingModel;
+use app\common\service\BaseService;
+use app\common\library\wechat\WxUser;
+use app\common\exception\BaseException;
 
 /**
  * 服务类: 第三方用户服务类
@@ -94,12 +94,24 @@ class Oauth extends BaseService
     public static function wxCode2Session(string $code)
     {
         // 获取当前小程序信息
-        $wxConfig = WxappModel::getWxappCache();
+        $wxConfig = static::getMpWxConfig();
         // 微信登录 (获取session_key)
         $WxUser = new WxUser($wxConfig['app_id'], $wxConfig['app_secret']);
         $result = $WxUser->jscode2session($code);
         !$result && throwError($WxUser->getError());
         return $result;
+    }
+
+    /**
+     * 获取微信小程序配置项
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    private static function getMpWxConfig(): array
+    {
+        return WxappSettingModel::getWxappConfig();
     }
 
     /**

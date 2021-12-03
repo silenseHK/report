@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace app\common\library\wechat;
 
-use app\common\model\Wxapp as WxappModel;
+use app\common\model\wxapp\Setting as WxappSettingModel;
 use app\common\enum\OrderType as OrderTypeEnum;
 use app\common\enum\order\PayType as OrderPayTypeEnum;
 use app\common\library\helper;
@@ -26,6 +26,9 @@ class WxPay extends WxBase
     // 微信支付配置
     private $config;
 
+    // 当前商城ID
+    private $storeId;
+
     // 订单模型
     private $modelClass = [
         OrderTypeEnum::ORDER => \app\api\service\order\PaySuccess::class,
@@ -34,14 +37,17 @@ class WxPay extends WxBase
 
     /**
      * 构造函数
-     * WxPay constructor.
-     * @param $config
+     * @param array $config
+     * @param int|null $storeId
      */
-    public function __construct($config = false)
+    public function __construct(array $config = [], ?int $storeId = null)
     {
         parent::__construct();
         $this->config = $config;
-        $this->config !== false && $this->setConfig($this->config['app_id'], $this->config['app_secret']);
+        $this->storeId = $storeId;
+        if (!empty($this->config)) {
+            $this->setConfig($this->config['app_id'], $this->config['app_secret']);
+        }
     }
 
     /**
@@ -51,9 +57,9 @@ class WxPay extends WxBase
      * @param $totalFee
      * @param int $orderType 订单类型
      * @return array
-     * @throws BaseException
+     * @throws \cores\exception\BaseException
      */
-    public function unifiedorder($orderNo, $openid, $totalFee, $orderType = OrderTypeEnum::ORDER)
+    public function unifiedorder($orderNo, $openid, $totalFee, int $orderType = OrderTypeEnum::ORDER): array
     {
         // 当前时间
         $time = time();
@@ -82,11 +88,11 @@ class WxPay extends WxBase
         // 请求失败
         if ($prepay['return_code'] === 'FAIL') {
             $errMsg = "微信支付api：{$prepay['return_msg']}";
-            throwError($errMsg, null, ['error_code' => 'WECHAT_PAY', 'is_created' => true]);
+            throwError($errMsg, null, ['errorCode' => 'WECHAT_PAY', 'isCreated' => true]);
         }
         if ($prepay['result_code'] === 'FAIL') {
             $errMsg = "微信支付api：{$prepay['err_code_des']}";
-            throwError($errMsg, null, ['error_code' => 'WECHAT_PAY', 'is_created' => true]);
+            throwError($errMsg, null, ['errorCode' => 'WECHAT_PAY', 'isCreated' => true]);
         }
         // 生成 nonce_str 供前端使用
         $paySign = $this->makePaySign($params['nonce_str'], $prepay['prepay_id'], $time);
@@ -100,31 +106,12 @@ class WxPay extends WxBase
 
     /**
      * 支付成功异步通知
-     * @throws BaseException
-     * @throws \Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public function notify()
     {
-//        $xml = <<<EOF
-//<xml><appid><![CDATA[wx8908532a27c5dd4f]]></appid>
-//<attach><![CDATA[{"order_type":10}]]></attach>
-//<bank_type><![CDATA[CFT]]></bank_type>
-//<cash_fee><![CDATA[1]]></cash_fee>
-//<fee_type><![CDATA[CNY]]></fee_type>
-//<is_subscribe><![CDATA[N]]></is_subscribe>
-//<mch_id><![CDATA[1509822581]]></mch_id>
-//<nonce_str><![CDATA[ca1fe6d2b4f667cf249bd1d7176c6178]]></nonce_str>
-//<openid><![CDATA[oZDDE5JLnVyc6qe6nbNWdbFHtY5I]]></openid>
-//<out_trade_no><![CDATA[2019040155491005]]></out_trade_no>
-//<result_code><![CDATA[SUCCESS]]></result_code>
-//<return_code><![CDATA[SUCCESS]]></return_code>
-//<sign><![CDATA[3880232710B7328822D079DC405FB09D]]></sign>
-//<time_end><![CDATA[20190401104804]]></time_end>
-//<total_fee>1</total_fee>
-//<trade_type><![CDATA[JSAPI]]></trade_type>
-//<transaction_id><![CDATA[4200000265201904014227830207]]></transaction_id>
-//</xml>
-//EOF;
         if (!$xml = file_get_contents('php://input')) {
             $this->returnCode(false, 'Not found DATA');
         }
@@ -139,7 +126,7 @@ class WxPay extends WxBase
         $order = $model->getOrderInfo();
         empty($order) && $this->returnCode(false, '订单不存在');
         // 小程序配置信息
-        $wxConfig = WxappModel::getWxappCache($order['store_id']);
+        $wxConfig = WxappSettingModel::getWxappConfig($order['store_id']);
         // 设置支付秘钥
         $this->config['apikey'] = $wxConfig['apikey'];
         // 保存微信服务器返回的签名sign
@@ -167,27 +154,28 @@ class WxPay extends WxBase
 
     /**
      * 申请退款API
-     * @param $transaction_id
-     * @param double $total_fee 订单总金额
-     * @param double $refund_fee 退款金额
+     * @param string $transactionId 微信支付交易流水号
+     * @param string $totalFee 订单总金额
+     * @param string $refundFee 退款金额
      * @return bool
      * @throws BaseException
+     * @throws \cores\exception\BaseException
      */
-    public function refund($transaction_id, $total_fee, $refund_fee)
+    public function refund(string $transactionId, string $totalFee, string $refundFee): bool
     {
         // 当前时间
         $time = time();
         // 生成随机字符串
-        $nonceStr = md5($time . $transaction_id . $total_fee . $refund_fee);
+        $nonceStr = md5($time . $transactionId . $totalFee . $refundFee);
         // API参数
         $params = [
             'appid' => $this->appId,
             'mch_id' => $this->config['mchid'],
             'nonce_str' => $nonceStr,
-            'transaction_id' => $transaction_id,
+            'transaction_id' => $transactionId,
             'out_refund_no' => $time,
-            'total_fee' => $total_fee * 100,
-            'refund_fee' => $refund_fee * 100,
+            'total_fee' => $totalFee * 100,
+            'refund_fee' => $refundFee * 100,
         ];
         // 生成签名
         $params['sign'] = $this->makeSign($params);
@@ -218,14 +206,15 @@ class WxPay extends WxBase
 
     /**
      * 企业付款到零钱API
-     * @param $orderNo
-     * @param $openid
-     * @param $amount
-     * @param $desc
+     * @param string $orderNo 订单号
+     * @param string $openid 微信用户openid
+     * @param string $amount 支付金额
+     * @param string $desc 描述
      * @return bool
      * @throws BaseException
+     * @throws \cores\exception\BaseException
      */
-    public function transfers($orderNo, $openid, $amount, $desc)
+    public function transfers(string $orderNo, string $openid, string $amount, string $desc): bool
     {
         // API参数
         $params = [
@@ -262,16 +251,16 @@ class WxPay extends WxBase
 
     /**
      * 获取cert证书文件
-     * @return array
-     * @throws BaseException
+     * @return string[]
+     * @throws \cores\exception\BaseException
      */
-    private function getCertPem()
+    private function getCertPem(): array
     {
         if (empty($this->config['cert_pem']) || empty($this->config['key_pem'])) {
             throwError('请先到后台小程序设置填写微信支付证书文件');
         }
         // cert目录
-        $filePath = __DIR__ . '/cert/' . $this->config['store_id'] . '/';
+        $filePath = __DIR__ . "/cert/{$this->storeId}/";
         return [
             'certPem' => $filePath . 'cert.pem',
             'keyPem' => $filePath . 'key.pem'
@@ -314,17 +303,17 @@ class WxPay extends WxBase
 
     /**
      * 生成paySign
-     * @param $nonceStr
-     * @param $prepay_id
-     * @param $timeStamp
+     * @param string $nonceStr
+     * @param string $prepayId
+     * @param int $timeStamp
      * @return string
      */
-    private function makePaySign($nonceStr, $prepay_id, $timeStamp)
+    private function makePaySign(string $nonceStr, string $prepayId, int $timeStamp): string
     {
         $data = [
             'appId' => $this->appId,
             'nonceStr' => $nonceStr,
-            'package' => 'prepay_id=' . $prepay_id,
+            'package' => 'prepay_id=' . $prepayId,
             'signType' => 'MD5',
             'timeStamp' => $timeStamp,
         ];
@@ -336,16 +325,15 @@ class WxPay extends WxBase
         // 签名步骤三：MD5加密
         $string = md5($string);
         // 签名步骤四：所有字符转为大写
-        $result = strtoupper($string);
-        return $result;
+        return strtoupper($string);
     }
 
     /**
      * 将xml转为array
-     * @param $xml
+     * @param string $xml
      * @return mixed
      */
-    private function fromXml($xml)
+    private function fromXml(string $xml)
     {
         // 禁止引用外部xml实体
         libxml_disable_entity_loader(true);
@@ -354,10 +342,10 @@ class WxPay extends WxBase
 
     /**
      * 生成签名
-     * @param $values
+     * @param array $values
      * @return string 本函数不覆盖sign成员变量，如要设置签名需要调用SetSign方法赋值
      */
-    private function makeSign($values)
+    private function makeSign(array $values): string
     {
         //签名步骤一：按字典序排序参数
         ksort($values);
@@ -367,16 +355,15 @@ class WxPay extends WxBase
         //签名步骤三：MD5加密
         $string = md5($string);
         //签名步骤四：所有字符转为大写
-        $result = strtoupper($string);
-        return $result;
+        return strtoupper($string);
     }
 
     /**
      * 格式化参数格式化成url参数
-     * @param $values
+     * @param array $values
      * @return string
      */
-    private function toUrlParams($values)
+    private function toUrlParams(array $values): string
     {
         $buff = '';
         foreach ($values as $k => $v) {
@@ -389,17 +376,16 @@ class WxPay extends WxBase
 
     /**
      * 输出xml字符
-     * @param $values
+     * @param array $values
      * @return bool|string
      */
-    private function toXml($values)
+    private function toXml(array $values)
     {
         if (!is_array($values)
             || count($values) <= 0
         ) {
             return false;
         }
-
         $xml = "<xml>";
         foreach ($values as $key => $val) {
             if (is_numeric($val)) {
@@ -411,5 +397,4 @@ class WxPay extends WxBase
         $xml .= "</xml>";
         return $xml;
     }
-
 }

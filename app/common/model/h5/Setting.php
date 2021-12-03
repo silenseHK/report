@@ -73,8 +73,8 @@ class Setting extends BaseModel
      */
     public static function getAll(int $storeId = null): array
     {
+        is_null($storeId) && $storeId = static::$storeId;
         $model = new static;
-        is_null($storeId) && $storeId = $model::$storeId;
         if (!$data = Cache::get("wxapp_setting_{$storeId}")) {
             // 获取全部设置
             $setting = $model->getList($storeId);
@@ -82,8 +82,8 @@ class Setting extends BaseModel
             // 写入缓存中
             Cache::tag('cache')->set("wxapp_setting_{$storeId}", $data);
         }
-        // 重组setting缓存数据 (多维)
-        return static::reorganize($model->defaultData(), $data, $type = 'cache');
+        // 合并默认设置
+        return array_merge_multiple($model->defaultData(), $data);
     }
 
     /**

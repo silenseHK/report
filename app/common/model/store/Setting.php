@@ -90,10 +90,10 @@ class Setting extends BaseModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public static function getAll(int $storeId = null)
+    public static function getAll(int $storeId = null): array
     {
+        is_null($storeId) && $storeId = static::$storeId;
         $model = new static;
-        is_null($storeId) && $storeId = $model::$storeId;
         if (!$data = Cache::get("setting_{$storeId}")) {
             // 获取商城设置列表
             $setting = $model->getList($storeId);
@@ -122,7 +122,7 @@ class Setting extends BaseModel
      * @param array $actualData
      * @return array
      */
-    private function getMergeData(array $actualData)
+    private function getMergeData(array $actualData): array
     {
         return array_merge_multiple($this->defaultData(), $actualData);
     }

@@ -12,6 +12,7 @@ declare (strict_types=1);
 
 namespace app\common\model;
 
+use app\common\library\helper;
 use cores\BaseModel;
 use think\facade\Cache;
 use app\common\exception\BaseException;
@@ -30,40 +31,17 @@ class Wxapp extends BaseModel
     protected $pk = 'id';
 
     /**
-     * 获取小程序信息
-     * @param int|null $storeId
-     * @return array|static|null
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
-     */
-    public static function detail(?int $storeId = null)
-    {
-        $storeId = $storeId ?: static::$storeId;
-        return (new static)->where(['store_id' => $storeId])->find();
-    }
-
-    /**
-     * 从缓存中获取小程序信息
+     * 获取微信小程序配置 (即将废弃, 用于兼容v2.0.4之前)
      * @param int|null $storeId
      * @return array
-     * @throws BaseException
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
      */
-    public static function getWxappCache(?int $storeId = null)
+    public static function getOldData(?int $storeId = null): array
     {
-        // 小程序id
-        is_null($storeId) && $storeId = static::$storeId;
-        if (!$data = Cache::get("wxapp_{$storeId}")) {
-            // 获取小程序详情, 解除hidden属性
-            $detail = self::detail($storeId);
-            empty($detail) && throwError('未找到当前小程序信息');
-            // 写入缓存
-            $data = $detail->hidden([])->toArray();
-            Cache::tag('cache')->set("wxapp_{$storeId}", $data);
+        empty($storeId) && $storeId = static::$storeId;
+        $detail = static::get(['store_id' => $storeId]);
+        if (empty($detail)) {
+            return [];
         }
-        return $data;
+        return helper::pick($detail->toArray(), ['app_id', 'app_secret', 'mchid', 'apikey', 'cert_pem', 'key_pem']);
     }
 }

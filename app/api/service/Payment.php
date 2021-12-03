@@ -8,17 +8,17 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\service;
 
-use app\api\model\Wxapp as WxappModel;
 use app\api\service\User as UserService;
+use app\api\model\wxapp\Setting as WxappSettingModel;
 use app\common\enum\OrderType as OrderTypeEnum;
 use app\common\enum\order\PayType as OrderPayTypeEnum;
+use app\common\service\BaseService;
 use app\common\library\wechat\WxPay;
 use app\common\exception\BaseException;
-use app\common\service\BaseService;
 
 /**
  * 订单支付服务类
@@ -37,7 +37,7 @@ class Payment extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public static function orderPayment($order, $payType)
+    public static function orderPayment($order, $payType): array
     {
         if ($payType == OrderPayTypeEnum::WECHAT) {
             return self::wechat(
@@ -55,7 +55,7 @@ class Payment extends BaseService
      * @param $orderId
      * @param $orderNo
      * @param $payPrice
-     * @param $orderType
+     * @param int $orderType
      * @return array
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
@@ -66,8 +66,8 @@ class Payment extends BaseService
         $orderId,
         $orderNo,
         $payPrice,
-        $orderType = OrderTypeEnum::ORDER
-    )
+        int $orderType = OrderTypeEnum::ORDER
+    ): array
     {
         // 获取当前用户信息
         $userInfo = UserService::getCurrentLoginUser(true);
@@ -87,9 +87,9 @@ class Payment extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private static function getWxConfig()
+    private static function getWxConfig(): array
     {
-        return WxappModel::getWxappCache(getStoreId());
+        $storeId = getStoreId();
+        return WxappSettingModel::getWxappConfig($storeId);
     }
-
 }

@@ -8,12 +8,13 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\service\order;
 
+use app\common\exception\BaseException;
 use app\common\model\User as UserModel;
-use app\common\model\Wxapp as WxappModel;
+use app\common\model\wxapp\Setting as WxappSettingModel;
 use app\common\model\user\BalanceLog as BalanceLogModel;
 use app\common\enum\order\PayType as OrderPayTypeEnum;
 use app\common\enum\user\balanceLog\Scene as SceneEnum;
@@ -29,12 +30,15 @@ class Refund extends BaseService
 {
     /**
      * 执行订单退款
-     * @param object $order 订单信息
+     * @param mixed $order 订单信息
      * @param null $money 指定退款金额
      * @return bool
-     * @throws \app\common\exception\BaseException
+     * @throws BaseException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
-    public function execute($order, $money = null)
+    public function execute($order, $money = null): bool
     {
         // 退款金额，如不指定则默认为订单实付款金额
         is_null($money) && $money = $order['pay_price'];
@@ -55,7 +59,7 @@ class Refund extends BaseService
      * @param $money
      * @return bool
      */
-    private function balance($order, $money)
+    private function balance($order, $money): bool
     {
         // 回退用户余额
         UserModel::setIncBalance((int)$order['user_id'], (float)$money);
@@ -72,13 +76,15 @@ class Refund extends BaseService
      * @param $order
      * @param $money
      * @return bool
-     * @throws \app\common\exception\BaseException
+     * @throws BaseException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
-    private function wxpay($order, $money)
+    private function wxpay($order, $money): bool
     {
-        $wxConfig = WxappModel::getWxappCache($order['store_id']);
+        $wxConfig = WxappSettingModel::getWxappConfig($order['store_id']);
         $WxPay = new WxPay($wxConfig);
         return $WxPay->refund($order['transaction_id'], $order['pay_price'], $money);
     }
-
 }
