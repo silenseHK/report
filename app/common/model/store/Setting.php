@@ -263,6 +263,17 @@ class Setting extends BaseModel
                     'describe' => ''            // 满额包邮说明
                 ],
             ],
+            // 账户注册设置
+            SettingEnum::REGISTER => [
+                'key' => SettingEnum::REGISTER,
+                'describe' => '账户注册设置',
+                'values' => [
+                    'registerMethod' => 10,   // 默认注册方式: 10=>手机号+短信验证码
+                    'isOauthMpweixin' => 1,   // 是否开启微信小程序一键授权登录
+                    'isForceBindMpweixin' => 1,   // 客户端是否强制绑定手机号(微信小程序)
+                    'isManualBind' => 1,   // 个人中心页显示手动绑定手机号
+                ],
+            ],
             // 用户充值设置
             SettingEnum::RECHARGE => [
                 'key' => SettingEnum::RECHARGE,

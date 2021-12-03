@@ -14,7 +14,7 @@ namespace app\api\service\passport;
 
 use think\facade\Cache;
 use yiovo\captcha\facade\CaptchaApi;
-use app\api\model\{User as UserModel, Setting as SettingModel, dealer\Referee as RefereeModel};
+use app\api\model\{User as UserModel, Setting as SettingModel};
 use app\api\service\{user\Oauth as OauthService, user\Avatar as AvatarService, passport\Party as PartyService};
 use app\api\validate\passport\Login as ValidateLogin;
 use app\common\service\BaseService;
@@ -28,7 +28,10 @@ use cores\exception\BaseException;
  */
 class Login extends BaseService
 {
-    // 用户信息 (登录成功后才记录)
+    /**
+     * 用户信息 (登录成功后才记录)
+     * @var UserModel|null $userInfo
+     */
     private $userInfo;
 
     // 用于生成token的自定义盐
@@ -77,7 +80,7 @@ class Login extends BaseService
         $userInfo = !empty($userId) ? UserModel::detail($userId) : null;
 
         // 用户信息存在, 更新登录信息
-        if (!empty($userInfo)) {
+        if (!empty($userInfo) && $userInfo instanceof UserModel) {
             // 更新用户登录信息
             $this->updateUser($userInfo, true, $form['partyData']);
             // 记录登录态
@@ -92,10 +95,8 @@ class Login extends BaseService
         }
         // 后台设置了强制绑定手机号, 直接保存新用户
         if (!$setting['isForceBindMpweixin']) {
-            // 推荐人ID
-            $refereeId = $form['refereeId'] ?? null;
             // 用户不存在: 创建一个新用户
-            $this->createUser('', true, $form['partyData'], (int)$refereeId);
+            $this->createUser('', true, $form['partyData']);
             // 保存第三方用户信息
             $this->createUserOauth($this->getUserId(), true, $form['partyData']);
             return true;
@@ -124,7 +125,6 @@ class Login extends BaseService
             'mobile' => $wxData['purePhoneNumber'],
             'isParty' => $form['isParty'],
             'partyData' => $form['partyData'],
-            'refereeId' => $form['refereeId'] ?? null
         ];
         // 自动登录注册
         $this->register($loginData);
@@ -132,21 +132,6 @@ class Login extends BaseService
         $this->createUserOauth($this->getUserId(), $loginData['isParty'], $loginData['partyData']);
         // 记录登录态
         return $this->setSession();
-    }
-
-    /**
-     * 绑定推荐关系
-     * @param int $userId 当前用户ID
-     * @param int $refereeId 推荐人ID
-     * @return bool
-     * @throws \think\Exception
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
-     */
-    private function bindRelation(int $userId, int $refereeId): bool
-    {
-        return $refereeId > 0 && RefereeModel::createRelation($userId, $refereeId);
     }
 
     /**
@@ -171,9 +156,8 @@ class Login extends BaseService
 
     /**
      * 当前登录的用户信息
-     * @return array
      */
-    public function getUserInfo(): array
+    public function getUserInfo(): ?UserModel
     {
         return $this->userInfo;
     }
@@ -204,10 +188,8 @@ class Login extends BaseService
         if ($userInfo) {
             return $this->updateUser($userInfo, $data['isParty'], $data['partyData']);
         }
-        // 推荐人ID
-        $refereeId = (int)$data['refereeId'] ?? null;
         // 用户不存在: 创建一个新用户
-        return $this->createUser($data['mobile'], $data['isParty'], $data['partyData'], $refereeId);
+        return $this->createUser($data['mobile'], $data['isParty'], $data['partyData']);
     }
 
     /**
@@ -215,14 +197,13 @@ class Login extends BaseService
      * @param string $mobile 手机号
      * @param bool $isParty 是否存在第三方用户信息
      * @param array $partyData 用户信息(第三方)
-     * @param int|null $refereeId 推荐人ID
      * @return bool
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function createUser(string $mobile, bool $isParty, array $partyData = [], ?int $refereeId = null): bool
+    private function createUser(string $mobile, bool $isParty, array $partyData = []): bool
     {
         // 用户信息
         $data = [
@@ -242,8 +223,6 @@ class Login extends BaseService
         $status = $model->save($data);
         // 记录用户信息
         $this->userInfo = $model;
-        // 记录推荐人关系
-        $this->bindRelation($this->getUserId(), (int)$refereeId);
         return $status;
     }
 

@@ -42,6 +42,8 @@ class Setting extends BaseService
         $data[SettingEnum::POINTS] = $this->getPoints();
         // 充值设置
         $data[SettingEnum::RECHARGE] = $this->getRecharge();
+        // 注册设置
+        $data[SettingEnum::REGISTER] = $this->getRegister();
         // 其他设置
         $data['_other'] = $this->getOtherSetting();
         return $data;
@@ -85,6 +87,19 @@ class Setting extends BaseService
     {
         $values = SettingModel::getItem(SettingEnum::RECHARGE);
         return helper::pick($values, ['is_entrance', 'is_custom', 'describe']);
+    }
+
+    /**
+     * 注册设置 (默认登录方式、是否开启微信小程序授权登录)
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    private function getRegister(): array
+    {
+        $values = SettingModel::getItem(SettingEnum::REGISTER);
+        return helper::pick($values, ['registerMethod', 'isOauthMpweixin', 'isManualBind']);
     }
 
     /**

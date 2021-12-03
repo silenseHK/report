@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\enum;
 
@@ -34,6 +34,9 @@ class Setting extends EnumBasics
     // 满额包邮设置
     const FULL_FREE = 'full_free';
 
+    // 账户注册设置
+    const REGISTER = 'register';
+
     // 充值设置
     const RECHARGE = 'recharge';
 
@@ -47,7 +50,7 @@ class Setting extends EnumBasics
      * 获取订单类型值
      * @return array
      */
-    public static function data()
+    public static function data(): array
     {
         return [
             self::DELIVERY => [
@@ -58,10 +61,10 @@ class Setting extends EnumBasics
                 'value' => self::TRADE,
                 'describe' => '交易设置',
             ],
-                self::SMS => [
-                    'value' => self::SMS,
-                    'describe' => '短信通知',
-                ],
+            self::SMS => [
+                'value' => self::SMS,
+                'describe' => '短信通知',
+            ],
             self::STORAGE => [
                 'value' => self::STORAGE,
                 'describe' => '上传设置',
@@ -69,6 +72,10 @@ class Setting extends EnumBasics
             self::FULL_FREE => [
                 'value' => self::FULL_FREE,
                 'describe' => '满额包邮设置',
+            ],
+            self::REGISTER => [
+                'value' => self::REGISTER,
+                'describe' => '账户注册设置',
             ],
             self::RECHARGE => [
                 'value' => self::RECHARGE,
@@ -84,5 +91,4 @@ class Setting extends EnumBasics
             ],
         ];
     }
-
 }
