@@ -79,6 +79,11 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
     );
 
     public static $prefixLengthsPsr4 = array (
+        'y' => 
+        array (
+            'yiovo\\captcha\\' => 14,
+            'yiovo\\cache\\' => 12,
+        ),
         't' => 
         array (
             'think\\worker\\' => 13,
@@ -155,6 +160,14 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
     );
 
     public static $prefixDirsPsr4 = array (
+        'yiovo\\captcha\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yiovo/tp6-captcha/src',
+        ),
+        'yiovo\\cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yiovo/tp6-cache/src',
+        ),
         'think\\worker\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-worker/src',

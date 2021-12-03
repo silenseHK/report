@@ -16,9 +16,9 @@ use app\api\model\User as UserModel;
 use app\api\service\user\Oauth as OauthService;
 use app\api\service\user\Avatar as AvatarService;
 use app\api\validate\passport\Login as ValidateLogin;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 use app\common\service\BaseService;
-use edward\captcha\facade\CaptchaApi;
+use yiovo\captcha\facade\CaptchaApi;
 use think\facade\Cache;
 
 /**
@@ -43,7 +43,7 @@ class Login extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function login(array $data)
+    public function login(array $data): bool
     {
         // 数据验证
         if (!$this->validate($data)) {
@@ -66,7 +66,7 @@ class Login extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function mpWxLogin(array $data)
+    public function mpWxLogin(array $data): bool
     {
         try {
             // 根据code换取openid
@@ -99,7 +99,7 @@ class Login extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function oauth(array $data)
+    private function oauth(array $data): bool
     {
         if ($data['isParty']) {
             $Oauth = new OauthService;
@@ -112,7 +112,7 @@ class Login extends BaseService
      * 当前登录的用户信息
      * @return array
      */
-    public function getUserInfo()
+    public function getUserInfo(): array
     {
         return $this->userInfo;
     }
@@ -122,7 +122,7 @@ class Login extends BaseService
      * @param array $data
      * @return bool
      */
-    private function register(array $data)
+    private function register(array $data): bool
     {
         // 查询用户是否已存在
         $userInfo = UserModel::detail(['mobile' => $data['mobile']]);
@@ -142,7 +142,7 @@ class Login extends BaseService
      * @param array $partyData 用户信息(第三方)
      * @return bool
      */
-    private function createUser(string $mobile, bool $isParty, array $partyData = [])
+    private function createUser(string $mobile, bool $isParty, array $partyData = []): bool
     {
         // 用户信息
         $data = [
@@ -171,7 +171,7 @@ class Login extends BaseService
      * @param bool $isGetAvatarUrl 是否下载头像
      * @return array
      */
-    private function partyUserInfo(array $partyData, bool $isGetAvatarUrl = true)
+    private function partyUserInfo(array $partyData, bool $isGetAvatarUrl = true): array
     {
         $partyUserInfo = $partyData['userInfo'];
         $data = [
@@ -190,7 +190,7 @@ class Login extends BaseService
      * @param string $avatarUrl
      * @return int
      */
-    private function partyAvatar(string $avatarUrl)
+    private function partyAvatar(string $avatarUrl): int
     {
         $Avatar = new AvatarService;
         $fileId = $Avatar->party($avatarUrl);
@@ -204,7 +204,7 @@ class Login extends BaseService
      * @param array $partyData 用户信息(第三方)
      * @return bool
      */
-    private function updateUser(UserModel $userInfo, bool $isParty, array $partyData = [])
+    private function updateUser(UserModel $userInfo, bool $isParty, array $partyData = []): bool
     {
         // 用户信息
         $data = [
@@ -228,7 +228,7 @@ class Login extends BaseService
      * @return bool
      * @throws BaseException
      */
-    private function session()
+    private function session(): bool
     {
         empty($this->userInfo) && throwError('未找到用户信息');
         // 登录的token
@@ -247,7 +247,7 @@ class Login extends BaseService
      * @param array $data
      * @return bool
      */
-    private function validate(array $data)
+    private function validate(array $data): bool
     {
         // 数据验证
         $validate = new ValidateLogin;
@@ -268,7 +268,7 @@ class Login extends BaseService
      * @param int $userId
      * @return string
      */
-    public function getToken(int $userId)
+    public function getToken(int $userId): string
     {
         static $token = '';
         if (empty($token)) {
@@ -282,7 +282,7 @@ class Login extends BaseService
      * @param int $userId
      * @return string
      */
-    public function makeToken(int $userId)
+    public function makeToken(int $userId): string
     {
         $storeId = $this->storeId;
         // 生成一个不会重复的随机字符串
@@ -293,5 +293,4 @@ class Login extends BaseService
         $salt = self::TOKEN_SALT;
         return md5("{$storeId}_{$timeStamp}_{$userId}_{$guid}_{$salt}");
     }
-
 }

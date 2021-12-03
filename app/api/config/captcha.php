@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 return [
     // 验证码图片宽度
@@ -25,5 +25,7 @@ return [
     'fontSize' => 26,
     // 验证码字符集合
     // 复杂版：2345678abcdefhijkmnpqrstuvwxyzABCDEFGHJKLMNPQRTUVWXY
-    'codeSet' => '23456ACEFHJKLMNPRTUVWXY'
+    'codeSet' => '23456ACEFHJKLMNPRTUVWXY',
+    // 验证码可重复验证的次数
+    'checkTimes' => 5,
 ];

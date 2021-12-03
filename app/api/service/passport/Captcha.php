@@ -13,15 +13,16 @@ declare (strict_types = 1);
 namespace app\api\service\passport;
 
 use app\common\service\BaseService;
-use edward\captcha\facade\CaptchaApi;
+use yiovo\captcha\facade\CaptchaApi;
+use think\response\Json;
 
 class Captcha extends BaseService
 {
     /**
      * 图形验证码
-     * @return array|\think\response\Json
+     * @return array
      */
-    public function create()
+    public function create(): array
     {
         $data = CaptchaApi::create();
         return [

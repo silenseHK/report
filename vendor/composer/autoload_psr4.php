@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'yiovo\\captcha\\' => array($vendorDir . '/yiovo/tp6-captcha/src'),
+    'yiovo\\cache\\' => array($vendorDir . '/yiovo/tp6-cache/src'),
     'think\\worker\\' => array($vendorDir . '/topthink/think-worker/src'),
     'think\\trace\\' => array($vendorDir . '/topthink/think-trace/src'),
     'think\\app\\' => array($vendorDir . '/topthink/think-multi-app/src'),

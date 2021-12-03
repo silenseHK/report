@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0f9f50572ec0a76614af87a4b1acdb01",
+    "content-hash": "af14364ae5e5a0568b74895761221a25",
     "packages": [
         {
             "name": "aliyuncs/oss-sdk-php",
@@ -2337,6 +2337,99 @@
                 "wiki": "http://doc.workerman.net/"
             },
             "time": "2020-08-24T03:49:23+00:00"
+        },
+        {
+            "name": "yiovo/tp6-cache",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiovo/tp6-cache.git",
+                "reference": "31e0b5aaa1315ef85d7e68ed189bdb68406becfe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiovo/tp6-cache/zipball/31e0b5aaa1315ef85d7e68ed189bdb68406becfe",
+                "reference": "31e0b5aaa1315ef85d7e68ed189bdb68406becfe",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0",
+                "topthink/framework": "^6.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "yiovo\\cache\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "yiovo",
+                    "email": "developer@yiovo.com"
+                }
+            ],
+            "description": "tp6-cache",
+            "homepage": "https://github.com/yiovo/tp6-captcha",
+            "support": {
+                "issues": "https://github.com/yiovo/tp6-cache/issues",
+                "source": "https://github.com/yiovo/tp6-cache/tree/v1.0.1"
+            },
+            "time": "2021-11-27T18:53:07+00:00"
+        },
+        {
+            "name": "yiovo/tp6-captcha",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiovo/tp6-captcha.git",
+                "reference": "ee3580516de48500cd02bcea01031eb6cb9f7d2d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiovo/tp6-captcha/zipball/ee3580516de48500cd02bcea01031eb6cb9f7d2d",
+                "reference": "ee3580516de48500cd02bcea01031eb6cb9f7d2d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "ext-mbstring": "*",
+                "php": ">=7.1.0",
+                "topthink/framework": "^6.0.0",
+                "yiovo/tp6-cache": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "think": {
+                    "config": {
+                        "captcha": "src/config.php"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yiovo\\captcha\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "yiovo",
+                    "email": "developer@yiovo.com"
+                }
+            ],
+            "description": "tp6-captcha",
+            "homepage": "https://github.com/yiovo/tp6-captcha",
+            "support": {
+                "source": "https://github.com/yiovo/tp6-captcha/tree/v1.1.1"
+            },
+            "time": "2021-11-27T19:12:51+00:00"
         }
     ],
     "packages-dev": [

@@ -15,7 +15,7 @@ namespace app\api\service\passport;
 use app\api\validate\passport\SmsCaptcha as ValidateSmsCaptcha;
 use app\common\service\BaseService;
 use app\common\service\Message as MessageService;
-use edward\captcha\facade\CaptchaApi;
+use yiovo\captcha\facade\CaptchaApi;
 
 /**
  * 服务类：发送短信验证码
@@ -29,7 +29,7 @@ class SmsCaptcha extends BaseService
      * @param array $data
      * @return bool
      */
-    public function sendSmsCaptcha(array $data)
+    public function sendSmsCaptcha(array $data): bool
     {
         // 数据验证
         if (!$this->validate($data)) return false;
@@ -52,7 +52,7 @@ class SmsCaptcha extends BaseService
      * @param array $data
      * @return bool
      */
-    private function validate(array $data)
+    private function validate(array $data): bool
     {
         // 数据验证
         $validate = new ValidateSmsCaptcha;
@@ -62,7 +62,7 @@ class SmsCaptcha extends BaseService
         }
         // 验证图形验证码
         if (!CaptchaApi::check($data['captchaCode'], $data['captchaKey'])) {
-            $this->error = '图形验证码不正确';
+            $this->error = '很抱歉，图形验证码不正确';
             return false;
         }
         return true;

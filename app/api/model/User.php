@@ -13,7 +13,7 @@ declare (strict_types=1);
 namespace app\api\model;
 
 use think\facade\Cache;
-use edward\captcha\facade\CaptchaApi;
+use yiovo\captcha\facade\CaptchaApi;
 use app\api\service\User as UserService;
 use app\common\model\User as UserModel;
 use cores\exception\BaseException;
