@@ -134,7 +134,7 @@ class CaptchaApi
      */
     public function createSMS(string $phone = null): array
     {
-        $key = rand(1000, 9999);
+        $key = rand(100000, 999999);
         $this->cache->set('captchaSMS.' . $phone, $key, $this->expire);
         return [
             'key' => $phone,
