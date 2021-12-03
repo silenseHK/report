@@ -10,7 +10,7 @@ CREATE TABLE `yoshop_wxapp_setting` (
   `store_id` int unsigned NOT NULL DEFAULT '0' COMMENT '商城ID',
   `update_time` int unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   UNIQUE KEY `unique_key` (`key`,`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='微信小程序设置表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8mb4_unicode_ci COMMENT='微信小程序设置表';
 
 
 CREATE TABLE `yoshop_h5_setting` (
@@ -20,7 +20,15 @@ CREATE TABLE `yoshop_h5_setting` (
   `store_id` int unsigned NOT NULL DEFAULT '0' COMMENT '商城ID',
   `update_time` int unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   UNIQUE KEY `unique_key` (`key`,`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='H5端设置表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8mb4_unicode_ci COMMENT='H5端设置表';
+
+
+UPDATE `yoshop_store_api` SET `url`='/client.wxapp.setting/update', `sort`='105' WHERE (`api_id`='11153');
+UPDATE `yoshop_store_api` SET `url`='/client.wxapp.setting/detail', `sort`='100' WHERE (`api_id`='11182');
+
+INSERT INTO `yoshop_store_api` VALUES ('11270', 'H5端', '-', '11151', '105', '1614556800', '1614556800');
+INSERT INTO `yoshop_store_api` VALUES ('11271', '获取设置项', '/client.h5.setting/detail', '11270', '100', '1614556800', '1614556800');
+INSERT INTO `yoshop_store_api` VALUES ('11272', '更新设置项', '/client.h5.setting/update', '11270', '105', '1614556800', '1614556800');
 
 
 --------------------------------------------

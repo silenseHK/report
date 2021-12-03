@@ -4600,3 +4600,11 @@ INSERT INTO `yoshop_store_menu` VALUES ('10141', '20', '删除订单', '', 'dele
 INSERT INTO `yoshop_store_menu_api` VALUES ('10661', '10141', '11185', '1614556800');
 INSERT INTO `yoshop_store_menu_api` VALUES ('10662', '10141', '11132', '1614556800');
 INSERT INTO `yoshop_store_menu_api` VALUES ('10663', '10141', '11076', '1614556800');
+
+UPDATE `yoshop_store_api` SET `url`='/client.wxapp.setting/update', `sort`='105' WHERE (`api_id`='11153');
+UPDATE `yoshop_store_api` SET `url`='/client.wxapp.setting/detail', `sort`='100' WHERE (`api_id`='11182');
+
+INSERT INTO `yoshop_store_api` VALUES ('11270', 'H5端', '-', '11151', '105', '1614556800', '1614556800');
+INSERT INTO `yoshop_store_api` VALUES ('11271', '获取设置项', '/client.h5.setting/detail', '11270', '100', '1614556800', '1614556800');
+INSERT INTO `yoshop_store_api` VALUES ('11272', '更新设置项', '/client.h5.setting/update', '11270', '105', '1614556800', '1614556800');
+

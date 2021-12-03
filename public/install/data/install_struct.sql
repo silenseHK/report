@@ -920,7 +920,7 @@ CREATE TABLE `yoshop_wxapp` (
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `store_id` (`store_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='微信小程序记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='微信小程序记录表（已废弃）';
 
 DROP TABLE IF EXISTS `yoshop_order_export`;
 CREATE TABLE `yoshop_order_export` (
