@@ -2909,17 +2909,17 @@
         },
         {
             "name": "yiovo/tp6-captcha",
-            "version": "v1.1.1",
-            "version_normalized": "1.1.1.0",
+            "version": "v1.1.2",
+            "version_normalized": "1.1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiovo/tp6-captcha.git",
-                "reference": "ee3580516de48500cd02bcea01031eb6cb9f7d2d"
+                "reference": "33a00cbf9c94fc0cbd6636e4c6cb6642d12dfd27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiovo/tp6-captcha/zipball/ee3580516de48500cd02bcea01031eb6cb9f7d2d",
-                "reference": "ee3580516de48500cd02bcea01031eb6cb9f7d2d",
+                "url": "https://api.github.com/repos/yiovo/tp6-captcha/zipball/33a00cbf9c94fc0cbd6636e4c6cb6642d12dfd27",
+                "reference": "33a00cbf9c94fc0cbd6636e4c6cb6642d12dfd27",
                 "shasum": ""
             },
             "require": {
@@ -2929,7 +2929,7 @@
                 "topthink/framework": "^6.0.0",
                 "yiovo/tp6-cache": "^1.0"
             },
-            "time": "2021-11-27T19:12:51+00:00",
+            "time": "2021-12-02T13:49:15+00:00",
             "type": "library",
             "extra": {
                 "think": {
@@ -2957,7 +2957,7 @@
             "description": "tp6-captcha",
             "homepage": "https://github.com/yiovo/tp6-captcha",
             "support": {
-                "source": "https://github.com/yiovo/tp6-captcha/tree/v1.1.1"
+                "source": "https://github.com/yiovo/tp6-captcha/tree/v1.1.2"
             },
             "install-path": "../yiovo/tp6-captcha"
         }
