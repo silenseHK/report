@@ -86,7 +86,7 @@ class User extends BaseModel
      * 获取用户信息
      * @param $where
      * @param array $with
-     * @return array|\think\Model|null
+     * @return static|array|false|null
      */
     public static function detail($where, array $with = [])
     {

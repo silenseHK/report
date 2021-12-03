@@ -57,7 +57,7 @@ abstract class BaseModel extends Model
      * 查找单条记录
      * @param $data
      * @param array $with
-     * @return array|false|Model|null
+     * @return array|false|static|null
      */
     public static function get($data, array $with = [])
     {

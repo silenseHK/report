@@ -80,7 +80,7 @@ class Login extends BaseService
         $userInfo = !empty($userId) ? UserModel::detail($userId) : null;
 
         // 用户信息存在, 更新登录信息
-        if (!empty($userInfo) && $userInfo instanceof UserModel) {
+        if (!empty($userInfo)) {
             // 更新用户登录信息
             $this->updateUser($userInfo, true, $form['partyData']);
             // 记录登录态
@@ -93,15 +93,15 @@ class Login extends BaseService
         if ($setting['isForceBindMpweixin']) {
             throwError('当前用户未绑定手机号', null, ['isBindMobile' => true]);
         }
-        // 后台设置了强制绑定手机号, 直接保存新用户
+        // 后台未开启强制绑定手机号, 直接保存新用户
         if (!$setting['isForceBindMpweixin']) {
             // 用户不存在: 创建一个新用户
             $this->createUser('', true, $form['partyData']);
             // 保存第三方用户信息
             $this->createUserOauth($this->getUserId(), true, $form['partyData']);
-            return true;
         }
-        return true;
+        // 记录登录态
+        return $this->setSession();
     }
 
     /**
@@ -139,19 +139,18 @@ class Login extends BaseService
      * @param int $userId 用户ID
      * @param bool $isParty 是否为第三方用户
      * @param array $partyData 第三方用户数据
-     * @return bool
+     * @return void
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function createUserOauth(int $userId, bool $isParty, array $partyData = []): bool
+    private function createUserOauth(int $userId, bool $isParty, array $partyData = []): void
     {
         if ($isParty) {
             $Oauth = new PartyService;
-            return $Oauth->createUserOauth($userId, $partyData);
+            $Oauth->createUserOauth($userId, $partyData);
         }
-        return true;
     }
 
     /**
@@ -174,22 +173,23 @@ class Login extends BaseService
     /**
      * 自动登录注册
      * @param array $data
-     * @return bool
+     * @return void
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function register(array $data): bool
+    private function register(array $data): void
     {
         // 查询用户是否已存在
         // 用户存在: 更新用户登录信息
         $userInfo = UserModel::detail(['mobile' => $data['mobile']]);
         if ($userInfo) {
-            return $this->updateUser($userInfo, $data['isParty'], $data['partyData']);
+            $this->updateUser($userInfo, $data['isParty'], $data['partyData']);
+            return;
         }
         // 用户不存在: 创建一个新用户
-        return $this->createUser($data['mobile'], $data['isParty'], $data['partyData']);
+        $this->createUser($data['mobile'], $data['isParty'], $data['partyData']);
     }
 
     /**
@@ -197,13 +197,13 @@ class Login extends BaseService
      * @param string $mobile 手机号
      * @param bool $isParty 是否存在第三方用户信息
      * @param array $partyData 用户信息(第三方)
-     * @return bool
+     * @return void
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function createUser(string $mobile, bool $isParty, array $partyData = []): bool
+    private function createUser(string $mobile, bool $isParty, array $partyData = []): void
     {
         // 用户信息
         $data = [
@@ -223,7 +223,6 @@ class Login extends BaseService
         $status = $model->save($data);
         // 记录用户信息
         $this->userInfo = $model;
-        return $status;
     }
 
     /**
@@ -231,9 +230,9 @@ class Login extends BaseService
      * @param UserModel $userInfo
      * @param bool $isParty 是否存在第三方用户信息
      * @param array $partyData 用户信息(第三方)
-     * @return bool
+     * @return void
      */
-    private function updateUser(UserModel $userInfo, bool $isParty, array $partyData = []): bool
+    private function updateUser(UserModel $userInfo, bool $isParty, array $partyData = []): void
     {
         // 用户信息
         $data = [
@@ -250,7 +249,6 @@ class Login extends BaseService
         $status = $userInfo->save($data) !== false;
         // 记录用户信息
         $this->userInfo = $userInfo;
-        return $status;
     }
 
     /**
