@@ -366,9 +366,9 @@ function pad_left($value, int $padLength = 2): string
 /**
  * 重写trim方法 (解决int类型过滤后后变为string类型)
  * @param $str
- * @return string
+ * @return mixed
  */
-function my_trim($str): string
+function my_trim($str)
 {
     return is_string($str) ? trim($str) : $str;
 }
@@ -376,9 +376,9 @@ function my_trim($str): string
 /**
  * 重写htmlspecialchars方法 (解决int类型过滤后后变为string类型)
  * @param $string
- * @return string
+ * @return mixed
  */
-function my_htmlspecialchars($string): string
+function my_htmlspecialchars($string)
 {
     return is_string($string) ? htmlspecialchars($string) : $string;
 }
