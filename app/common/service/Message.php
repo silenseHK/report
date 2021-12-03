@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\service;
 
@@ -40,9 +40,9 @@ class Message extends BaseService
      * @param string $sceneName 场景名称
      * @param array $param 参数
      * @param int $storeId 商城ID
-     * @return bool
+     * @return mixed
      */
-    public static function send(string $sceneName, array $param, int $storeId): bool
+    public static function send(string $sceneName, array $param, int $storeId)
     {
         if (!isset(self::$sceneList[$sceneName])) return false;
         $class = self::$sceneList[$sceneName];

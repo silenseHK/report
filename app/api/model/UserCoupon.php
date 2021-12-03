@@ -33,7 +33,7 @@ class UserCoupon extends UserCouponModel
      * @return \think\Paginator
      * @throws \think\db\exception\DbException
      */
-    public function getList(int $userId, array $param)
+    public function getList(int $userId, array $param): \think\Paginator
     {
         $filter = $this->getFilter($param);
         return $this->where($filter)
@@ -44,9 +44,9 @@ class UserCoupon extends UserCouponModel
     /**
      * 检索查询条件
      * @param array $param
-     * @return array|mixed
+     * @return array
      */
-    private function getFilter(array $param = [])
+    private function getFilter(array $param = []): array
     {
         // 设置默认查询参数
         $params = $this->setQueryDefaultValue($param, [
@@ -80,20 +80,22 @@ class UserCoupon extends UserCouponModel
      * @param int $userId
      * @return int
      */
-    public function getCount(int $userId)
+    public function getCount(int $userId): int
     {
         return $this->where('user_id', '=', $userId)
             ->where('is_use', '=', 0)
             ->where('is_expire', '=', 0)
+            ->where('start_time', '<=', time())
+            ->where('end_time', '>', time())
             ->count();
     }
 
     /**
      * 获取用户优惠券ID集
-     * @param $userId
+     * @param int $userId
      * @return array
      */
-    public function getUserCouponIds(int $userId)
+    public function getUserCouponIds(int $userId): array
     {
         return $this->where('user_id', '=', $userId)->column('coupon_id');
     }
@@ -104,7 +106,7 @@ class UserCoupon extends UserCouponModel
      * @return bool
      * @throws BaseException
      */
-    public function receive(int $couponId)
+    public function receive(int $couponId): bool
     {
         // 当前用户信息
         $userInfo = UserService::getCurrentLoginUser(true);
@@ -124,7 +126,7 @@ class UserCoupon extends UserCouponModel
      * @param Coupon $coupon
      * @return bool
      */
-    private function add($user, Coupon $coupon)
+    private function add($user, Coupon $coupon): bool
     {
         // 计算有效期
         if ($coupon['expire_type'] == ExpireTypeEnum::RECEIVE) {
@@ -169,9 +171,9 @@ class UserCoupon extends UserCouponModel
      * @param Coupon $coupon 优惠券详情
      * @return bool
      */
-    private function checkReceive($userInfo, Coupon $coupon)
+    private function checkReceive($userInfo, Coupon $coupon): bool
     {
-        if (!$coupon) {
+        if (empty($coupon)) {
             $this->error = '优惠券不存在';
             return false;
         }
@@ -192,10 +194,10 @@ class UserCoupon extends UserCouponModel
      * 订单结算优惠券列表
      * @param int $userId 用户id
      * @param float $orderPayPrice 订单商品总金额
-     * @return array|mixed
+     * @return array
      * @throws \think\db\exception\DbException
      */
-    public static function getUserCouponList(int $userId, float $orderPayPrice)
+    public static function getUserCouponList(int $userId, float $orderPayPrice): array
     {
         // 获取用户可用的优惠券列表
         $list = (new static)->getList($userId, ['dataType' => 'isUsable', 'amount' => $orderPayPrice]);
@@ -230,11 +232,11 @@ class UserCoupon extends UserCouponModel
 
     /**
      * 判断当前优惠券是否满足订单使用条件
-     * @param $couponList
+     * @param array $couponList
      * @param array $orderGoodsIds 订单商品ID集
-     * @return mixed
+     * @return array
      */
-    public static function couponListApplyRange(array $couponList, array $orderGoodsIds)
+    public static function couponListApplyRange(array $couponList, array $orderGoodsIds): array
     {
         // 名词解释(is_apply)：允许用于抵扣当前订单
         foreach ($couponList as &$item) {

@@ -31,7 +31,7 @@ class PayType extends EnumBasics
      * 获取枚举数据
      * @return array
      */
-    public static function data()
+    public static function data(): array
     {
         return [
             self::BALANCE => [

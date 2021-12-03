@@ -12,24 +12,21 @@ declare (strict_types=1);
 
 namespace app\api\model;
 
-use app\api\model\Goods as GoodsModel;
-use app\api\model\Setting as SettingModel;
-use app\api\model\GoodsSku as GoodsSkuModel;
-use app\api\service\User as UserService;
-use app\api\service\Payment as PaymentService;
-use app\api\service\order\PaySuccess as OrderPaySuccesService;
-use app\api\service\order\source\Factory as OrderSourceFactory;
+use app\api\model\{Goods as GoodsModel, Setting as SettingModel};
+use app\api\service\{User as UserService, Goods as GoodsService, Payment as PaymentService};
+use app\api\service\order\{PaySuccess as OrderPaySuccesService, source\Factory as OrderSourceFactory};
 use app\common\model\Order as OrderModel;
-use app\common\service\Order as OrderService;
-use app\common\service\order\Complete as OrderCompleteService;
-use app\common\enum\Setting as SettingEnum;
-use app\common\enum\OrderType as OrderTypeEnum;
-use app\common\enum\order\PayType as OrderPayTypeEnum;
-use app\common\enum\order\PayStatus as PayStatusEnum;
-use app\common\enum\order\OrderStatus as OrderStatusEnum;
-use app\common\enum\order\DeliveryType as DeliveryTypeEnum;
-use app\common\enum\order\ReceiptStatus as ReceiptStatusEnum;
-use app\common\enum\order\DeliveryStatus as DeliveryStatusEnum;
+use app\common\service\{Order as OrderService, order\Complete as OrderCompleteService};
+use app\common\enum\{
+    Setting as SettingEnum,
+    OrderType as OrderTypeEnum,
+    order\PayType as OrderPayTypeEnum,
+    order\PayStatus as PayStatusEnum,
+    order\OrderStatus as OrderStatusEnum,
+    order\DeliveryType as DeliveryTypeEnum,
+    order\ReceiptStatus as ReceiptStatusEnum,
+    order\DeliveryStatus as DeliveryStatusEnum
+};
 use app\common\library\helper;
 use cores\exception\BaseException;
 
@@ -170,8 +167,8 @@ class Order extends OrderModel
      * 获取用户订单列表
      * @param string $type 订单类型 (all全部 payment待付款 received待发货 deliver待收货 comment待评价)
      * @return \think\Paginator
-     * @throws BaseException
      * @throws \think\db\exception\DbException
+     * @throws BaseException
      */
     public function getList(string $type = 'all'): \think\Paginator
     {

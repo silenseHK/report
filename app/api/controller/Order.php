@@ -16,7 +16,8 @@ use app\api\model\Order as OrderModel;
 use app\api\model\Setting as SettingModel;
 use app\store\model\Express as ExpressModel;
 use app\common\enum\order\PayType as OrderPayTypeEnum;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
+use think\response\Json;
 
 /**
  * 我的订单控制器
@@ -27,10 +28,10 @@ class Order extends Controller
 {
     /**
      * 获取当前用户待处理的订单数量
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      */
-    public function todoCounts()
+    public function todoCounts(): Json
     {
         $model = new OrderModel;
         $counts = $model->getTodoCounts();
@@ -40,11 +41,11 @@ class Order extends Controller
     /**
      * 我的订单列表
      * @param string $dataType 订单类型 (all全部 payment待付款 received待发货 deliver待收货 comment待评价)
-     * @return array|\think\response\Json
-     * @throws BaseException
+     * @return Json
      * @throws \think\db\exception\DbException
+     * @throws BaseException
      */
-    public function list(string $dataType)
+    public function list(string $dataType): Json
     {
         $model = new OrderModel;
         $list = $model->getList($dataType);
@@ -54,13 +55,13 @@ class Order extends Controller
     /**
      * 订单详情信息
      * @param int $orderId 订单ID
-     * @return array|\think\response\Json
-     * @throws BaseException
+     * @return Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
+     * @throws BaseException
      */
-    public function detail(int $orderId)
+    public function detail(int $orderId): Json
     {
         // 订单详情
         $model = OrderModel::getUserOrderDetail($orderId);
@@ -76,13 +77,13 @@ class Order extends Controller
     /**
      * 获取物流信息
      * @param int $orderId 订单ID
-     * @return array|\think\response\Json
-     * @throws BaseException
+     * @return Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
+     * @throws BaseException
      */
-    public function express(int $orderId)
+    public function express(int $orderId): Json
     {
         // 订单信息
         $order = OrderModel::getDetail($orderId);
@@ -101,10 +102,10 @@ class Order extends Controller
     /**
      * 取消订单
      * @param int $orderId
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      */
-    public function cancel(int $orderId)
+    public function cancel(int $orderId): Json
     {
         $model = OrderModel::getDetail($orderId);
         if ($model->cancel()) {
@@ -116,10 +117,10 @@ class Order extends Controller
     /**
      * 确认收货
      * @param int $orderId
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      */
-    public function receipt(int $orderId)
+    public function receipt(int $orderId): Json
     {
         $model = OrderModel::getDetail($orderId);
         if ($model->receipt()) {
@@ -132,13 +133,13 @@ class Order extends Controller
      * 立即支付
      * @param int $orderId 订单ID
      * @param int $payType 支付方式
-     * @return array|\think\response\Json
-     * @throws BaseException
+     * @return Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
+     * @throws BaseException
      */
-    public function pay(int $orderId, int $payType = OrderPayTypeEnum::WECHAT)
+    public function pay(int $orderId, int $payType = OrderPayTypeEnum::WECHAT): Json
     {
         // 获取订单详情
         $model = OrderModel::getUserOrderDetail($orderId);
@@ -155,5 +156,4 @@ class Order extends Controller
             'payment' => $payment               // 微信支付参数
         ]);
     }
-
 }
