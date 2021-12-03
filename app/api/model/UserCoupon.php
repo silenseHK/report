@@ -85,7 +85,6 @@ class UserCoupon extends UserCouponModel
         return $this->where('user_id', '=', $userId)
             ->where('is_use', '=', 0)
             ->where('is_expire', '=', 0)
-            ->where('start_time', '<=', time())
             ->where('end_time', '>', time())
             ->count();
     }

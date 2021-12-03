@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\console\model;
 
@@ -29,14 +29,12 @@ class UserCoupon extends UserCouponModel
      * @param int $storeId
      * @return array
      */
-    public function getExpiredCouponIds(int $storeId)
+    public function getExpiredCouponIds(int $storeId): array
     {
         $time = time();
         return $this->where('is_expire', '=', 0)
             ->where('is_use', '=', 0)
-            ->where("IF ( `expire_type` = 20,
-                    (`end_time` + 86400) < {$time},
-                    ( `create_time` + (`expire_day` * 86400)) < {$time} )")
+            ->where('end_time', '<=', time())
             ->where('store_id', '=', $storeId)
             ->column('user_coupon_id');
     }
@@ -44,14 +42,13 @@ class UserCoupon extends UserCouponModel
     /**
      * 设置优惠券过期状态
      * @param array $couponIds
-     * @return false|int
+     * @return bool
      */
-    public function setIsExpire(array $couponIds)
+    public function setIsExpire(array $couponIds): bool
     {
         if (empty($couponIds)) {
             return false;
         }
         return $this->updateBase(['is_expire' => 1], [['user_coupon_id', 'in', $couponIds]]);
     }
-
 }

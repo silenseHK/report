@@ -27,9 +27,9 @@ class UserCoupon extends BaseService
     /**
      * 设置优惠券过期状态
      * @param int $storeId
-     * @return mixed
+     * @return bool
      */
-    public function setExpired(int $storeId)
+    public function setExpired(int $storeId): bool
     {
         $model = new UserCouponModel;
         // 获取已过期的优惠券ID集
