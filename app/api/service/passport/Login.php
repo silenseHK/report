@@ -12,14 +12,14 @@ declare (strict_types=1);
 
 namespace app\api\service\passport;
 
-use app\api\model\User as UserModel;
-use app\api\service\user\Oauth as OauthService;
-use app\api\service\user\Avatar as AvatarService;
-use app\api\validate\passport\Login as ValidateLogin;
-use cores\exception\BaseException;
-use app\common\service\BaseService;
-use yiovo\captcha\facade\CaptchaApi;
 use think\facade\Cache;
+use yiovo\captcha\facade\CaptchaApi;
+use app\api\model\{User as UserModel, Setting as SettingModel, dealer\Referee as RefereeModel};
+use app\api\service\{user\Oauth as OauthService, user\Avatar as AvatarService, passport\Party as PartyService};
+use app\api\validate\passport\Login as ValidateLogin;
+use app\common\service\BaseService;
+use app\common\enum\Setting as SettingEnum;
+use cores\exception\BaseException;
 
 /**
  * 服务类：用户登录
@@ -39,6 +39,7 @@ class Login extends BaseService
      * @param array $data
      * @return bool
      * @throws BaseException
+     * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
@@ -46,64 +47,124 @@ class Login extends BaseService
     public function login(array $data): bool
     {
         // 数据验证
-        if (!$this->validate($data)) {
-            return false;
-        }
+        $this->validate($data);
         // 自动登录注册
         $this->register($data);
-        // 保存oauth信息
-        $this->oauth($data);
+        // 保存第三方用户信息
+        $this->createUserOauth($this->getUserId(), $data['isParty'], $data['partyData']);
         // 记录登录态
-        return $this->session();
+        return $this->setSession();
     }
 
     /**
      * 快捷登录：微信小程序用户
-     * @param array $data
+     * @param array $form
      * @return bool
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\Exception
      */
-    public function mpWxLogin(array $data): bool
+    public function loginMpWx(array $form): bool
     {
-        try {
-            // 根据code换取openid
-            $wxSession = OauthService::wxCode2Session($data['code']);
-        } catch (BaseException $e) {
-            // showError参数表示让前端显示错误
-            throwError($e->getMessage(), null, ['showError' => true]);
-            return false;
-        }
+        // 获取微信小程序登录态(session)
+        $wxSession = PartyService::getMpWxSession($form['partyData']['code']);
+
         // 判断openid是否存在
         $userId = OauthService::getUserIdByOauthId($wxSession['openid'], 'MP-WEIXIN');
         // 获取用户信息
         $userInfo = !empty($userId) ? UserModel::detail($userId) : null;
-        if (empty($userId) || empty($userInfo)) {
-            $this->error = '第三方用户不存在';
-            return false;
+
+        // 用户信息存在, 更新登录信息
+        if (!empty($userInfo)) {
+            // 更新用户登录信息
+            $this->updateUser($userInfo, true, $form['partyData']);
+            // 记录登录态
+            return $this->setSession();
         }
-        // 更新用户登录信息
-        $this->updateUser($userInfo, true, $data);
-        // 记录登录态
-        return $this->session();
+
+        // 用户信息不存在 => 注册新用户 或者 跳转到绑定手机号页
+        $setting = SettingModel::getItem(SettingEnum::REGISTER);
+        // 后台设置了需强制绑定手机号, 返回前端isBindMobile, 跳转到手机号验证页
+        if ($setting['isForceBindMpweixin']) {
+            throwError('当前用户未绑定手机号', null, ['isBindMobile' => true]);
+        }
+        // 后台设置了强制绑定手机号, 直接保存新用户
+        if (!$setting['isForceBindMpweixin']) {
+            // 推荐人ID
+            $refereeId = $form['refereeId'] ?? null;
+            // 用户不存在: 创建一个新用户
+            $this->createUser('', true, $form['partyData'], (int)$refereeId);
+            // 保存第三方用户信息
+            $this->createUserOauth($this->getUserId(), true, $form['partyData']);
+            return true;
+        }
+        return true;
     }
 
     /**
-     * 保存oauth信息
-     * @param array $data
+     * 快捷登录：微信小程序用户
+     * @param array $form
+     * @return bool
+     * @throws BaseException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\Exception
+     */
+    public function loginMpWxMobile(array $form): bool
+    {
+        // 获取微信小程序登录态(session)
+        $wxSession = PartyService::getMpWxSession($form['code']);
+        // 解密encryptedData -> 拿到手机号
+        $wxData = OauthService::wxDecryptData($wxSession['session_key'], $form['encryptedData'], $form['iv']);
+        // 整理登录注册数据
+        $loginData = [
+            'mobile' => $wxData['purePhoneNumber'],
+            'isParty' => $form['isParty'],
+            'partyData' => $form['partyData'],
+            'refereeId' => $form['refereeId'] ?? null
+        ];
+        // 自动登录注册
+        $this->register($loginData);
+        // 保存第三方用户信息
+        $this->createUserOauth($this->getUserId(), $loginData['isParty'], $loginData['partyData']);
+        // 记录登录态
+        return $this->setSession();
+    }
+
+    /**
+     * 绑定推荐关系
+     * @param int $userId 当前用户ID
+     * @param int $refereeId 推荐人ID
+     * @return bool
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    private function bindRelation(int $userId, int $refereeId): bool
+    {
+        return $refereeId > 0 && RefereeModel::createRelation($userId, $refereeId);
+    }
+
+    /**
+     * 保存oauth信息(第三方用户信息)
+     * @param int $userId 用户ID
+     * @param bool $isParty 是否为第三方用户
+     * @param array $partyData 第三方用户数据
      * @return bool
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function oauth(array $data): bool
+    private function createUserOauth(int $userId, bool $isParty, array $partyData = []): bool
     {
-        if ($data['isParty']) {
-            $Oauth = new OauthService;
-            return $Oauth->party((int)$this->userInfo['user_id'], $data['partyData']);
+        if ($isParty) {
+            $Oauth = new PartyService;
+            return $Oauth->createUserOauth($userId, $partyData);
         }
         return true;
     }
@@ -118,21 +179,35 @@ class Login extends BaseService
     }
 
     /**
+     * 当前登录的用户ID
+     * @return int
+     */
+    private function getUserId(): int
+    {
+        return (int)$this->getUserInfo()['user_id'];
+    }
+
+    /**
      * 自动登录注册
      * @param array $data
      * @return bool
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     private function register(array $data): bool
     {
         // 查询用户是否已存在
+        // 用户存在: 更新用户登录信息
         $userInfo = UserModel::detail(['mobile' => $data['mobile']]);
         if ($userInfo) {
-            // 用户存在: 更新登录信息
             return $this->updateUser($userInfo, $data['isParty'], $data['partyData']);
-        } else {
-            // 用户不存在: 新增用户
-            return $this->createUser($data['mobile'], $data['isParty'], $data['partyData']);
         }
+        // 推荐人ID
+        $refereeId = (int)$data['refereeId'] ?? null;
+        // 用户不存在: 创建一个新用户
+        return $this->createUser($data['mobile'], $data['isParty'], $data['partyData'], $refereeId);
     }
 
     /**
@@ -140,21 +215,26 @@ class Login extends BaseService
      * @param string $mobile 手机号
      * @param bool $isParty 是否存在第三方用户信息
      * @param array $partyData 用户信息(第三方)
+     * @param int|null $refereeId 推荐人ID
      * @return bool
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
-    private function createUser(string $mobile, bool $isParty, array $partyData = []): bool
+    private function createUser(string $mobile, bool $isParty, array $partyData = [], ?int $refereeId = null): bool
     {
         // 用户信息
         $data = [
             'mobile' => $mobile,
-            'nick_name' => hide_mobile($mobile),
+            'nick_name' => !empty($mobile) ? hide_mobile($mobile) : '',
             'platform' => getPlatform(),
             'last_login_time' => time(),
             'store_id' => $this->storeId
         ];
         // 写入用户信息(第三方)
         if ($isParty === true && !empty($partyData)) {
-            $partyUserInfo = $this->partyUserInfo($partyData, true);
+            $partyUserInfo = PartyService::partyUserInfo($partyData, true);
             $data = array_merge($data, $partyUserInfo);
         }
         // 新增用户记录
@@ -162,39 +242,9 @@ class Login extends BaseService
         $status = $model->save($data);
         // 记录用户信息
         $this->userInfo = $model;
+        // 记录推荐人关系
+        $this->bindRelation($this->getUserId(), (int)$refereeId);
         return $status;
-    }
-
-    /**
-     * 第三方用户信息
-     * @param array $partyData 第三方用户信息
-     * @param bool $isGetAvatarUrl 是否下载头像
-     * @return array
-     */
-    private function partyUserInfo(array $partyData, bool $isGetAvatarUrl = true): array
-    {
-        $partyUserInfo = $partyData['userInfo'];
-        $data = [
-            'nick_name' => $partyUserInfo['nickName'],
-            'gender' => $partyUserInfo['gender']
-        ];
-        // 下载用户头像
-        if ($isGetAvatarUrl) {
-            $data['avatar_id'] = $this->partyAvatar($partyUserInfo['avatarUrl']);
-        }
-        return $data;
-    }
-
-    /**
-     * 下载第三方头像并写入文件库
-     * @param string $avatarUrl
-     * @return int
-     */
-    private function partyAvatar(string $avatarUrl): int
-    {
-        $Avatar = new AvatarService;
-        $fileId = $Avatar->party($avatarUrl);
-        return $fileId ? $fileId : 0;
     }
 
     /**
@@ -212,8 +262,9 @@ class Login extends BaseService
             'store_id' => $this->storeId
         ];
         // 写入用户信息(第三方)
+        // 如果不需要每次登录都更新微信用户头像昵称, 下面4行代码可以屏蔽掉
         if ($isParty === true && !empty($partyData)) {
-            $partyUserInfo = $this->partyUserInfo($partyData, !$userInfo['avatar_id']);
+            $partyUserInfo = PartyService::partyUserInfo($partyData, true);
             $data = array_merge($data, $partyUserInfo);
         }
         // 更新用户记录
@@ -228,11 +279,11 @@ class Login extends BaseService
      * @return bool
      * @throws BaseException
      */
-    private function session(): bool
+    private function setSession(): bool
     {
         empty($this->userInfo) && throwError('未找到用户信息');
         // 登录的token
-        $token = $this->getToken((int)$this->userInfo['user_id']);
+        $token = $this->getToken($this->getUserId());
         // 记录缓存, 30天
         Cache::set($token, [
             'user' => $this->userInfo,
@@ -245,22 +296,20 @@ class Login extends BaseService
     /**
      * 数据验证
      * @param array $data
-     * @return bool
+     * @return void
+     * @throws BaseException
      */
-    private function validate(array $data): bool
+    private function validate(array $data): void
     {
         // 数据验证
         $validate = new ValidateLogin;
         if (!$validate->check($data)) {
-            $this->error = $validate->getError();
-            return false;
+            throwError($validate->getError());
         }
         // 验证短信验证码是否匹配
         if (!CaptchaApi::checkSms($data['smsCode'], $data['mobile'])) {
-            $this->error = '短信验证码不正确';
-            return false;
+            throwError('短信验证码不正确');
         }
-        return true;
     }
 
     /**
@@ -282,7 +331,7 @@ class Login extends BaseService
      * @param int $userId
      * @return string
      */
-    public function makeToken(int $userId): string
+    private function makeToken(int $userId): string
     {
         $storeId = $this->storeId;
         // 生成一个不会重复的随机字符串

@@ -16,8 +16,8 @@ use app\common\service\BaseService;
 use app\api\model\Setting as SettingModel;
 use app\api\model\UploadFile as UploadFileModel;
 use app\common\enum\file\FileType as FileTypeEnum;
-use app\common\library\Download;
-use app\common\library\storage\Driver as Storage;
+use app\common\library\{Download, storage\Driver as Storage};
+use cores\exception\BaseException;
 
 /**
  * 服务类: 用户头像
@@ -46,7 +46,7 @@ class Avatar extends BaseService
     /**
      * 下载第三方头像并返回文件记录ID
      * @param string $avatarUrl
-     * @return false|mixed
+     * @return int|false
      */
     public function party(string $avatarUrl)
     {
@@ -89,9 +89,9 @@ class Avatar extends BaseService
     /**
      * 添加文件库记录
      * @param array $fileInfo
-     * @return mixed
+     * @return int
      */
-    private function record(array $fileInfo)
+    private function record(array $fileInfo): int
     {
         $model = new UploadFileModel;
         $model->add($fileInfo, FileTypeEnum::IMAGE, 0);
@@ -102,12 +102,11 @@ class Avatar extends BaseService
      * 下载网络图片
      * @param string $avatarUrl
      * @return string
-     * @throws \app\common\exception\BaseException
+     * @throws BaseException
      */
-    private function download(string $avatarUrl)
+    private function download(string $avatarUrl): string
     {
         $Download = new Download;
         return $Download->saveTempImage($this->storeId, $avatarUrl, 'avatar');
     }
-
 }
