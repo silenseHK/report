@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\controller;
 
@@ -24,12 +24,14 @@ class Notify
 {
     /**
      * 支付成功异步通知(微信小程序-微信支付)
-     * @throws BaseException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public function wxpay()
     {
         // 微信支付组件：验证异步通知
         $WxPay = new WxPay();
-        return $WxPay->notify();
+        $WxPay->notify();
     }
 }

@@ -30,10 +30,10 @@ class Refund extends BaseService
 {
     /**
      * 执行订单退款
-     * @param mixed $order 订单信息
-     * @param null $money 指定退款金额
+     * @param $order
+     * @param null $money
      * @return bool
-     * @throws BaseException
+     * @throws \cores\exception\BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
@@ -74,17 +74,17 @@ class Refund extends BaseService
     /**
      * 微信支付退款
      * @param $order
-     * @param $money
+     * @param string $money
      * @return bool
-     * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
+     * @throws \cores\exception\BaseException
      */
-    private function wxpay($order, $money): bool
+    private function wxpay($order, string $money): bool
     {
         $wxConfig = WxappSettingModel::getWxappConfig($order['store_id']);
-        $WxPay = new WxPay($wxConfig);
+        $WxPay = new WxPay($wxConfig, $order['store_id']);
         return $WxPay->refund($order['transaction_id'], $order['pay_price'], $money);
     }
 }
