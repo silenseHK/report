@@ -10,21 +10,21 @@
 // +----------------------------------------------------------------------
 declare (strict_types=1);
 
-namespace app\common\model\wxapp;
+namespace app\common\model\h5;
 
 use cores\BaseModel;
 use think\facade\Cache;
 use app\common\library\helper;
 
 /**
- * 微信小程序设置模型
+ * H5设置模型
  * Class Setting
- * @package app\common\model\wxapp
+ * @package app\common\model\h5
  */
 class Setting extends BaseModel
 {
     // 定义表名
-    protected $name = 'wxapp_setting';
+    protected $name = 'h5_setting';
 
     protected $createTime = false;
 
@@ -120,18 +120,10 @@ class Setting extends BaseModel
                 'key' => 'basic',
                 'describe' => '基础设置',
                 'values' => [
-                    // 小程序AppID
-                    'app_id' => '',
-                    // 小程序AppSecret
-                    'app_secret' => '',
-                    // 微信支付商户号ID
-                    'mchid' => '',
-                    // 微信支付密钥
-                    'apikey' => '',
-                    // 证书文件cert
-                    'cert_pem' => '',
-                    // 证书文件key
-                    'key_pem' => '',
+                    // 是否启用h5端访问  0=>关闭  1=>开启
+                    'enabled' => 1,
+                    // h5站点url [默认是当前访问的域名]
+                    'baseUrl' => base_url(),
                 ]
             ]
         ];
