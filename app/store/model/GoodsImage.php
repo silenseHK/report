@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\store\model;
 
@@ -42,17 +42,15 @@ class GoodsImage extends GoodsImageModel
 
     /**
      * 更新关系记录
-     * @param $goodsId
+     * @param int $goodsId
      * @param array $imageIds 新的图片集
      * @return array|false
-     * @throws \Exception
      */
-    public static function updates(int $goodsId, $imageIds)
+    public static function updates(int $goodsId, array $imageIds)
     {
         // 删除所有的sku记录
         static::deleteAll(['goods_id' => $goodsId]);
         // 批量写入商品图片记录
         return static::increased($goodsId, $imageIds);
     }
-
 }

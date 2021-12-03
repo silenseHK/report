@@ -21,7 +21,7 @@ class Apply extends GoodsService
      * @param int $goodsId
      * @return bool
      */
-    public static function checkSpecLocked(int $goodsId)
+    public static function checkSpecLocked(int $goodsId): bool
     {
         // 这里实现业务判断
         return false;
@@ -32,10 +32,9 @@ class Apply extends GoodsService
      * @param int $goodsId
      * @return bool
      */
-    public static function checkIsAllowDelete(int $goodsId)
+    public static function checkIsAllowDelete(int $goodsId): bool
     {
         // 这里实现业务判断
         return true;
     }
-
 }

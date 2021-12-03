@@ -54,9 +54,9 @@ abstract class BaseModel extends Model
      * 查找单条记录
      * @param $data
      * @param array $with
-     * @return array|static|null|false
+     * @return array|false|Model|null
      */
-    public static function get($data, $with = [])
+    public static function get($data, array $with = [])
     {
         try {
             $query = (new static)->with($with);
@@ -71,7 +71,7 @@ abstract class BaseModel extends Model
      * @param Query $query
      * @return bool
      */
-    public function scopeStore_id(Query $query)
+    public function scopeStore_id(Query $query): bool
     {
         if (!$this->isGlobalScopeStoreId) return false;
         $storeId = self::getStoreId();
@@ -83,7 +83,7 @@ abstract class BaseModel extends Model
      * 获取当前操作的商城ID
      * @return int|null
      */
-    private static function getStoreId()
+    private static function getStoreId(): ?int
     {
         if (empty(self::$storeId) && in_array(app_name(), ['store', 'api'])) {
             self::$storeId = getStoreId();
@@ -110,7 +110,7 @@ abstract class BaseModel extends Model
      * @param array $default
      * @return array
      */
-    protected function setQueryDefaultValue(array $query, array $default = [])
+    protected function setQueryDefaultValue(array $query, array $default = []): array
     {
         $data = array_merge($default, $query);
         foreach ($query as $field => $value) {
@@ -131,15 +131,14 @@ abstract class BaseModel extends Model
      * @param array $join
      * @return static
      */
-    public function setBaseQuery($alias = '', $join = [])
+    public function setBaseQuery(string $alias = '', array $join = [])
     {
         // 设置别名
         $aliasValue = $alias ?: $this->alias;
         $query = $this->alias($aliasValue)->field("{$aliasValue}.*");
         // join条件
         if (!empty($join)) : foreach ($join as $item):
-            $query->join($item[0], "{$item[0]}.{$item[1]}={$aliasValue}."
-                . (isset($item[2]) ? $item[2] : $item[1]));
+            $query->join($item[0], "{$item[0]}.{$item[1]}={$aliasValue}." . ($item[2] ?? $item[1]));
         endforeach; endif;
         return $query;
     }
@@ -211,9 +210,9 @@ abstract class BaseModel extends Model
      *           ['store_user_id', '=', $storeUserId],
      *           ['role_id', 'in', $deleteRoleIds]
      *        ]
-     * @return int
+     * @return bool
      */
-    public static function deleteAll(array $where)
+    public static function deleteAll(array $where): bool
     {
         return (new static)->where($where)->delete();
     }
@@ -280,7 +279,7 @@ abstract class BaseModel extends Model
      * @param array $withoutFields 排除的字段
      * @return array
      */
-    protected function getAliasFields(string $alias, $withoutFields = [])
+    protected function getAliasFields(string $alias, array $withoutFields = []): array
     {
         $fields = array_diff($this->getTableFields(), $withoutFields);
         foreach ($fields as &$field) {
@@ -288,5 +287,4 @@ abstract class BaseModel extends Model
         }
         return $fields;
     }
-
 }

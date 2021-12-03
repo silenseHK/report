@@ -24,10 +24,10 @@ class Goods extends GoodsService
 {
     /**
      * 验证商品是否允许删除
-     * @param $goodsId
+     * @param int $goodsId
      * @return bool
      */
-    public static function checkIsAllowDelete($goodsId)
+    public static function checkIsAllowDelete(int $goodsId): bool
     {
         return GoodsApplyService::checkIsAllowDelete($goodsId);
     }
@@ -37,9 +37,8 @@ class Goods extends GoodsService
      * @param int $goodsId
      * @return bool
      */
-    public static function checkSpecLocked(int $goodsId)
+    public static function checkSpecLocked(int $goodsId): bool
     {
         return GoodsApplyService::checkSpecLocked($goodsId);
     }
-
 }
