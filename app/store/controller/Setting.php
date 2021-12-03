@@ -14,6 +14,7 @@ namespace app\store\controller;
 
 use app\store\model\Setting as SettingModel;
 use app\common\library\sms\Driver as SmsDriver;
+use think\response\Json;
 
 /**
  * 系统设置
@@ -25,12 +26,12 @@ class Setting extends Controller
     /**
      * 获取设置项
      * @param string $key
-     * @return array
+     * @return Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function detail(string $key)
+    public function detail(string $key): Json
     {
         $values = SettingModel::getItem($key);
         return $this->renderSuccess(compact('values'));
@@ -39,12 +40,12 @@ class Setting extends Controller
     /**
      * 更新系统设置
      * @param string $key
-     * @return array
+     * @return Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function update(string $key)
+    public function update(string $key): Json
     {
         // 保存商城设置
         $model = new SettingModel;
@@ -53,5 +54,4 @@ class Setting extends Controller
         }
         return $this->renderError($model->getError() ?: '操作失败');
     }
-
 }

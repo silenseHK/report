@@ -39,8 +39,11 @@ class Setting extends SettingModel
     public function edit(string $key, array $values): bool
     {
         $model = self::detail($key) ?: $this;
-        // 删除系统设置缓存
+        // 删除小程序设置缓存
         Cache::delete('wxapp_setting_' . self::$storeId);
+        // 写入cert证书文件
+        $this->writeCertPemFiles($values['cert_pem'], $values['key_pem']);
+        // 保存设置
         return $model->save([
                 'key' => $key,
                 'describe' => $this->describe[$key],
@@ -48,5 +51,32 @@ class Setting extends SettingModel
                 'update_time' => time(),
                 'store_id' => self::$storeId,
             ]) !== false;
+    }
+
+    /**
+     * 写入cert证书文件
+     * @param string $certPem
+     * @param string $keyPem
+     * @return void
+     */
+    private function writeCertPemFiles(string $certPem, string $keyPem): void
+    {
+        if (empty($certPem) && empty($keyPem)) {
+            return;
+        }
+        // 证书目录
+        $filePath = base_path() . 'common/library/wechat/cert/' . self::$storeId . '/';
+        // 目录不存在则自动创建
+        if (!is_dir($filePath)) {
+            mkdir($filePath, 0755, true);
+        }
+        // 写入cert.pem文件
+        if (!empty($certPem)) {
+            file_put_contents($filePath . 'cert.pem', $certPem);
+        }
+        // 写入key.pem文件
+        if (!empty($keyPem)) {
+            file_put_contents($filePath . 'key.pem', $keyPem);
+        }
     }
 }
