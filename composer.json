@@ -21,10 +21,13 @@
     ],
     "require": {
         "php": ">=7.1.0",
+        "ext-gd": "*",
         "ext-curl": "*",
         "ext-bcmath": "*",
         "ext-json": "*",
         "ext-mysqli": "*",
+        "ext-pdo": "*",
+        "ext-openssl": "*",
         "ext-libxml": "*",
         "ext-simplexml": "*",
         "topthink/framework": "^6.0.0",

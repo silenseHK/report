@@ -12,11 +12,12 @@ namespace cores;
 
 use Throwable;
 use think\Response;
+use think\response\Json;
 use think\facade\Log;
 use think\facade\Request;
 use think\exception\Handle;
 use think\db\exception\PDOException;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 
 /**
  * 应用异常处理类
@@ -54,29 +55,32 @@ class ExceptionHandle extends Handle
      */
     public function render($request, Throwable $e): Response
     {
+        // 手动触发的异常 BaseException
         if ($e instanceof BaseException) {
             $this->status = $e->status;
             $this->message = $e->message;
             $this->data = $e->data;
-            return $this->renderJson();
+            $extend = property_exists($e, 'extend') ? $e->extend : [];
+            return $this->output($extend);
         }
+        // 系统运行的异常
         $this->status = config('status.error');
         $this->message = $e->getMessage() ?: '很抱歉，服务器内部错误';
         // 如果是debug模式, 输出调试信息
         if (is_debug()) {
-            return $this->renderDebug($e);
+            return $this->outputDebug($e);
         }
-        // 将异常写入日志
-        $this->recordErrorLog($e);
-        return $this->renderJson();
+        // 将运行异常写入日志
+        $this->errorLog($e);
+        return $this->output();
     }
 
     /**
      * 返回json格式数据
      * @param array $extend 扩展的数据
-     * @return \think\response\Json
+     * @return Json
      */
-    private function renderJson($extend = [])
+    private function output(array $extend = []): Json
     {
         $jsonData = ['message' => $this->message, 'status' => $this->status, 'data' => $this->data];
         return json(array_merge($jsonData, $extend));
@@ -85,9 +89,9 @@ class ExceptionHandle extends Handle
     /**
      * 返回json格式数据 (debug模式)
      * @param Throwable $e
-     * @return \think\response\Json
+     * @return Json
      */
-    private function renderDebug(Throwable $e)
+    private function outputDebug(Throwable $e): Json
     {
         $debug = [
             'name' => get_class($e),
@@ -98,14 +102,14 @@ class ExceptionHandle extends Handle
             'trace' => $e->getTrace(),
             'source' => $this->getSourceCode($e),
         ];
-        return $this->renderJson(['debug' => $debug]);
+        return $this->output(['debug' => $debug]);
     }
 
     /**
      * 将异常写入日志
      * @param Throwable $e
      */
-    private function recordErrorLog(Throwable $e)
+    private function errorLog(Throwable $e)
     {
         // 错误信息
         $data = [
@@ -115,8 +119,7 @@ class ExceptionHandle extends Handle
             'status' => $this->getCode($e),
         ];
         // 日志内容
-        $log = '';
-        $log .= $this->getVisitor();
+        $log = $this->getVisitor();
         $log .= "\r\n" . "[ message ] [{$data['status']}] {$data['message']}";
         $log .= "\r\n" . "[ file ] {$data['file']}:{$data['line']}";
         // $log .= "\r\n" . "[ time ] " . format_time(time());
@@ -137,7 +140,7 @@ class ExceptionHandle extends Handle
      * 获取请求路径信息
      * @return string
      */
-    private function getVisitor()
+    private function getVisitor(): string
     {
         $data = [Request::ip(), Request::method(), Request::url(true)];
         return implode(' ', $data);

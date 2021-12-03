@@ -20,21 +20,33 @@ use think\facade\Log;
 use think\facade\Config;
 use think\facade\Request;
 use app\common\library\helper;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
+use cores\exception\DebugException;
 use think\exception\HttpResponseException;
 
 /**
- * 打印调试函数
- * @param  $content
- * @param bool $isDie
+ * 打印调试函数 html
+ * @param $content
  * @param bool $export
  */
-function pre($content, bool $isDie = true, bool $export = false)
+function pre($content, bool $export = false)
 {
     header('Content-type: text/html; charset=utf-8');
     $output = $export ? var_export($content, true) : print_r($content, true);
     echo "<pre>{$output}</pre>";
-    $isDie && die;
+    die;
+}
+
+/**
+ * 打印调试函数 json
+ * @param $content
+ * @param bool $export
+ * @throws DebugException
+ */
+function pree($content, bool $export = false)
+{
+    $output = $export ? var_export($content, true) : $content;
+    throw new DebugException([], $output);
 }
 
 /**
@@ -44,19 +56,19 @@ function pre($content, bool $isDie = true, bool $export = false)
  * @param array $data 附加数据
  * @throws BaseException
  */
-function throwError(string $message, $status = null, array $data = [])
+function throwError(string $message, ?int $status = null, array $data = [])
 {
     is_null($status) && $status = config('status.error');
-    throw new BaseException(['status' => $status, 'msg' => $message, 'data' => $data]);
+    throw new BaseException(['status' => $status, 'message' => $message, 'data' => $data]);
 }
 
 /**
  * 下划线转驼峰
- * @param $uncamelized_words
+ * @param string $uncamelized_words
  * @param string $separator
  * @return string
  */
-function camelize($uncamelized_words, $separator = '_')
+function camelize(string $uncamelized_words, string $separator = '_'): string
 {
     $uncamelized_words = $separator . str_replace($separator, " ", strtolower($uncamelized_words));
     return ltrim(str_replace(" ", "", ucwords($uncamelized_words)), $separator);
@@ -64,21 +76,21 @@ function camelize($uncamelized_words, $separator = '_')
 
 /**
  * 驼峰转下划线
- * @param $camelCaps
+ * @param string $camelCaps
  * @param string $separator
  * @return string
  */
-function uncamelize($camelCaps, $separator = '_')
+function uncamelize(string $camelCaps, string $separator = '_'): string
 {
     return strtolower(preg_replace('/([a-z])([A-Z])/', "$1" . $separator . "$2", $camelCaps));
 }
 
 /**
  * 生成密码hash值
- * @param $password
+ * @param string $password
  * @return string
  */
-function encryption_hash($password)
+function encryption_hash(string $password): string
 {
     return password_hash($password, PASSWORD_DEFAULT);
 }
@@ -87,7 +99,7 @@ function encryption_hash($password)
  * 获取当前域名及根路径
  * @return string
  */
-function base_url()
+function base_url(): string
 {
     static $baseUrl = '';
     if (empty($baseUrl)) {
@@ -106,7 +118,7 @@ function base_url()
  * 获取当前url的子目录路径
  * @return string
  */
-function root_url()
+function root_url(): string
 {
     static $rootUrl = '';
     if (empty($rootUrl)) {
@@ -121,7 +133,7 @@ function root_url()
  * 获取当前uploads目录访问地址
  * @return string
  */
-function uploads_url()
+function uploads_url(): string
 {
     return base_url() . 'uploads';
 }
@@ -130,7 +142,7 @@ function uploads_url()
  * 获取当前temp目录访问地址
  * @return string
  */
-function temp_url()
+function temp_url(): string
 {
     return base_url() . 'temp/';
 }
@@ -148,7 +160,7 @@ function app_name()
  * 获取web根目录
  * @return string
  */
-function web_path()
+function web_path(): string
 {
     static $webPath = '';
     if (empty($webPath)) {
@@ -162,7 +174,7 @@ function web_path()
  * 获取runtime根目录路径
  * @return string
  */
-function runtime_root_path()
+function runtime_root_path(): string
 {
     return dirname(runtime_path()) . DIRECTORY_SEPARATOR;
 }
@@ -172,7 +184,7 @@ function runtime_root_path()
  * @param $value
  * @param string $type
  */
-function log_record($value, $type = 'info')
+function log_record($value, string $type = 'info')
 {
     $content = is_string($value) ? $value : print_r($value, true);
     Log::record($content, $type);
@@ -182,9 +194,9 @@ function log_record($value, $type = 'info')
  * curl请求指定url (post)
  * @param $url
  * @param array $data
- * @return mixed
+ * @return bool|string
  */
-function curl_post($url, $data = [])
+function curl_post($url, array $data = [])
 {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_POST, 1);
@@ -200,11 +212,11 @@ function curl_post($url, $data = [])
 
 /**
  * 多维数组合并
- * @param $array1
- * @param $array2
+ * @param array $array1
+ * @param array $array2
  * @return array
  */
-function array_merge_multiple($array1, $array2)
+function array_merge_multiple(array $array1, array $array2): array
 {
     $merge = $array1 + $array2;
     $data = [];
@@ -217,7 +229,7 @@ function array_merge_multiple($array1, $array2)
         ) {
             $data[$key] = is_assoc($array1[$key]) ? array_merge_multiple($array1[$key], $array2[$key]) : $array2[$key];
         } else {
-            $data[$key] = isset($array2[$key]) ? $array2[$key] : $array1[$key];
+            $data[$key] = $array2[$key] ?? $array1[$key];
         }
     }
     return $data;
@@ -228,7 +240,7 @@ function array_merge_multiple($array1, $array2)
  * @param array $array
  * @return bool
  */
-function is_assoc(array $array)
+function is_assoc(array $array): bool
 {
     if (empty($array)) return false;
     return array_keys($array) !== range(0, count($array) - 1);
@@ -239,9 +251,9 @@ function is_assoc(array $array)
  * @param $arr
  * @param $keys
  * @param bool $desc
- * @return mixed
+ * @return array
  */
-function array_sort($arr, $keys, $desc = false)
+function array_sort($arr, $keys, bool $desc = false): array
 {
     $key_value = $new_array = array();
     foreach ($arr as $k => $v) {
@@ -261,10 +273,10 @@ function array_sort($arr, $keys, $desc = false)
 
 /**
  * 隐藏敏感字符
- * @param $value
+ * @param string $value
  * @return string
  */
-function substr_cut($value)
+function substr_cut(string $value): string
 {
     $strlen = mb_strlen($value, 'utf-8');
     if ($strlen <= 1) return $value;
@@ -302,7 +314,7 @@ function get_version()
  * @param bool $trim
  * @return string
  */
-function get_guid_v4($trim = true)
+function get_guid_v4(bool $trim = true): string
 {
     // Windows
     if (function_exists('com_create_guid') === true) {
@@ -347,7 +359,7 @@ function format_time($timeStamp)
  * @param int $padLength
  * @return string
  */
-function pad_left($value, $padLength = 2)
+function pad_left($value, int $padLength = 2): string
 {
     return \str_pad($value, $padLength, "0", STR_PAD_LEFT);
 }
@@ -357,7 +369,7 @@ function pad_left($value, $padLength = 2)
  * @param $str
  * @return string
  */
-function my_trim($str)
+function my_trim($str): string
 {
     return is_string($str) ? trim($str) : $str;
 }
@@ -367,7 +379,7 @@ function my_trim($str)
  * @param $string
  * @return string
  */
-function my_htmlspecialchars($string)
+function my_htmlspecialchars($string): string
 {
     return is_string($string) ? htmlspecialchars($string) : $string;
 }
@@ -393,7 +405,7 @@ function filter_emoji($text)
  * @param int $length
  * @return bool|string
  */
-function str_substr($str, $length = 30)
+function str_substr($str, int $length = 30)
 {
     if (strlen($str) > $length) {
         $str = mb_substr($str, 0, $length);
@@ -413,14 +425,14 @@ function app_end()
  * 当前是否为调试模式
  * @return bool
  */
-function is_debug()
+function is_debug(): bool
 {
     return (bool)Env::instance()->get('APP_DEBUG');
 }
 
 /**
  * 文本左斜杠转换为右斜杠
- * @param $string
+ * @param string $string
  * @return mixed
  */
 function convert_left_slash(string $string)
@@ -433,7 +445,7 @@ function convert_left_slash(string $string)
  * @param string $mobile 手机号
  * @return string
  */
-function hide_mobile(string $mobile)
+function hide_mobile(string $mobile): string
 {
     return substr_replace($mobile, '****', 3, 4);
 }
@@ -442,7 +454,7 @@ function hide_mobile(string $mobile)
  * 获取当前登录的商城ID
  * @return int $storeId
  */
-function getStoreId()
+function getStoreId(): int
 {
     return 10001;
 }
