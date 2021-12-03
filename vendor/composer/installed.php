@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'ed9c9225b282737e1ecbb912cc8346532f224d5e',
+        'reference' => '3c61d97d46a61a4d12312a4ccf194bfb127a2afa',
         'name' => 'topthink/think',
         'dev' => true,
     ),
@@ -178,6 +178,33 @@
                 0 => 'v3.9.3',
             ),
         ),
+        'guzzlehttp/guzzle' => array(
+            'pretty_version' => '7.4.0',
+            'version' => '7.4.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../guzzlehttp/guzzle',
+            'aliases' => array(),
+            'reference' => '868b3571a039f0ebc11ac8f344f4080babe2cb94',
+            'dev_requirement' => false,
+        ),
+        'guzzlehttp/promises' => array(
+            'pretty_version' => '1.5.1',
+            'version' => '1.5.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../guzzlehttp/promises',
+            'aliases' => array(),
+            'reference' => 'fe752aedc9fd8fcca3fe7ad05d419d32998a06da',
+            'dev_requirement' => false,
+        ),
+        'guzzlehttp/psr7' => array(
+            'pretty_version' => '2.1.0',
+            'version' => '2.1.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../guzzlehttp/psr7',
+            'aliases' => array(),
+            'reference' => '089edd38f5b8abba6cb01567c2a8aaa47cec4c72',
+            'dev_requirement' => false,
+        ),
         'kosinix/grafika' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
@@ -250,6 +277,15 @@
             'reference' => '5f36467c7a87e20fbdc51e524fd8f9d1de80187c',
             'dev_requirement' => false,
         ),
+        'overtrue/easy-sms' => array(
+            'pretty_version' => '2.0.4',
+            'version' => '2.0.4.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../overtrue/easy-sms',
+            'aliases' => array(),
+            'reference' => '8a9d45cdd090dc66b26faad127614a24c6c1b049',
+            'dev_requirement' => false,
+        ),
         'phpoffice/phpspreadsheet' => array(
             'pretty_version' => '1.18.0',
             'version' => '1.18.0.0',
@@ -286,6 +322,12 @@
             'reference' => '2dfb5f6c5eff0e91e20e913f8c5452ed95b86621',
             'dev_requirement' => false,
         ),
+        'psr/http-client-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '1.0',
+            ),
+        ),
         'psr/http-factory' => array(
             'pretty_version' => '1.0.1',
             'version' => '1.0.1.0',
@@ -295,6 +337,12 @@
             'reference' => '12ac7fcd07e5b077433f5f2bee95b3a771bf61be',
             'dev_requirement' => false,
         ),
+        'psr/http-factory-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '1.0',
+            ),
+        ),
         'psr/http-message' => array(
             'pretty_version' => '1.0.1',
             'version' => '1.0.1.0',
@@ -303,6 +351,12 @@
             'aliases' => array(),
             'reference' => 'f6561bf28d520154e4b0ec72be95418abe6d9363',
             'dev_requirement' => false,
+        ),
+        'psr/http-message-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '1.0',
+            ),
         ),
         'psr/log' => array(
             'pretty_version' => '1.1.3',
@@ -338,6 +392,24 @@
             'install_path' => __DIR__ . '/../qiniu/php-sdk',
             'aliases' => array(),
             'reference' => 'd89987163f560ebf9dfa5bb25de9bd9b1a3b2bd8',
+            'dev_requirement' => false,
+        ),
+        'ralouphie/getallheaders' => array(
+            'pretty_version' => '3.0.3',
+            'version' => '3.0.3.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../ralouphie/getallheaders',
+            'aliases' => array(),
+            'reference' => '120b605dfeb996808c31b6477290a714d356e822',
+            'dev_requirement' => false,
+        ),
+        'symfony/deprecation-contracts' => array(
+            'pretty_version' => 'v2.5.0',
+            'version' => '2.5.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/deprecation-contracts',
+            'aliases' => array(),
+            'reference' => '6f981ee24cf69ee7ce9736146d1c57c2780598a8',
             'dev_requirement' => false,
         ),
         'symfony/event-dispatcher' => array(
@@ -400,7 +472,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'ed9c9225b282737e1ecbb912cc8346532f224d5e',
+            'reference' => '3c61d97d46a61a4d12312a4ccf194bfb127a2afa',
             'dev_requirement' => false,
         ),
         'topthink/think-helper' => array(

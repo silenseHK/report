@@ -41,7 +41,8 @@
         "myclabs/php-enum": "^1.6",
         "lvht/geohash": "^1.1",
         "edward1108/edward-captcha": "^1.1",
-        "phpoffice/phpspreadsheet": "^1.18"
+        "phpoffice/phpspreadsheet": "^1.18",
+        "overtrue/easy-sms": "^2.0"
     },
     "require-dev": {
         "symfony/var-dumper": "^4.2",
