@@ -75,12 +75,12 @@ class Setting extends BaseModel
     {
         is_null($storeId) && $storeId = static::$storeId;
         $model = new static;
-        if (!$data = Cache::get("wxapp_setting_{$storeId}")) {
+        if (!$data = Cache::get("h5_setting_{$storeId}")) {
             // 获取全部设置
             $setting = $model->getList($storeId);
             $data = $setting->isEmpty() ? [] : helper::arrayColumn2Key($setting->toArray(), 'key');
             // 写入缓存中
-            Cache::tag('cache')->set("wxapp_setting_{$storeId}", $data);
+            Cache::tag('cache')->set("h5_setting_{$storeId}", $data);
         }
         // 合并默认设置
         return array_merge_multiple($model->defaultData(), $data);
