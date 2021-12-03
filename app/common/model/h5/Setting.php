@@ -86,8 +86,8 @@ class Setting extends BaseModel
      */
     public static function getAll(int $storeId = null): array
     {
-        is_null($storeId) && $storeId = static::$storeId;
         $model = new static;
+        is_null($storeId) && $storeId = static::$storeId;
         if (!$data = Cache::get("h5_setting_{$storeId}")) {
             // 获取全部设置
             $setting = $model->getList($storeId);
