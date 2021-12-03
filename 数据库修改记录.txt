@@ -23,6 +23,19 @@ CREATE TABLE `yoshop_h5_setting` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8mb4_unicode_ci COMMENT='H5端设置表';
 
 
+CREATE TABLE `yoshop_order_export` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `start_time` int unsigned NOT NULL DEFAULT '0' COMMENT '下单时间(开始)',
+  `end_time` int unsigned NOT NULL DEFAULT '0' COMMENT '下单时间(结束)',
+  `file_path` varchar(255) NOT NULL DEFAULT '' COMMENT 'excel文件路径',
+  `status` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '导出状态(10进行中 20已完成 30失败)',
+  `store_id` int unsigned NOT NULL DEFAULT '0' COMMENT '商城ID',
+  `create_time` int unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `store_id` (`store_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='订单导出Excel记录表';
+
+
 UPDATE `yoshop_store_api` SET `url`='/client.wxapp.setting/update', `sort`='105' WHERE (`api_id`='11153');
 UPDATE `yoshop_store_api` SET `url`='/client.wxapp.setting/detail', `sort`='100' WHERE (`api_id`='11182');
 
