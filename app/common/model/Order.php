@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\model;
 
@@ -22,6 +22,9 @@ use app\common\enum\order\OrderStatus as OrderStatusEnum;
 use app\common\enum\order\DeliveryType as DeliveryTypeEnum;
 use app\common\enum\order\DeliveryStatus as DeliveryStatusEnum;
 use app\common\library\helper;
+use think\model\relation\BelongsTo;
+use think\model\relation\HasMany;
+use think\model\relation\HasOne;
 
 /**
  * 订单模型
@@ -52,9 +55,9 @@ class Order extends BaseModel
 
     /**
      * 订单商品列表
-     * @return \think\model\relation\HasMany
+     * @return HasMany
      */
-    public function goods()
+    public function goods(): HasMany
     {
         $module = self::getCalledModule();
         return $this->hasMany("app\\{$module}\\model\\OrderGoods")->withoutField('content');
@@ -62,9 +65,9 @@ class Order extends BaseModel
 
     /**
      * 关联订单收货地址表
-     * @return \think\model\relation\HasOne
+     * @return HasOne
      */
-    public function address()
+    public function address(): HasOne
     {
         $module = self::getCalledModule();
         return $this->hasOne("app\\{$module}\\model\\OrderAddress");
@@ -72,9 +75,9 @@ class Order extends BaseModel
 
     /**
      * 关联用户表
-     * @return \think\model\relation\BelongsTo
+     * @return BelongsTo
      */
-    public function user()
+    public function user(): BelongsTo
     {
         $module = self::getCalledModule();
         return $this->belongsTo("app\\{$module}\\model\\User");
@@ -82,9 +85,9 @@ class Order extends BaseModel
 
     /**
      * 关联物流公司表
-     * @return \think\model\relation\BelongsTo
+     * @return BelongsTo
      */
-    public function express()
+    public function express(): BelongsTo
     {
         $module = self::getCalledModule();
         return $this->belongsTo("app\\{$module}\\model\\Express");
@@ -93,10 +96,10 @@ class Order extends BaseModel
     /**
      * 订单状态文字描述
      * @param $value
-     * @param $data
+     * @param array $data
      * @return string
      */
-    public function getStateTextAttr($value, $data)
+    public function getStateTextAttr($value, array $data): string
     {
         // 订单状态
 //        if (in_array($data['order_status'], [OrderStatusEnum::CANCELLED, OrderStatusEnum::COMPLETED])) {
@@ -127,7 +130,7 @@ class Order extends BaseModel
      * @param $data
      * @return string
      */
-    public function getOrderPriceAttr($value, $data)
+    public function getOrderPriceAttr($value, $data): string
     {
         // 兼容旧数据：订单金额
         if ($value == 0) {
@@ -141,11 +144,11 @@ class Order extends BaseModel
      * @param $value
      * @return array
      */
-    public function getUpdatePriceAttr($value)
+    public function getUpdatePriceAttr($value): array
     {
         return [
             'symbol' => $value < 0 ? '-' : '+',
-            'value' => sprintf('%.2f', abs($value))
+            'value' => sprintf('%.2f', abs((float)$value))
         ];
     }
 
@@ -183,7 +186,7 @@ class Order extends BaseModel
      * 生成订单号
      * @return string
      */
-    public function orderNo()
+    public function orderNo(): string
     {
         return OrderService::createOrderNo();
     }
@@ -194,7 +197,7 @@ class Order extends BaseModel
      * @param array $with
      * @return array|null|static
      */
-    public static function detail($where, $with = [])
+    public static function detail($where, array $with = [])
     {
         is_array($where) ? $filter = $where : $filter['order_id'] = (int)$where;
         return self::get($filter, $with);
@@ -202,14 +205,14 @@ class Order extends BaseModel
 
     /**
      * 批量获取订单列表
-     * @param $orderIds
+     * @param array $orderIds
      * @param array $with
      * @return array
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getListByIds(array $orderIds, array $with = [])
+    public function getListByIds(array $orderIds, array $with = []): array
     {
         $data = $this->getListByInArray('order_id', $orderIds, $with);
         return helper::arrayColumn2Key($data, 'order_id');
@@ -225,7 +228,7 @@ class Order extends BaseModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function getListByInArray($field, $data, $with = [])
+    private function getListByInArray($field, $data, array $with = []): \think\Collection
     {
         return $this->with($with)
             ->where($field, 'in', $data)
@@ -242,7 +245,7 @@ class Order extends BaseModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getListByOrderNos($orderNos, $with = [])
+    public function getListByOrderNos($orderNos, array $with = []): \think\Collection
     {
         return $this->getListByInArray('order_no', $orderNos, $with);
     }
@@ -251,11 +254,10 @@ class Order extends BaseModel
      * 批量更新订单
      * @param $orderIds
      * @param $data
-     * @return false|int
+     * @return bool|false
      */
-    public function onBatchUpdate($orderIds, $data)
+    public function onBatchUpdate($orderIds, $data): bool
     {
         return static::updateBase($data, [['order_id', 'in', $orderIds]]);
     }
-
 }
