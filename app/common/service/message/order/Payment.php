@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\service\message\order;
 
@@ -57,7 +57,6 @@ class Payment extends Basics
 
     /**
      * 短信通知商家
-     * @return void
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
@@ -66,6 +65,27 @@ class Payment extends Basics
     private function onSendSms(): void
     {
         $orderInfo = $this->param['order'];
-        $this->sendSms(SettingSmsScene::ORDER_PAY, ['order_no' => $orderInfo['order_no']]);
+        // 获取商家的手机号 (用于接受短信通知)
+        $acceptPhone = $this->getStoreAcceptPhone();
+        if (empty($acceptPhone)) {
+            return;
+        }
+        // 发送短信通知
+        $this->sendSms(SettingSmsScene::ORDER_PAY, $acceptPhone, ['order_no' => $orderInfo['order_no']]);
+    }
+
+    /**
+     * 获取商家手机号(用于接受短信通知)
+     * @return string|false
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    private function getStoreAcceptPhone()
+    {
+        // 短信通知设置
+        $smsConfig = SettingModel::getItem('sms', $this->storeId);
+        // 商家手机号 (后台设置)
+        return $smsConfig['scene'][SettingSmsScene::ORDER_PAY]['acceptPhone'] ?? false;
     }
 }
