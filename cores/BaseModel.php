@@ -213,9 +213,9 @@ abstract class BaseModel extends Model
      *           ['store_user_id', '=', $storeUserId],
      *           ['role_id', 'in', $deleteRoleIds]
      *        ]
-     * @return bool
+     * @return bool|int
      */
-    public static function deleteAll(array $where): bool
+    public static function deleteAll(array $where)
     {
         return (new static)->where($where)->delete();
     }
