@@ -133,7 +133,7 @@ class Order extends OrderModel
         $goodsList->hidden(array_merge($model->hidden, ['content', 'goods_images', 'images']));
         foreach ($goodsList as &$item) {
             // 商品sku信息
-            $item['skuInfo'] = GoodsSkuModel::detail($item['goods_id'], $goodsSkuId);
+            $item['skuInfo'] = GoodsService::getSkuInfo($item['goods_id'], $goodsSkuId);
             // 商品单价
             $item['goods_price'] = $item['skuInfo']['goods_price'];
             // 商品购买数量
