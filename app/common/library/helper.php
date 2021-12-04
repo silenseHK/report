@@ -81,7 +81,7 @@ class helper
         return $data;
     }
 
-    public static function number2($number, $isMinimum = false, $minimum = 0.01)
+    public static function number2($number, $isMinimum = false, $minimum = 0.01): string
     {
         $isMinimum && $number = max($minimum, $number);
         return sprintf('%.2f', $number);
@@ -117,12 +117,14 @@ class helper
      * @param array $array 二维数组
      * @param string $searchIdx 查找的索引
      * @param mixed $searchVal 查找的值
-     * @return bool
+     * @return bool|mixed
      */
-    public static function arraySearch(array $array, string $searchIdx, $searchVal): bool
+    public static function arraySearch(array $array, string $searchIdx, $searchVal)
     {
         foreach ($array as $item) {
-            if ($item[$searchIdx] == $searchVal) return $item;
+            if ($item[$searchIdx] == $searchVal) {
+                return $item;
+            }
         }
         return false;
     }
@@ -138,22 +140,22 @@ class helper
         return $source;
     }
 
-    public static function bcsub($leftOperand, $rightOperand, $scale = 2)
+    public static function bcsub($leftOperand, $rightOperand, $scale = 2): string
     {
         return \bcsub($leftOperand, $rightOperand, $scale);
     }
 
-    public static function bcadd($leftOperand, $rightOperand, $scale = 2)
+    public static function bcadd($leftOperand, $rightOperand, $scale = 2): string
     {
         return \bcadd($leftOperand, $rightOperand, $scale);
     }
 
-    public static function bcmul($leftOperand, $rightOperand, $scale = 2)
+    public static function bcmul($leftOperand, $rightOperand, $scale = 2): string
     {
         return \bcmul($leftOperand, $rightOperand, $scale);
     }
 
-    public static function bcdiv($leftOperand, $rightOperand, int $scale = 2)
+    public static function bcdiv($leftOperand, $rightOperand, int $scale = 2): ?string
     {
         return \bcdiv($leftOperand, $rightOperand, $scale);
     }
@@ -166,7 +168,7 @@ class helper
      * @param int $scale
      * @return int
      */
-    public static function bccomp($leftOperand, $rightOperand, $scale = 2)
+    public static function bccomp($leftOperand, $rightOperand, int $scale = 2): int
     {
         return \bccomp($leftOperand, $rightOperand, $scale);
     }
@@ -178,7 +180,7 @@ class helper
      * @param int $scale
      * @return bool
      */
-    public static function bcequal($leftOperand, $rightOperand, $scale = 2)
+    public static function bcequal($leftOperand, $rightOperand, int $scale = 2): bool
     {
         return self::bccomp($leftOperand, $rightOperand, $scale) === 0;
     }
