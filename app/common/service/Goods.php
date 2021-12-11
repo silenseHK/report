@@ -57,4 +57,18 @@ class Goods extends BaseService
     {
         return GoodsSkuModel::detail($goodsId, $goodsSkuId);
     }
+
+    /**
+     * SKU的规格属性转换为可读的字符串
+     * @param array $goodsPops
+     * @return string
+     */
+    public static function goodsPropsToAttr(array $goodsPops): string
+    {
+        $goodsAttr = '';
+        foreach ($goodsPops as $pop) {
+            $goodsAttr .= "{$pop['group']['name']}: {$pop['value']['name']}; ";
+        }
+        return $goodsAttr;
+    }
 }

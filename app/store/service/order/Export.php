@@ -17,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use app\store\model\{Order as OrderModel, order\Export as ExportModel, OrderAddress as OrderAddressModel};
 use app\common\library\helper;
 use app\common\service\BaseService;
+use app\common\service\Goods as GoodsService;
 use app\common\enum\order\{
     PayType as PayTypeEnum,
     PayStatus as PayStatusEnum,
@@ -275,7 +276,10 @@ class Export extends BaseService
         $content = '';
         foreach ($order['goods'] as $key => $goods) {
             $content .= ($key + 1) . ".商品名称：{$goods['goods_name']}\n";
-            !empty($goods['goods_attr']) && $content .= "　商品规格：{$goods['goods_attr']}\n";
+            if (!empty($goods['goods_props'])) {
+                $goodsAttr = GoodsService::goodsPropsToAttr($goods['goods_props']);
+                $content .= "　商品规格：{$goodsAttr}\n";
+            }
             $content .= "　购买数量：{$goods['total_num']}\n";
             $content .= "　商品总价：{$goods['total_price']}元\n\n";
         }
