@@ -232,8 +232,8 @@ class Export extends BaseService
         $dataArray = [];
         foreach ($orderList as $order) {
             $dataArray[] = [
-                'order_id' => $order['order_id'],
-                'order_no' => $order['order_no'],
+                'order_id' => $this->filterValue($order['order_id']),
+                'order_no' => $this->filterValue($order['order_no']),
                 'goods_detail' => $this->filterGoodsInfo($order),
                 'total_price' => $this->filterValue($order['total_price']) . '元',
                 'coupon_money' => $this->filterValue($order['coupon_money']) . '元',
@@ -289,7 +289,6 @@ class Export extends BaseService
      */
     private function filterValue($value): string
     {
-        return $value;
-        //return "\t" . $value . "\t";
+        return "\t{$value}\t";
     }
 }
