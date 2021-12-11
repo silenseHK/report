@@ -162,7 +162,7 @@ class OrderRefund extends OrderRefundModel
                 (new UserModel)->setDecUserExpend($order['user_id'], $data['refund_money']);
             }
             // 执行原路退款
-            (new RefundService)->execute($order, $data['refund_money']);
+            (new RefundService)->execute($order, (string)$data['refund_money']);
             // 发送消息通知
             MessageService::send('order.refund', [
                 'refund' => $this,                  // 退款单信息

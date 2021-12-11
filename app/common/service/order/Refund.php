@@ -44,11 +44,11 @@ class Refund extends BaseService
         is_null($money) && $money = $order['pay_price'];
         // 1.微信支付退款
         if ($order['pay_type'] == OrderPayTypeEnum::WECHAT) {
-            return $this->wxpay($order, $money);
+            return $this->wxpay($order, (string)$money);
         }
         // 2.余额支付退款
         if ($order['pay_type'] == OrderPayTypeEnum::BALANCE) {
-            return $this->balance($order, $money);
+            return $this->balance($order, (string)$money);
         }
         return false;
     }
