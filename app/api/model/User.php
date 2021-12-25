@@ -50,17 +50,23 @@ class User extends UserModel
     /**
      * 获取用户信息
      * @param string $token
-     * @return bool|static
+     * @return User|array|false|null
+     * @throws BaseException
      */
     public static function getUserByToken(string $token)
     {
-        if (Cache::has($token)) {
-            // 获取微信用户openid
-            $userId = Cache::get($token)['user']['user_id'];
-            // 获取用户信息s
-            return self::detail($userId);
+        // 检查登录态是否存在
+        if (!Cache::has($token)) {
+            return false;
         }
-        return false;
+        // 获取用户的ID
+        $userId = Cache::get($token)['user']['user_id'];
+        // 获取用户基本信息
+        $userInfo = self::detail($userId);
+        if (empty($userInfo) || $userInfo['is_delete']) {
+            throwError('很抱歉，用户信息不存在或已删除', config('status.not_logged'));
+        }
+        return $userInfo;
     }
 
     /**
