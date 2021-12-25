@@ -13,11 +13,12 @@ declare (strict_types=1);
 namespace app\api\model;
 
 use app\api\service\User as UserService;
-use app\common\exception\BaseException;
 use app\common\model\UserCoupon as UserCouponModel;
+use app\common\enum\coupon\CouponType as CouponTypeEnum;
 use app\common\enum\coupon\ExpireType as ExpireTypeEnum;
 use app\common\enum\coupon\ApplyRange as ApplyRangeEnum;
 use app\common\library\helper;
+use cores\exception\BaseException;
 
 /**
  * 用户优惠券模型
@@ -206,33 +207,18 @@ class UserCoupon extends UserCouponModel
     {
         // 获取用户可用的优惠券列表
         $list = (new static)->getList($userId, ['dataType' => 'isUsable', 'amount' => $orderPayPrice]);
-        $data = [];
-        foreach ($list as $coupon) {
-            // 有效期范围内
-            if ($coupon['start_time'] > time()) continue;
-            $key = $coupon['user_coupon_id'];
-            $data[$key] = [
-                'user_coupon_id' => $coupon['user_coupon_id'],
-                'name' => $coupon['name'],
-                'coupon_type' => $coupon['coupon_type'],
-                'reduce_price' => $coupon['reduce_price'],
-                'discount' => $coupon['discount'],
-                'min_price' => $coupon['min_price'],
-                'expire_type' => $coupon['expire_type'],
-                'start_time' => $coupon['start_time'],
-                'end_time' => $coupon['end_time'],
-                'apply_range' => $coupon['apply_range'],
-                'apply_range_config' => $coupon['apply_range_config']
-            ];
-            // 计算打折金额
-            if ($coupon['coupon_type'] == 20) {
-                $reducePrice = helper::bcmul($orderPayPrice, $coupon['discount'] / 10);
-                $data[$key]['reduced_price'] = helper::bcsub($orderPayPrice, $reducePrice);
-            } else
-                $data[$key]['reduced_price'] = $coupon['reduce_price'];
+        $data = $list->isEmpty() ? [] : $list->toArray()['data'];
+        foreach ($data as &$item) {
+            // 计算最大能折扣的金额
+            if ($item['coupon_type'] == CouponTypeEnum::DISCOUNT) {
+                $reducePrice = helper::bcmul($orderPayPrice, $item['discount'] / 10);
+                $item['reduced_price'] = helper::bcsub($orderPayPrice, $reducePrice);
+            } else {
+                $item['reduced_price'] = $item['reduce_price'];
+            }
         }
         // 根据折扣金额排序并返回
-        return array_sort($data, 'reduced_price', true);
+        return !empty($data) ? array_sort($data, 'reduced_price', true) : [];
     }
 
     /**

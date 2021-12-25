@@ -34,7 +34,7 @@ use app\common\service\BaseService;
 use app\common\service\delivery\Express as ExpressService;
 use app\common\service\goods\source\Factory as StockFactory;
 use app\common\library\helper;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 
 /**
  * 订单结算台服务类
@@ -152,7 +152,6 @@ class Checkout extends BaseService
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
-     * @throws \cores\exception\BaseException
      */
     public function onCheckout($goodsList): array
     {
@@ -168,7 +167,6 @@ class Checkout extends BaseService
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
-     * @throws \cores\exception\BaseException
      */
     private function checkout(): array
     {
@@ -518,7 +516,7 @@ class Checkout extends BaseService
      * @param array $couponList 当前用户可用的优惠券列表
      * @param int $couponId 当前选择的优惠券id
      * @return void
-     * @throws \cores\exception\BaseException
+     * @throws BaseException
      */
     private function setOrderCouponMoney(array $couponList, int $couponId): void
     {
@@ -538,12 +536,17 @@ class Checkout extends BaseService
         // 获取优惠券信息
         $couponInfo = $this->getCouponInfo($couponId, $couponList);
         // 计算订单商品优惠券抵扣金额
-        $goodsListTemp = helper::getArrayColumns($this->goodsList, ['total_price']);
+        $goodsListTemp = helper::getArrayColumns($this->goodsList, ['goods_id', 'total_price']);
         $CouponMoney = new GoodsDeductService;
-        $completed = $CouponMoney->setGoodsCouponMoney($goodsListTemp, $couponInfo['reduced_price']);
+        $rangeGoodsList = $CouponMoney->setGoodsList($goodsListTemp)
+            ->setCouponInfo($couponInfo)
+            ->setGoodsCouponMoney($goodsListTemp, $couponInfo)
+            ->getRangeGoodsList();
         // 分配订单商品优惠券抵扣金额
-        foreach ($this->goodsList as $key => &$goods) {
-            $goods['coupon_money'] = $completed[$key]['coupon_money'] / 100;
+        foreach ($this->goodsList as &$goods) {
+            if (isset($rangeGoodsList[$goods['goods_id']])) {
+                $goods['coupon_money'] = $rangeGoodsList[$goods['goods_id']]['coupon_money'] / 100;
+            }
         }
         // 记录订单优惠券信息
         $this->orderData['couponId'] = $couponId;
@@ -555,7 +558,7 @@ class Checkout extends BaseService
      * @param int $couponId
      * @param $couponList
      * @return bool
-     * @throws \cores\exception\BaseException
+     * @throws BaseException
      */
     private function verifyOrderCouponId(int $couponId, $couponList): bool
     {
@@ -646,7 +649,9 @@ class Checkout extends BaseService
      * @param $order
      * @return bool
      * @throws BaseException
-     * @throws \Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     private function createOrderEvent($order): bool
     {
