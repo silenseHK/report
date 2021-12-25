@@ -190,26 +190,6 @@ function log_record($value, string $type = 'info')
 }
 
 /**
- * curl请求指定url (post)
- * @param $url
- * @param array $data
- * @return bool|string
- */
-function curl_post($url, array $data = [])
-{
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $result = curl_exec($ch);
-    curl_close($ch);
-    return $result;
-}
-
-/**
  * 多维数组合并
  * @param array $array1
  * @param array $array2
