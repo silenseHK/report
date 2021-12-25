@@ -53,7 +53,9 @@ class Grade extends BaseService
      */
     public static function getDiscountPrice($originalPrice, $discountRatio): string
     {
-        $discountPrice = helper::bcmul($originalPrice, $discountRatio / 10);
+        // 使用高精度方法计算等级折扣; 因bcmach不支持四舍五入, 所以精确计算到3位数, 使用round四舍五入
+        $discountPrice = helper::bcmul($originalPrice, $discountRatio / 10, 3);
+        $discountPrice = round((float)$discountPrice, 2);
         return helper::number2($discountPrice, true);
     }
 }

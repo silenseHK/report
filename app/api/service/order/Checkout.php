@@ -515,7 +515,7 @@ class Checkout extends BaseService
             helper::setDataAttribute($goods, [
                 'is_user_grade' => true,
                 'grade_ratio' => $discountRatio,
-                'grade_goods_price' =>  UserGradeService::getDiscountPrice($goods['goods_price'], $discountRatio),
+                'grade_goods_price' => UserGradeService::getDiscountPrice($goods['goods_price'], $discountRatio),
                 'grade_total_money' => helper::bcsub($goods['total_price'], $gradeTotalPrice),
                 'total_price' => $gradeTotalPrice,
             ], false);
@@ -549,10 +549,7 @@ class Checkout extends BaseService
         // 计算订单商品优惠券抵扣金额
         $goodsListTemp = helper::getArrayColumns($this->goodsList, ['goods_id', 'total_price']);
         $CouponMoney = new GoodsDeductService;
-        $rangeGoodsList = $CouponMoney->setGoodsList($goodsListTemp)
-            ->setCouponInfo($couponInfo)
-            ->setGoodsCouponMoney($goodsListTemp, $couponInfo)
-            ->getRangeGoodsList();
+        $rangeGoodsList = $CouponMoney->setGoodsList($goodsListTemp)->setCouponInfo($couponInfo)->getRangeGoodsList();
         // 分配订单商品优惠券抵扣金额
         foreach ($this->goodsList as &$goods) {
             if (isset($rangeGoodsList[$goods['goods_id']])) {

@@ -27,19 +27,9 @@ use think\response\Json;
  */
 class Checkout extends Controller
 {
+    // 结算台验证器
     /* @var CheckoutValidate $validate */
     private $validate;
-
-    /**
-     * 构造方法
-     * @throws BaseException
-     */
-    public function initialize()
-    {
-        parent::initialize();
-        // 验证类
-        $this->validate = new CheckoutValidate;
-    }
 
     /**
      * 结算台订单信息
@@ -93,8 +83,8 @@ class Checkout extends Controller
             'goodsNum' => 0,
         ]));
         // 表单验证
-        if (!$this->validate->scene('buyNow')->check($params)) {
-            return $this->renderError($this->validate->getError(), ['is_created' => false]);
+        if (!$this->getValidate()->scene('buyNow')->check($params)) {
+            return $this->renderError($this->getValidate()->getError(), ['isCreated' => false]);
         }
         // 立即购买：获取订单商品列表
         $model = new OrderModel;
@@ -177,6 +167,18 @@ class Checkout extends Controller
             'payType' => $params['payType'],  // 支付方式
             'payment' => $payment               // 微信支付参数
         ]);
+    }
+
+    /**
+     * 获取结算台验证器
+     * @return CheckoutValidate
+     */
+    private function getValidate(): CheckoutValidate
+    {
+        if (!$this->validate) {
+            $this->validate = new CheckoutValidate;
+        }
+        return $this->validate;
     }
 
     /**
