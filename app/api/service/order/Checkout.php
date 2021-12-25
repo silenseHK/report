@@ -325,7 +325,7 @@ class Checkout extends BaseService
             'pointsBonus' => 0,
             // 支付方式
             'payType' => $this->param['payType'],
-            // 系统设置
+            // 系统设置 TODO: 废弃
             'setting' => $this->getSetting(),
         ];
     }
@@ -337,7 +337,7 @@ class Checkout extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function getSetting(): array
+    public function getSetting(): array
     {
         // 系统支持的配送方式 (后台设置)
         $deliveryType = SettingModel::getItem(SettingEnum::DELIVERY)['delivery_type'];
@@ -347,6 +347,17 @@ class Checkout extends BaseService
             'deliveryType' => $deliveryType,                     // 支持的配送方式
             'points_name' => $pointsSetting['points_name'],      // 积分名称
             'points_describe' => $pointsSetting['describe'],     // 积分说明
+        ];
+    }
+
+    // 获取订单结算时的个人信息
+    public function getPersonal(): array
+    {
+        return [
+            'user_id' => $this->user['user_id'],
+            'balance' => $this->user['balance'],
+            'points' => $this->user['points'],
+            'address_id' => $this->user['address_id'],
         ];
     }
 

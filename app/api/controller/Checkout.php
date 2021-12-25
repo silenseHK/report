@@ -17,7 +17,8 @@ use app\api\service\User as UserService;
 use app\api\service\Cart as CartService;
 use app\api\service\order\Checkout as CheckoutService;
 use app\api\validate\order\Checkout as CheckoutValidate;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
+use think\response\Json;
 
 /**
  * 订单结算控制器
@@ -26,9 +27,6 @@ use app\common\exception\BaseException;
  */
 class Checkout extends Controller
 {
-    /* @var \app\api\model\User $user */
-    private $user;
-
     /* @var CheckoutValidate $validate */
     private $validate;
 
@@ -39,8 +37,6 @@ class Checkout extends Controller
     public function initialize()
     {
         parent::initialize();
-        // 用户信息
-        $this->user = UserService::getCurrentLoginUser(true);
         // 验证类
         $this->validate = new CheckoutValidate;
     }
@@ -48,13 +44,13 @@ class Checkout extends Controller
     /**
      * 结算台订单信息
      * @param string $mode
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function order(string $mode = 'buyNow')
+    public function order(string $mode = 'buyNow'): Json
     {
         if ($mode === 'buyNow') {
             return $this->buyNow();
@@ -67,26 +63,26 @@ class Checkout extends Controller
     /**
      * 订单提交
      * @param string $mode
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function submit(string $mode = 'buyNow')
+    public function submit(string $mode = 'buyNow'): Json
     {
         return $this->order($mode);
     }
 
     /**
      * 订单确认-立即购买
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function buyNow()
+    private function buyNow(): Json
     {
         // 实例化结算台服务
         $Checkout = new CheckoutService;
@@ -110,7 +106,11 @@ class Checkout extends Controller
         // 获取订单确认信息
         $orderInfo = $Checkout->onCheckout($goodsList);
         if ($this->request->isGet()) {
-            return $this->renderSuccess(['order' => $orderInfo]);
+            return $this->renderSuccess([
+                'order' => $orderInfo,
+                'personal' => $Checkout->getPersonal(),
+                'setting' => $Checkout->getSetting(),
+            ]);
         }
         // 验证订单是否存在错误
         if ($Checkout->hasError()) {
@@ -132,13 +132,13 @@ class Checkout extends Controller
 
     /**
      * 订单确认-购物车结算
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function cart()
+    private function cart(): Json
     {
         // 实例化结算台服务
         $Checkout = new CheckoutService;
@@ -153,7 +153,11 @@ class Checkout extends Controller
         // 获取订单结算信息
         $orderInfo = $Checkout->onCheckout($goodsList);
         if ($this->request->isGet()) {
-            return $this->renderSuccess(['order' => $orderInfo]);
+            return $this->renderSuccess([
+                'order' => $orderInfo,
+                'personal' => $Checkout->getPersonal(),
+                'setting' => $Checkout->getSetting(),
+            ]);
         }
         // 验证订单是否存在错误
         if ($Checkout->hasError()) {
@@ -190,9 +194,8 @@ class Checkout extends Controller
      * @param array $define
      * @return array
      */
-    private function getParam($define = [])
+    private function getParam(array $define = []): array
     {
         return array_merge($define, $this->request->param());
     }
-
 }
