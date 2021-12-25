@@ -46,6 +46,9 @@ class Order extends OrderModel
         'update_time'
     ];
 
+    // 信息提示
+    private $message = '';
+
     /**
      * 待支付订单详情
      * @param string $orderNo 订单号
@@ -219,10 +222,12 @@ class Order extends OrderModel
             $this->error = '已发货订单不可取消';
             return false;
         }
+        // 订单是否已支付
+        $isPay = $this['pay_status'] == PayStatusEnum::SUCCESS;
+        // 提示信息
+        $this->message = $isPay ? '订单已申请取消，需等待后台审核' : '订单已取消成功';
         // 订单取消事件
-        return $this->transaction(function () {
-            // 订单是否已支付
-            $isPay = $this['pay_status'] == PayStatusEnum::SUCCESS;
+        return $this->transaction(function () use ($isPay) {
             // 订单取消事件
             $isPay == false && OrderService::cancelEvent($this);
             // 更新订单状态: 已付款的订单设置为"待取消", 等待后台审核
@@ -263,7 +268,7 @@ class Order extends OrderModel
      * @return int
      * @throws BaseException
      */
-    public function getCount(string $type = 'all')
+    public function getCount(string $type = 'all'): int
     {
         // 筛选条件
         $filter = [];
@@ -341,6 +346,26 @@ class Order extends OrderModel
     }
 
     /**
+     * 获取当前用户待处理的订单数量
+     * @return array
+     * @throws BaseException
+     */
+    public function getTodoCounts(): array
+    {
+        return [
+            'payment' => $this->getCount('payment'),
+            'delivery' => $this->getCount('delivery'),
+            'received' => $this->getCount('received')
+        ];
+    }
+
+    // 返回提示信息
+    public function getMessage(): string
+    {
+        return $this->message;
+    }
+
+    /**
      * 当前订单是否允许申请售后
      * @param Order $order
      * @return bool
@@ -368,19 +393,5 @@ class Order extends OrderModel
             return false;
         }
         return true;
-    }
-
-    /**
-     * 获取当前用户待处理的订单数量
-     * @return array
-     * @throws BaseException
-     */
-    public function getTodoCounts(): array
-    {
-        return [
-            'payment' => $this->getCount('payment'),
-            'delivery' => $this->getCount('delivery'),
-            'received' => $this->getCount('received')
-        ];
     }
 }
