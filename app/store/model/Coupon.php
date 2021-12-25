@@ -30,7 +30,7 @@ class Coupon extends CouponModel
      * @return \think\Paginator
      * @throws \think\db\exception\DbException
      */
-    public function getList(array $param = [])
+    public function getList(array $param = []): \think\Paginator
     {
         // 检索查询条件
         $filter = $this->getFilter($param);
@@ -59,9 +59,9 @@ class Coupon extends CouponModel
     /**
      * 添加新记录
      * @param array $data
-     * @return false|int
+     * @return bool|false
      */
-    public function add(array $data)
+    public function add(array $data): bool
     {
         $data['store_id'] = self::$storeId;
         return $this->save($this->createData($data));
@@ -70,9 +70,9 @@ class Coupon extends CouponModel
     /**
      * 更新记录
      * @param array $data
-     * @return bool|int
+     * @return bool
      */
-    public function edit(array $data)
+    public function edit(array $data): bool
     {
         return $this->save($this->createData($data)) !== false;
     }
@@ -104,9 +104,9 @@ class Coupon extends CouponModel
 
     /**
      * 删除记录 (软删除)
-     * @return bool|int
+     * @return bool
      */
-    public function setDelete()
+    public function setDelete(): bool
     {
         return $this->save(['is_delete' => 1]) !== false;
     }

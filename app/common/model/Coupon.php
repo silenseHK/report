@@ -8,11 +8,12 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\model;
 
 use cores\BaseModel;
+
 use app\common\library\helper;
 
 /**
@@ -37,10 +38,10 @@ class Coupon extends BaseModel
     /**
      * 优惠券状态 (是否可领取)
      * @param $value
-     * @param $data
+     * @param array $data
      * @return array
      */
-    public function getStateAttr($value, $data)
+    public function getStateAttr($value, array $data): array
     {
         if (isset($data['is_receive']) && $data['is_receive']) {
             return ['text' => '已领取', 'value' => 0];
@@ -57,7 +58,7 @@ class Coupon extends BaseModel
     /**
      * 获取器：格式化折扣率
      * @param $value
-     * @return mixed
+     * @return float|int
      */
     public function getDiscountAttr($value)
     {
@@ -69,9 +70,9 @@ class Coupon extends BaseModel
      * @param $value
      * @return string
      */
-    public function getStartTimeAttr($value)
+    public function getStartTimeAttr($value): ?string
     {
-        return date('Y/m/d', $value);
+        return $value ? date('Y/m/d', $value) : null;
     }
 
     /**
@@ -79,9 +80,9 @@ class Coupon extends BaseModel
      * @param $value
      * @return string
      */
-    public function getEndTimeAttr($value)
+    public function getEndTimeAttr($value): ?string
     {
-        return date('Y/m/d', $value);
+        return $value ? date('Y/m/d', $value) : null;
     }
 
     /**
@@ -97,7 +98,7 @@ class Coupon extends BaseModel
     /**
      * 修改器：格式化折扣率
      * @param $value
-     * @return mixed
+     * @return float|int
      */
     public function setDiscountAttr($value)
     {

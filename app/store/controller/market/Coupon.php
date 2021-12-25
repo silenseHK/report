@@ -8,13 +8,14 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\store\controller\market;
 
 use app\store\controller\Controller;
 use app\store\model\Coupon as CouponModel;
 use app\store\model\UserCoupon as UserCouponModel;
+use think\response\Json;
 
 /**
  * 优惠券管理
@@ -25,10 +26,10 @@ class Coupon extends Controller
 {
     /**
      * 列表记录
-     * @return array
+     * @return Json
      * @throws \think\db\exception\DbException
      */
-    public function list()
+    public function list(): Json
     {
         $model = new CouponModel;
         $list = $model->getList($this->request->param());
@@ -38,9 +39,9 @@ class Coupon extends Controller
     /**
      * 详情记录
      * @param int $couponId
-     * @return array
+     * @return Json
      */
-    public function detail(int $couponId)
+    public function detail(int $couponId): Json
     {
         $detail = CouponModel::detail($couponId);
         return $this->renderSuccess(compact('detail'));
@@ -48,9 +49,9 @@ class Coupon extends Controller
 
     /**
      * 添加优惠券
-     * @return array|mixed
+     * @return Json
      */
-    public function add()
+    public function add(): Json
     {
         // 新增记录
         $model = new CouponModel;
@@ -62,10 +63,10 @@ class Coupon extends Controller
 
     /**
      * 更新优惠券
-     * @param $couponId
-     * @return array|mixed
+     * @param int $couponId
+     * @return Json
      */
-    public function edit(int $couponId)
+    public function edit(int $couponId): Json
     {
         // 优惠券详情
         $model = CouponModel::detail($couponId);
@@ -78,10 +79,10 @@ class Coupon extends Controller
 
     /**
      * 删除优惠券
-     * @param $couponId
-     * @return array|mixed
+     * @param int $couponId
+     * @return Json
      */
-    public function delete(int $couponId)
+    public function delete(int $couponId): Json
     {
         // 优惠券详情
         $model = CouponModel::detail($couponId);
@@ -94,14 +95,13 @@ class Coupon extends Controller
 
     /**
      * 领取记录
-     * @return array
+     * @return Json
      */
-    public function receive()
+    public function receive(): Json
     {
         // 获取列表记录
         $model = new UserCouponModel;
         $list = $model->getList($this->request->param());
         return $this->renderSuccess(compact('list'));
     }
-
 }

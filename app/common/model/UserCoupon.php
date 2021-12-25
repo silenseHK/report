@@ -8,12 +8,14 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types=1);
+declare (strict_types = 1);
 
 namespace app\common\model;
 
 use cores\BaseModel;
+
 use app\common\library\helper;
+use think\model\relation\BelongsTo;
 
 /**
  * 用户优惠券模型
@@ -36,9 +38,9 @@ class UserCoupon extends BaseModel
 
     /**
      * 关联用户表
-     * @return \think\model\relation\BelongsTo
+     * @return BelongsTo
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo('User');
     }
@@ -49,7 +51,7 @@ class UserCoupon extends BaseModel
      * @param $data
      * @return array
      */
-    public function getStateAttr($value, $data)
+    public function getStateAttr($value, $data): array
     {
         if ($data['is_use']) {
             return ['text' => '已使用', 'value' => 0];
@@ -63,7 +65,7 @@ class UserCoupon extends BaseModel
     /**
      * 获取器：格式化折扣率
      * @param $value
-     * @return mixed
+     * @return float|int
      */
     public function getDiscountAttr($value)
     {
@@ -75,7 +77,7 @@ class UserCoupon extends BaseModel
      * @param $value
      * @return string
      */
-    public function getStartTimeAttr($value)
+    public function getStartTimeAttr($value): string
     {
         return date('Y/m/d', $value);
     }
@@ -85,7 +87,7 @@ class UserCoupon extends BaseModel
      * @param $value
      * @return string
      */
-    public function getEndTimeAttr($value)
+    public function getEndTimeAttr($value): string
     {
         return date('Y/m/d', $value);
     }
@@ -103,7 +105,7 @@ class UserCoupon extends BaseModel
     /**
      * 修改器：格式化折扣率
      * @param $value
-     * @return mixed
+     * @return float|int
      */
     public function setDiscountAttr($value)
     {
@@ -134,11 +136,10 @@ class UserCoupon extends BaseModel
      * 设置优惠券使用状态
      * @param int $couponId 用户的优惠券id
      * @param bool $isUse 是否已使用
-     * @return false|int
+     * @return bool|false
      */
-    public static function setIsUse(int $couponId, $isUse = true)
+    public static function setIsUse(int $couponId, bool $isUse = true): bool
     {
-        return static::updateBase(['is_use' => (int)$isUse], ['user_coupon_id' => $couponId]);
+        return static::updateOne(['is_use' => (int)$isUse], $couponId);
     }
-
 }
