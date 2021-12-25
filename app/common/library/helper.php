@@ -81,7 +81,14 @@ class helper
         return $data;
     }
 
-    public static function number2($number, $isMinimum = false, $minimum = 0.01): string
+    /**
+     * 格式化价格显示
+     * @param mixed $number
+     * @param bool $isMinimum 是否存在最小值
+     * @param float $minimum
+     * @return string
+     */
+    public static function number2($number, bool $isMinimum = false, float $minimum = 0.01): string
     {
         $isMinimum && $number = max($minimum, $number);
         return sprintf('%.2f', $number);

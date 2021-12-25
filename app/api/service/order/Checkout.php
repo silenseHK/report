@@ -21,6 +21,7 @@ use app\api\model\UserCoupon as UserCouponModel;
 
 use app\api\service\User as UserService;
 use app\api\service\Payment as PaymentService;
+use app\api\service\user\Grade as UserGradeService;
 use app\api\service\coupon\GoodsDeduct as GoodsDeductService;
 use app\api\service\points\GoodsDeduct as PointsDeductService;
 use app\api\service\order\source\checkout\Factory as CheckoutFactory;
@@ -468,6 +469,7 @@ class Checkout extends BaseService
     /**
      * 设置订单商品会员折扣价
      * @return void
+     * @throws BaseException
      */
     private function setOrderGoodsGradeMoney(): void
     {
@@ -487,11 +489,10 @@ class Checkout extends BaseService
         if (!$this->checkoutRule['isUserGrade']) {
             return;
         }
-        // 会员等级状态
-        if (!(
-            $this->user['grade_id'] > 0 && !empty($this->user['grade'])
-            && !$this->user['grade']['is_delete'] && $this->user['grade']['status']
-        )) {
+        // 获取当前登录用户的会员等级信息
+        $gradeInfo = UserGradeService::getCurrentGradeInfo();
+        // 判断商品是否参与会员折扣
+        if (empty($gradeInfo)) {
             return;
         }
         // 计算抵扣金额
@@ -500,25 +501,24 @@ class Checkout extends BaseService
             if (!$goods['is_enable_grade']) {
                 continue;
             }
+            // 折扣比例
+            $discountRatio = $gradeInfo['equity']['discount'];
             // 商品单独设置了会员折扣
             if ($goods['is_alone_grade'] && isset($goods['alone_grade_equity'][$this->user['grade_id']])) {
-                // 折扣比例
-                $discountRatio = helper::bcdiv($goods['alone_grade_equity'][$this->user['grade_id']], 10);
-            } else {
-                // 折扣比例
-                $discountRatio = helper::bcdiv($this->user['grade']['equity']['discount'], 10);
+                $discountRatio = $goods['alone_grade_equity'][$gradeInfo['grade_id']];
             }
-            if ($discountRatio > 0) {
-                // 会员折扣后的商品总金额
-                $gradeTotalPrice = max(0.01, helper::bcmul($goods['total_price'], $discountRatio));
-                helper::setDataAttribute($goods, [
-                    'is_user_grade' => true,
-                    'grade_ratio' => $discountRatio,
-                    'grade_goods_price' => helper::number2(helper::bcmul($goods['goods_price'], $discountRatio), true),
-                    'grade_total_money' => helper::number2(helper::bcsub($goods['total_price'], $gradeTotalPrice)),
-                    'total_price' => $gradeTotalPrice,
-                ], false);
+            if (empty($discountRatio)) {
+                continue;
             }
+            // 会员折扣后的商品总金额
+            $gradeTotalPrice = UserGradeService::getDiscountPrice($goods['total_price'], $discountRatio);
+            helper::setDataAttribute($goods, [
+                'is_user_grade' => true,
+                'grade_ratio' => $discountRatio,
+                'grade_goods_price' =>  UserGradeService::getDiscountPrice($goods['goods_price'], $discountRatio),
+                'grade_total_money' => helper::bcsub($goods['total_price'], $gradeTotalPrice),
+                'total_price' => $gradeTotalPrice,
+            ], false);
         }
     }
 

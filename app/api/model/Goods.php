@@ -12,12 +12,12 @@ declare (strict_types=1);
 
 namespace app\api\model;
 
-use app\api\service\User as UserService;
 use app\api\model\GoodsSpecRel as GoodsSpecRelModel;
+use app\api\service\user\Grade as UserGradeService;
 use app\common\model\Goods as GoodsModel;
 use app\common\enum\goods\Status as GoodsStatusEnum;
 use app\common\library\helper;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 
 /**
  * 商品模型
@@ -48,7 +48,7 @@ class Goods extends GoodsModel
      * @param $value
      * @return string
      */
-    public function getContentAttr($value)
+    public function getContentAttr($value): string
     {
         return htmlspecialchars_decode((string)$value);
     }
@@ -147,32 +147,31 @@ class Goods extends GoodsModel
      */
     private function setGoodsGradeMoney(self $goods)
     {
-        // 获取当前登录的用户信息
-        $userInfo = UserService::getCurrentLoginUser();
-        // 会员等级状态
-        $gradeStatus = (!empty($userInfo) && $userInfo['grade_id'] > 0 && !empty($userInfo['grade']))
-            && (!$userInfo['grade']['is_delete'] && $userInfo['grade']['status']);
+        // 设置当前商品是否使用会员等级折扣价
+        $goods['is_user_grade'] = false;
+        // 获取当前登录用户的会员等级信息
+        $gradeInfo = UserGradeService::getCurrentGradeInfo();
         // 判断商品是否参与会员折扣
-        if (!$gradeStatus || !$goods['is_enable_grade']) {
-            $goods['is_user_grade'] = false;
+        if (empty($gradeInfo) || !$goods['is_enable_grade']) {
             return;
         }
+        // 默认的折扣比例
+        $discountRatio = $gradeInfo['equity']['discount'];
         // 商品单独设置了会员折扣
-        if ($goods['is_alone_grade'] && isset($goods['alone_grade_equity'][$userInfo['grade_id']])) {
-            // 折扣比例
-            $discountRatio = helper::bcdiv($goods['alone_grade_equity'][$userInfo['grade_id']], 10);
-        } else {
-            // 折扣比例
-            $discountRatio = helper::bcdiv($userInfo['grade']['equity']['discount'], 10);
+        if ($goods['is_alone_grade'] && isset($goods['alone_grade_equity'][$gradeInfo['grade_id']])) {
+            $discountRatio = $goods['alone_grade_equity'][$gradeInfo['grade_id']];
         }
-        if ($discountRatio > 0) {
-            // 标记参与会员折扣
-            $goods['is_user_grade'] = true;
-            // 会员折扣价
-            foreach ($goods['skuList'] as &$skuItem) {
-                $skuItem['goods_price'] = helper::number2(helper::bcmul($skuItem['goods_price'], $discountRatio), true);
-            }
+        if (empty($discountRatio)) {
+            return;
+        }
+        // 标记参与会员折扣
+        $goods['is_user_grade'] = true;
+        // 会员折扣价: 商品基础价格
+        $goods['goods_price_min'] = UserGradeService::getDiscountPrice($goods['goods_price_min'], $discountRatio);
+        $goods['goods_price_max'] = UserGradeService::getDiscountPrice($goods['goods_price_max'], $discountRatio);
+        // 会员折扣价: 商品sku
+        foreach ($goods['skuList'] as &$skuItem) {
+            $skuItem['goods_price'] = UserGradeService::getDiscountPrice($skuItem['goods_price'], $discountRatio);
         }
     }
-
 }
