@@ -15,7 +15,7 @@ namespace app\api\service;
 use app\api\model\User as UserModel;
 use app\api\model\UserOauth as UserOauthModel;
 use app\common\service\BaseService;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 
 /**
  * 用户服务类
@@ -87,13 +87,15 @@ class User extends BaseService
 
     /**
      * 获取当前登录的用户信息
-     * @return UserModel|bool|null
+     * @return UserModel|array|false|null
+     * @throws BaseException
      */
     private function getLoginUser()
     {
         // 获取用户认证Token
-        $token = $this->getToken();
-        if ($token === false) return false;
+        if (!$token = $this->getToken()) {
+            return false;
+        }
         // 获取用户信息
         if (!$user = UserModel::getUserByToken($token)) {
             $this->error = '没有找到用户信息';

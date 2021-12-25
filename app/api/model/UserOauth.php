@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\model;
 
@@ -26,6 +26,8 @@ class UserOauth extends UserOauthModel
      * @var array
      */
     protected $hidden = [
+        'store_id',
+        'is_delete',
         'create_time',
         'update_time',
     ];

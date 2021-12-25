@@ -13,10 +13,11 @@ declare (strict_types=1);
 namespace app\api\model;
 
 use think\facade\Cache;
-use yiovo\captcha\facade\CaptchaApi;
 use app\api\service\User as UserService;
+use app\api\model\UserOauth as UserOauthModel;
 use app\common\model\User as UserModel;
 use cores\exception\BaseException;
+use yiovo\captcha\facade\CaptchaApi;
 
 /**
  * 用户模型类
@@ -59,12 +60,18 @@ class User extends UserModel
         if (!Cache::has($token)) {
             return false;
         }
-        // 获取用户的ID
-        $userId = Cache::get($token)['user']['user_id'];
-        // 获取用户基本信息
+        // 用户的ID
+        $userId = (int)Cache::get($token)['user']['user_id'];
+        // 用户基本信息
         $userInfo = self::detail($userId);
         if (empty($userInfo) || $userInfo['is_delete']) {
             throwError('很抱歉，用户信息不存在或已删除', config('status.not_logged'));
+        }
+        // 获取用户关联的第三方用户信息(当前客户端)
+        try {
+            $userInfo['currentOauth'] = UserOauthModel::getOauth($userId, getPlatform());
+        } catch (\Throwable $e) {
+            throwError($e->getMessage());
         }
         return $userInfo;
     }
