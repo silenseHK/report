@@ -95,6 +95,8 @@ class Party extends BaseService
      * @param array $partyData 第三方用户信息
      * @param bool $isGetAvatarUrl 是否下载头像
      * @return array
+     * @throws BaseException
+     * @throws \think\Exception
      */
     public static function partyUserInfo(array $partyData, bool $isGetAvatarUrl = true): array
     {
@@ -114,6 +116,8 @@ class Party extends BaseService
      * 下载第三方头像并写入文件库
      * @param string $avatarUrl
      * @return int
+     * @throws BaseException
+     * @throws \think\Exception
      */
     private static function partyAvatar(string $avatarUrl): int
     {

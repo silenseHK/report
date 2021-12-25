@@ -46,21 +46,18 @@ class Avatar extends BaseService
     /**
      * 下载第三方头像并返回文件记录ID
      * @param string $avatarUrl
-     * @return int|false
+     * @return int
+     * @throws BaseException
+     * @throws \think\Exception
      */
-    public function party(string $avatarUrl)
+    public function party(string $avatarUrl): int
     {
-        try {
-            // 下载网络图片
-            $filePath = $this->download($avatarUrl);
-            // 上传到本地
-            $fileInfo = $this->upload($filePath);
-            // 新增文件记录
-            return $this->record($fileInfo);
-        } catch (\Exception $e) {
-            $this->error = $e->getMessage();
-            return false;
-        }
+        // 下载网络图片
+        $filePath = $this->download($avatarUrl);
+        // 上传到本地
+        $fileInfo = $this->upload($filePath);
+        // 新增文件记录
+        return $this->record($fileInfo);
     }
 
     /**
