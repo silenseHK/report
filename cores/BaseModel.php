@@ -244,6 +244,9 @@ abstract class BaseModel extends Model
      */
     protected function setDec($where, string $field, float $step = 1)
     {
+        if (is_numeric($where)) {
+            $where = [$this->getPk() => (int)$where];
+        }
         return $this->where($where)->dec($field, $step)->update();
     }
 
