@@ -30,23 +30,7 @@ class AppService extends Service
     // 服务启动
     public function boot()
     {
-        // 记录访问日志
-        if (env('access_log') && !is_debug()) {
-            $log = $this->getVisitor();
-            $log .= "\r\n" . '[ header ] ' . print_r(Request::header(), true);
-            $log .= "" . '[ param ] ' . print_r(Request::param(), true);
-            $log .= "\r\n" . '--------------------------------------------------------------------------------------------';
-            Log::record($log, 'begin');
-        }
+
     }
 
-    /**
-     * 获取请求路径信息
-     * @return string
-     */
-    private function getVisitor(): string
-    {
-        $data = [Request::ip(), Request::method(), Request::url(true)];
-        return implode(' ', $data);
-    }
 }
