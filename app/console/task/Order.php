@@ -43,7 +43,7 @@ class Order extends Task
     {
         ['storeId' => $this->storeId] = $param;
         $this->setInterval($this->storeId, $this->taskKey, $this->taskExpire, function () {
-            // echo $this->taskKey . PHP_EOL;
+            echo $this->taskKey . PHP_EOL;
             // 未支付订单自动关闭
             $this->closeEvent();
             // 已发货订单自动确认收货
@@ -61,12 +61,12 @@ class Order extends Task
      */
     private function closeEvent()
     {
-        // 自动关闭订单的天数
-        $closeDays = (int)$this->getTradeSetting()['close_days'];
+        // 自动关闭订单的有效期
+        $closeHours = (int)$this->getTradeSetting()['closeHours'];
         // 执行自动关闭
-        if ($closeDays > 0) {
+        if ($closeHours > 0) {
             $service = new OrderService;
-            $service->closeEvent($this->storeId, $closeDays);
+            $service->closeEvent($this->storeId, $closeHours);
         }
     }
 

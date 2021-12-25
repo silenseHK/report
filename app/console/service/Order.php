@@ -30,15 +30,15 @@ class Order extends BaseService
     /**
      * 未支付订单自动关闭
      * @param int $storeId
-     * @param int $closeDays 自定关闭订单天数
+     * @param int $closeHours 自定关闭订单有效期 (小时)
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function closeEvent(int $storeId, int $closeDays)
+    public function closeEvent(int $storeId, int $closeHours)
     {
         // 截止时间
-        $deadlineTime = time() - ((int)$closeDays * 86400);
+        $deadlineTime = time() - ((int)$closeHours * 60 * 60);
         // 查询截止时间未支付的订单
         $model = new OrderModel;
         $list = $model->getListByClose($storeId, $deadlineTime);
@@ -55,7 +55,7 @@ class Order extends BaseService
         // 记录日志
         Tools::taskLogs('Order', 'closeEvent', [
             'storeId' => $storeId,
-            'closeDays' => $closeDays,
+            'closeHours' => $closeHours,
             'deadlineTime' => $deadlineTime,
             'orderIds' => helper::jsonEncode($orderIds)
         ]);
