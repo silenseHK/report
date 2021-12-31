@@ -59,6 +59,7 @@ class Party extends BaseService
         }
         // 如果存在第三方用户, 需判断oauthId是否相同
         if ($oauthId != $oauthInfo['oauth_id']) {
+            // isBack参数代表需重新获取code, 前端拿到该参数进行页面返回
             throwError('很抱歉，当前手机号已绑定其他微信号', null, ['isBack' => true]);
         }
         return true;
@@ -83,7 +84,7 @@ class Party extends BaseService
                 $session = OauthService::wxCode2Session($code);
             } catch (BaseException $e) {
                 // showError参数表示让前端显示错误
-                throwError($e->getMessage(), null, ['showError' => true]);
+                throwError($e->getMessage());
                 return false;
             }
         }

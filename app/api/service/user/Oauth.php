@@ -68,7 +68,7 @@ class Oauth extends BaseService
         $content = null;
         $code = $WXBizDataCrypt->decryptData($encryptedData, $iv, $content);
         if ($code !== ErrorCode::$OK) {
-            throwError('微信数据解密失败');
+            throwError('微信数据 encryptedData 解密失败');
         }
         return $content;
     }
