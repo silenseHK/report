@@ -146,7 +146,7 @@ class GoodsDeduct extends BaseService
         if ($this->couponInfo['coupon_type'] == CouponTypeEnum::DISCOUNT) {
             $reducePrice = $reducedMoney - ($reducedMoney * ($this->couponInfo['discount'] / 10));
         } else {
-            $reducePrice = $this->couponInfo['reduce_price'];
+            $reducePrice = $this->couponInfo['reduce_price'] * 100;
         }
         // 优惠券最大允许抵扣到一分钱，所以此处判断抵扣金额大于等于订单金额时，减去一分钱
         $this->actualReducedMoney = ($reducePrice >= $orderTotalPrice) ? $orderTotalPrice - 1 : $reducePrice;
