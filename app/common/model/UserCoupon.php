@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\model;
 
@@ -140,6 +140,6 @@ class UserCoupon extends BaseModel
      */
     public static function setIsUse(int $couponId, bool $isUse = true): bool
     {
-        return static::updateOne(['is_use' => (int)$isUse], $couponId);
+        return static::updateBase(['is_use' => (int)$isUse], ['coupon_id' => $couponId]);
     }
 }
