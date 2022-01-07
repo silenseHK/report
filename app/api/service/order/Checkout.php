@@ -547,7 +547,7 @@ class Checkout extends BaseService
         // 获取优惠券信息
         $couponInfo = $this->getCouponInfo($couponId, $couponList);
         // 计算订单商品优惠券抵扣金额
-        $goodsListTemp = helper::getArrayColumns($this->goodsList, ['goods_id', 'total_price']);
+        $goodsListTemp = helper::getArrayColumns($this->goodsList, ['goods_id', 'goods_sku_id', 'total_price']);
         $CouponMoney = new GoodsDeductService;
         $rangeGoodsList = $CouponMoney->setGoodsList($goodsListTemp)
             ->setCouponInfo($couponInfo)
@@ -555,8 +555,9 @@ class Checkout extends BaseService
             ->getRangeGoodsList();
         // 分配订单商品优惠券抵扣金额
         foreach ($this->goodsList as &$goods) {
-            if (isset($rangeGoodsList[$goods['goods_id']])) {
-                $goods['coupon_money'] = $rangeGoodsList[$goods['goods_id']]['coupon_money'] / 100;
+            $goodsKey = "{$goods['goods_id']}-{$goods['goods_sku_id']}";
+            if (isset($rangeGoodsList[$goodsKey])) {
+                $goods['coupon_money'] = $rangeGoodsList[$goodsKey]['coupon_money'] / 100;
             }
         }
         // 记录订单优惠券信息

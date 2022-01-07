@@ -94,18 +94,19 @@ class GoodsDeduct extends BaseService
         $this->rangeGoodsList = [];
         foreach ($this->goodsList as $goods) {
             $goods['total_price'] *= 100;
+            $goodsKey = "{$goods['goods_id']}-{$goods['goods_sku_id']}";
             switch ($this->couponInfo['apply_range']) {
                 case ApplyRangeEnum::ALL:
-                    $this->rangeGoodsList[$goods['goods_id']] = $goods;
+                    $this->rangeGoodsList[$goodsKey] = $goods;
                     break;
                 case ApplyRangeEnum::SOME:
                     if (in_array($goods['goods_id'], $this->couponInfo['apply_range_config']['applyGoodsIds'])) {
-                        $this->rangeGoodsList[$goods['goods_id']] = $goods;
+                        $this->rangeGoodsList[$goodsKey] = $goods;
                     }
                     break;
                 case ApplyRangeEnum::EXCLUDE:
                     if (!in_array($goods['goods_id'], $this->couponInfo['apply_range_config']['excludedGoodsIds'])) {
-                        $this->rangeGoodsList[$goods['goods_id']] = $goods;
+                        $this->rangeGoodsList[$goodsKey] = $goods;
                     }
                     break;
                 default:
@@ -172,7 +173,7 @@ class GoodsDeduct extends BaseService
     {
         $orderTotalPrice = helper::getArrayColumnSum($this->rangeGoodsList, 'total_price');
         foreach ($this->rangeGoodsList as &$goods) {
-            $goods['weight'] = $goods['total_price'] / $orderTotalPrice;
+            $goods['weight'] = round($goods['total_price'] / $orderTotalPrice, 6);
         }
         array_sort($this->rangeGoodsList, 'weight', true);
     }
