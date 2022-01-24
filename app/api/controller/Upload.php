@@ -61,8 +61,7 @@ class Upload extends Controller
         // 设置上传文件的信息
         $storage->setUploadFile('file')
             ->setRootDirName((string)$this->getStoreId())
-            ->setValidationScene('image')
-            ->upload();
+            ->setValidationScene('image');
         // 执行文件上传
         if (!$storage->upload()) {
             return $this->renderError('图片上传失败：' . $storage->getError());

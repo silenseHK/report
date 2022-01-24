@@ -84,7 +84,7 @@ abstract class Basics
     private function throwFileError(Exception $e)
     {
         $maxSize = ini_get('upload_max_filesize');
-        $myMsg = $e->getCode() === 1 ? "上传的文件超出了服务器最大限制: {$maxSize}" : false;
+        $myMsg = $e->getCode() === 1 ? "上传的文件超出了服务器最大限制: {$maxSize}；可修改php.ini文件中upload_max_filesize项调整" : false;
         throwError($myMsg ?: $e->getMessage());
     }
 

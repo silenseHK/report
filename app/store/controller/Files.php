@@ -8,10 +8,11 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\store\controller;
 
+use think\response\Json;
 use app\store\model\UploadFile as UploadFileModel;
 
 /**
@@ -23,10 +24,10 @@ class Files extends Controller
 {
     /**
      * 文件列表
-     * @return array
+     * @return Json
      * @throws \think\db\exception\DbException
      */
-    public function list()
+    public function list(): Json
     {
         $model = new UploadFileModel;
         $list = $model->getList($this->request->param());
@@ -36,9 +37,9 @@ class Files extends Controller
     /**
      * 编辑文件
      * @param int $fileId
-     * @return array
+     * @return Json
      */
-    public function edit(int $fileId)
+    public function edit(int $fileId): Json
     {
         // 文件详情
         $model = UploadFileModel::detail($fileId);
@@ -52,13 +53,13 @@ class Files extends Controller
     /**
      * 删除文件(批量)
      * @param array $fileIds 文件id集
-     * @return array
+     * @return Json
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function delete(array $fileIds)
+    public function delete(array $fileIds): Json
     {
         $model = new UploadFileModel;
         if (!$model->setDelete($fileIds)) {
@@ -71,9 +72,9 @@ class Files extends Controller
      * 移动文件到指定分组(批量)
      * @param int $groupId
      * @param array $fileIds
-     * @return array
+     * @return Json
      */
-    public function moveGroup(int $groupId, array $fileIds)
+    public function moveGroup(int $groupId, array $fileIds): Json
     {
         $model = new UploadFileModel;
         if (!$model->moveGroup($groupId, $fileIds)) {
@@ -81,5 +82,4 @@ class Files extends Controller
         }
         return $this->renderSuccess('操作成功');
     }
-
 }

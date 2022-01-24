@@ -17,6 +17,7 @@ use app\store\model\UploadFile as UploadFileModel;
 use app\common\enum\Setting as SettingEnum;
 use app\common\enum\file\FileType as FileTypeEnum;
 use app\common\library\storage\Driver as StorageDriver;
+use think\response\Json;
 
 /**
  * 文件库管理
@@ -45,18 +46,17 @@ class Upload extends Controller
     /**
      * 图片上传接口
      * @param int $groupId 分组ID
-     * @return array
+     * @return Json
      * @throws \think\Exception
      */
-    public function image(int $groupId = 0)
+    public function image(int $groupId = 0): Json
     {
         // 实例化存储驱动
         $storage = new StorageDriver($this->config);
         // 设置上传文件的信息
         $storage->setUploadFile('iFile')
-            ->setRootDirName((string)$this->getStoreId())
-            ->setValidationScene('image')
-            ->upload();
+            ->setRootDirName((string)$this->storeId)
+            ->setValidationScene('image');
         // 执行文件上传
         if (!$storage->upload()) {
             return $this->renderError('图片上传失败：' . $storage->getError());
@@ -70,4 +70,30 @@ class Upload extends Controller
         return $this->renderSuccess(['fileInfo' => $model->toArray()], '图片上传成功');
     }
 
+    /**
+     * 视频上传接口
+     * @param int $groupId 分组ID
+     * @return Json
+     * @throws \think\Exception
+     */
+    public function video(int $groupId = 0): Json
+    {
+        // 实例化存储驱动
+        $storage = new StorageDriver($this->config);
+        // 设置上传文件的信息
+        $storage->setUploadFile('iFile')
+            ->setRootDirName((string)$this->storeId)
+            ->setValidationScene('video');
+        // 执行文件上传
+        if (!$storage->upload()) {
+            return $this->renderError('视频上传失败：' . $storage->getError());
+        }
+        // 文件信息
+        $fileInfo = $storage->getSaveFileInfo();
+        // 添加文件库记录
+        $model = new UploadFileModel;
+        $model->add($fileInfo, FileTypeEnum::VIDEO, $groupId);
+        // 图片上传成功
+        return $this->renderSuccess(['fileInfo' => $model->toArray()], '视频上传成功');
+    }
 }

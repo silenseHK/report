@@ -31,7 +31,7 @@ class UploadFile extends UploadFileModel
      * @return \think\Paginator
      * @throws \think\db\exception\DbException
      */
-    public function getList(array $param = [])
+    public function getList(array $param = []): \think\Paginator
     {
         // 商品列表获取条件
         $params = $this->setQueryDefaultValue($param, [
@@ -65,9 +65,9 @@ class UploadFile extends UploadFileModel
     /**
      * 移入|移出回收站
      * @param bool $isRecycle
-     * @return false|int
+     * @return bool|false
      */
-    public function setRecycle(bool $isRecycle = true)
+    public function setRecycle(bool $isRecycle = true): bool
     {
         return $this->save(['is_recycle' => (int)$isRecycle]);
     }
@@ -81,7 +81,7 @@ class UploadFile extends UploadFileModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function setDelete(array $fileIds)
+    public function setDelete(array $fileIds): bool
     {
         // 验证文件数量
         if (count($fileIds) > 15) {
@@ -106,23 +106,13 @@ class UploadFile extends UploadFileModel
         return true;
     }
 
-//    /**
-//     * 批量软删除
-//     * @param $fileIds
-//     * @return $this
-//     */
-//    public function softDelete($fileIds)
-//    {
-//        return $this->where('file_id', 'in', $fileIds)->update(['is_recycle' => 1]);
-//    }
-
     /**
      * 批量移动文件分组
      * @param int $groupId
      * @param array $fileIds
      * @return $this
      */
-    public function moveGroup(int $groupId, array $fileIds)
+    public function moveGroup(int $groupId, array $fileIds): UploadFile
     {
         return $this->where('file_id', 'in', $fileIds)->update(['group_id' => $groupId]);
     }
@@ -132,9 +122,9 @@ class UploadFile extends UploadFileModel
      * @param array $data
      * @param int $fileType
      * @param int $groupId
-     * @return false|int|mixed
+     * @return bool|false
      */
-    public function add(array $data, int $fileType, int $groupId = 0)
+    public function add(array $data, int $fileType, int $groupId = 0): bool
     {
         return $this->save([
             'group_id' => $groupId > 0 ? (int)$groupId : 0,
@@ -155,9 +145,8 @@ class UploadFile extends UploadFileModel
      * @param array $data
      * @return bool
      */
-    public function edit(array $data)
+    public function edit(array $data): bool
     {
         return $this->allowField(['file_name', 'group_id'])->save($data) !== false;
     }
-
 }
