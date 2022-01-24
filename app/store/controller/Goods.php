@@ -57,6 +57,7 @@ class Goods extends Controller
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
+     * @throws \cores\exception\BaseException
      */
     public function detail(int $goodsId): Json
     {
@@ -72,6 +73,7 @@ class Goods extends Controller
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
+     * @throws \cores\exception\BaseException
      */
     public function add(): Json
     {
@@ -89,6 +91,7 @@ class Goods extends Controller
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
+     * @throws \cores\exception\BaseException
      */
     public function edit(int $goodsId): Json
     {
@@ -119,7 +122,7 @@ class Goods extends Controller
     /**
      * 删除商品
      * @param array $goodsIds
-     * @return array
+     * @return Json
      */
     public function delete(array $goodsIds): Json
     {

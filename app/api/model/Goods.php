@@ -87,7 +87,7 @@ class Goods extends GoodsModel
     public function getDetails(int $goodsId)
     {
         // 关联查询
-        $with = ['images' => ['file'], 'skuList' => ['image']];
+        $with = ['images.file', 'skuList.image', 'video', 'videoCover'];
         // 获取商品记录
         $goodsInfo = static::detail($goodsId, $with);
         // 判断商品的状态

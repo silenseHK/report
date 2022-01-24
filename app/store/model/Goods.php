@@ -43,32 +43,49 @@ class Goods extends GoodsModel
      */
     public function getDetail(int $goodsId)
     {
-        // 关联查询
-        $with = ['images' => ['file'], 'skuList' => ['image']];
-        // 获取商品记录
-        $goodsInfo = static::detail($goodsId, $with);
-        empty($goodsInfo) && throwError('很抱歉，商品信息不存');
-        // 整理商品数据并返回
-        $goodsInfo = parent::setGoodsData($goodsInfo);
+        // 获取商品基础信息
+        $goodsInfo = $this->getBasic($goodsId);
         // 分类ID集
         $goodsInfo['categoryIds'] = GoodsCategoryRelModel::getCategoryIds($goodsInfo['goods_id']);
-        // 商品规格列表
-        $goodsInfo['specList'] = GoodsSpecRelModel::getSpecList($goodsInfo['goods_id']);
+        // 商品多规格属性列表
+        if ($goodsInfo['spec_type'] == SpecTypeEnum::MULTI) {
+            $goodsInfo['specList'] = GoodsSpecRelModel::getSpecList($goodsInfo['goods_id']);
+        }
         // 服务与承诺
         $goodsInfo['serviceIds'] = GoodsServiceRelModel::getServiceIds($goodsInfo['goods_id']);
-        // 商品基本信息
+        // 商品规格是否锁定(锁定状态下不允许编辑规格)
+        $goodsInfo['isSpecLocked'] = GoodsService::checkSpecLocked($goodsId);
+        // 返回商品详细信息
         return $goodsInfo;
+    }
+
+    /**
+     * 获取商品基础信息
+     * @param int $goodsId
+     * @return mixed
+     * @throws BaseException
+     */
+    public function getBasic(int $goodsId)
+    {
+        // 关联查询
+        $with = ['images.file', 'skuList.image', 'video', 'videoCover'];
+        // 获取商品记录
+        $goodsInfo = static::detail($goodsId, $with);
+        empty($goodsInfo) && throwError('很抱歉，商品信息不存在');
+        // 整理商品数据并返回
+        return parent::setGoodsData($goodsInfo);
     }
 
     /**
      * 添加商品
      * @param array $data
      * @return bool
+     * @throws \cores\exception\BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function add(array $data)
+    public function add(array $data): bool
     {
         // 创建商品数据
         $data = $this->createData($data);
@@ -94,6 +111,7 @@ class Goods extends GoodsModel
      * 编辑商品
      * @param array $data
      * @return bool
+     * @throws \cores\exception\BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
@@ -176,7 +194,7 @@ class Goods extends GoodsModel
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
-     * @throws BaseException
+     * @throws \cores\exception\BaseException
      */
     private function createData(array $data): array
     {

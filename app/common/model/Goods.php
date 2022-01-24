@@ -12,12 +12,13 @@ declare (strict_types=1);
 
 namespace app\common\model;
 
-use cores\BaseModel;
 use think\Paginator;
 use think\model\Collection;
-use app\common\library\helper;
+use think\model\relation\HasOne;
+use cores\BaseModel;
 use app\store\model\GoodsCategoryRel as GoodsCategoryRelModel;
 use app\common\enum\goods\Status as GoodsStatusEnum;
+use app\common\library\helper;
 
 /**
  * 商品模型
@@ -34,6 +35,24 @@ class Goods extends BaseModel
 
     // 追加字段
     protected $append = ['goods_sales'];
+
+    /**
+     * 关联模型：主图视频文件
+     * @return HasOne
+     */
+    public function video(): HasOne
+    {
+        return $this->hasOne('UploadFile', 'file_id', 'video_id');
+    }
+
+    /**
+     * 关联模型：主图视频封面图片文件
+     * @return HasOne
+     */
+    public function videoCover(): HasOne
+    {
+        return $this->hasOne('UploadFile', 'file_id', 'video_cover_id');
+    }
 
     /**
      * 计算显示销量 (初始销量 + 实际销量)
@@ -328,37 +347,4 @@ class Goods extends BaseModel
     {
         return static::get($goodsId, $with);
     }
-
-//    /**
-//     * 指定的商品规格信息
-//     * @param static $goods 商品详情
-//     * @param string $goodsSkuId
-//     * @return array|bool
-//     */
-//    public static function getGoodsSku(self $goods, string $goodsSkuId)
-//    {
-//        // 获取指定的sku
-//        $goodsSku = [];
-//        foreach ($goods['skuList'] as $item) {
-//            if ($item['goods_sku_id'] == $goodsSkuId) {
-//                $goodsSku = $item;
-//                break;
-//            }
-//        }
-//        if (empty($goodsSku)) {
-//            return false;
-//        }
-//        // 多规格文字内容
-//        $goodsSku['goods_attr'] = '';
-//        if ($goods['spec_type'] == 20) {
-//            $specRelData = helper::arrayColumn2Key($goods['spec_rel'], 'spec_value_id');
-//            $attrs = explode('_', $goodsSku['goods_sku_id']);
-//            foreach ($attrs as $specValueId) {
-//                $goodsSku['goods_attr'] .= $specRelData[$specValueId]['spec']['spec_name'] . ':'
-//                    . $specRelData[$specValueId]['spec_value'] . '; ';
-//            }
-//        }
-//        return $goodsSku;
-//    }
-
 }
