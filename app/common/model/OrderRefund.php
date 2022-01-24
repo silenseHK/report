@@ -82,6 +82,16 @@ class OrderRefund extends BaseModel
     }
 
     /**
+     * 获取器：用户发货时间
+     * @param $value
+     * @return false|string
+     */
+    public function getSendTimeAttr($value)
+    {
+        return format_time($value);
+    }
+
+    /**
      * 售后单详情
      * @param array|int $where
      * @param array $with
@@ -91,5 +101,4 @@ class OrderRefund extends BaseModel
     {
         return static::get($where, $with);
     }
-
 }

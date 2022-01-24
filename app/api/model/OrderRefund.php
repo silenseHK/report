@@ -112,7 +112,7 @@ class OrderRefund extends OrderRefundModel
     public static function getDetail(int $orderRefundId, bool $isWith = false): ?OrderRefund
     {
         // 关联查询
-        $with = $isWith ? ['orderGoods' => ['image'], 'images.file', 'address'] : [];
+        $with = $isWith ? ['orderGoods' => ['image'], 'images.file', 'address', 'express'] : [];
         // 获取记录
         $detail = static::detail([
             'user_id' => UserService::getCurrentLoginUserId(),
