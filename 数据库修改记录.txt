@@ -1,4 +1,12 @@
 ﻿
+# v2.0.5
+# 修改时间：2022-01-24
+ALTER TABLE `yoshop_goods`
+ADD COLUMN `video_id`  int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '主图视频ID' AFTER `goods_no`,
+ADD COLUMN `video_cover_id`  int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '主图视频ID' AFTER `video_id`;
+
+
+
 # v2.0.4
 # 修改时间：2021-11-29
 ALTER TABLE `yoshop_wxapp` COMMENT='微信小程序记录表（已废弃）';
