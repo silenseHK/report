@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\admin\controller\setting;
 
@@ -26,7 +26,7 @@ class Science extends Controller
      * 环境检测
      * @return array
      */
-    public function info()
+    public function info(): array
     {
         return $this->renderSuccess([
             'scienceInfo' => [
@@ -62,15 +62,36 @@ class Science extends Controller
                 'name' => 'PHP版本',
                 'key' => 'php',
                 'value' => PHP_VERSION,
-                'status' => version_compare(PHP_VERSION, '7.1.0') === -1 ? 'danger' : 'normal',
-                'remark' => 'PHP版本必须为 7.1.0 以上'
+                'status' => version_compare(PHP_VERSION, '7.2.0') === -1 ? 'danger' : 'normal',
+                'remark' => 'PHP版本必须为 7.2.0 以上'
             ],
             [
-                'name' => '文件上传限制',
-                'key' => 'upload_max',
-                'value' => @ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'unknow',
-                'status' => 'normal',
-                'remark' => ''
+                'name' => 'PHP运行位数',
+                'key' => 'system',
+                'value' => (PHP_INT_SIZE === 4 ? '32' : '64') . '位',
+                'status' => PHP_INT_SIZE === 4 ? 'warning' : 'normal',
+                'remark' => '建议使用 64位 PHP以提升程序性能'
+            ],
+//            [
+//                'name' => '文件上传功能',
+//                'key' => 'file_uploads',
+//                'value' => !ini_get('file_uploads') ? '关闭' : '开启',
+//                'status' => !ini_get('file_uploads') ? 'danger' : 'normal',
+//                'remark' => '文件上传必须开启 file_uploads'
+//            ],
+            [
+                'name' => '文件上传最大值',
+                'key' => 'upload_max_filesize',
+                'value' => ini_get('upload_max_filesize'),
+                'status' => $this->compareBytes(ini_get('upload_max_filesize'), '10m') ? 'danger' : 'normal',
+                'remark' => '不能小于10MB；请修改php.ini中upload_max_filesize'
+            ],
+            [
+                'name' => 'POST数据最大值',
+                'key' => 'post_max_size',
+                'value' => ini_get('post_max_size'),
+                'status' => $this->compareBytes(ini_get('post_max_size'), '12m') ? 'danger' : 'normal',
+                'remark' => '不能小于12MB；请修改php.ini中post_max_size'
             ],
             [
                 'name' => '程序运行目录',
@@ -93,9 +114,9 @@ class Science extends Controller
             [
                 'name' => 'PHP版本',
                 'key' => 'php_version',
-                'value' => '7.1.0及以上',
-                'status' => version_compare(PHP_VERSION, '7.1.0') === -1 ? 'danger' : 'normal',
-                'remark' => 'PHP版本必须为 7.1.0及以上'
+                'value' => '7.2.0及以上',
+                'status' => version_compare(PHP_VERSION, '7.2.0') === -1 ? 'danger' : 'normal',
+                'remark' => 'PHP版本必须为 7.2.0及以上'
             ],
             [
                 'name' => 'CURL',
@@ -152,7 +173,7 @@ class Science extends Controller
     /**
      * 目录权限监测
      */
-    private function writeable()
+    private function writeable(): array
     {
         $paths = [
             'uploads' => realpath(web_path()) . '/uploads/',
@@ -192,4 +213,16 @@ class Science extends Controller
         ];
     }
 
+    /**
+     * 比较数据大小
+     * @param string $size1
+     * @param string $size2
+     * @return bool
+     */
+    private function compareBytes(string $size1, string $size2): bool
+    {
+        $size1 = helper::convertToBytes($size1);
+        $size2 = helper::convertToBytes($size2);
+        return $size1 < $size2;
+    }
 }
