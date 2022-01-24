@@ -23,7 +23,7 @@ use app\store\model\GoodsCategoryRel as GoodsCategoryRelModel;
 use app\store\service\Goods as GoodsService;
 use app\common\enum\goods\SpecType as SpecTypeEnum;
 use app\common\enum\goods\Status as GoodsStatusEnum;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 
 /**
  * 商品模型
@@ -91,58 +91,6 @@ class Goods extends GoodsModel
     }
 
     /**
-     * 创建商品数据
-     * @param array $data
-     * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
-     */
-    private function createData(array $data)
-    {
-        // 默认数据
-        $data = array_merge($data, [
-            'line_price' => $data['line_price'] ?? 0,
-            'content' => $data['content'] ?? '',
-            'newSpecList' => [],
-            'newSkuList' => [],
-            'store_id' => self::$storeId,
-        ]);
-        // 库存总量 stock_total
-        // 商品价格 最低最高
-        if ($data['spec_type'] == SpecTypeEnum::MULTI) {
-            $data['stock_total'] = GoodsSkuModel::getStockTotal($data['specData']['skuList']);
-            list($data['goods_price_min'], $data['goods_price_max']) = GoodsSkuModel::getGoodsPrices($data['specData']['skuList']);
-            list($data['line_price_min'], $data['line_price_max']) = GoodsSkuModel::getLinePrices($data['specData']['skuList']);
-        } elseif ($data['spec_type'] == SpecTypeEnum::SINGLE) {
-            $data['goods_price_min'] = $data['goods_price_max'] = $data['goods_price'];
-            $data['line_price_min'] = $data['line_price_max'] = $data['line_price'];
-            $data['stock_total'] = $data['stock_num'];
-        }
-        // 规格和sku数据处理
-        if ($data['spec_type'] == SpecTypeEnum::MULTI) {
-            // 生成多规格数据(携带id)
-            $data['newSpecList'] = SpecModel::getNewSpecList($data['specData']['specList']);
-            // 生成skuList ( 携带goods_sku_id )
-            $data['newSkuList'] = GoodsSkuModel::getNewSkuList($data['newSpecList'], $data['specData']['skuList']);
-        } elseif ($data['spec_type'] == SpecTypeEnum::SINGLE) {
-            // 生成skuItem
-            $data['newSkuList'] = helper::pick($data, ['goods_price', 'line_price', 'stock_num', 'goods_weight']);
-        }
-        // 单独设置折扣的配置
-        $data['is_enable_grade'] == 0 && $data['is_alone_grade'] = 0;
-        $aloneGradeEquity = [];
-        if ($data['is_alone_grade'] == 1) {
-            foreach ($data['alone_grade_equity'] as $key => $value) {
-                $gradeId = str_replace('grade_id:', '', $key);
-                $aloneGradeEquity[$gradeId] = $value;
-            }
-        }
-        $data['alone_grade_equity'] = $aloneGradeEquity;
-        return $data;
-    }
-
-    /**
      * 编辑商品
      * @param array $data
      * @return bool
@@ -176,9 +124,9 @@ class Goods extends GoodsModel
      * 修改商品状态
      * @param array $goodsIds 商品id集
      * @param bool $state 为true表示上架
-     * @return false|int
+     * @return bool|false
      */
-    public function setStatus(array $goodsIds, bool $state)
+    public function setStatus(array $goodsIds, bool $state): bool
     {
         // 批量更新记录
         return static::updateBase(['status' => $state ? 10 : 20], [['goods_id', 'in', $goodsIds]]);
@@ -189,7 +137,7 @@ class Goods extends GoodsModel
      * @param array $goodsIds
      * @return bool
      */
-    public function setDelete(array $goodsIds)
+    public function setDelete(array $goodsIds): bool
     {
         foreach ($goodsIds as $goodsId) {
             if (!GoodsService::checkIsAllowDelete($goodsId)) {
@@ -202,7 +150,7 @@ class Goods extends GoodsModel
     }
 
     // 获取已售罄的商品
-    public function getSoldoutGoodsTotal()
+    public function getSoldoutGoodsTotal(): int
     {
         $filter = [
             ['stock_total', '=', 0],
@@ -216,9 +164,63 @@ class Goods extends GoodsModel
      * @param array $where
      * @return int
      */
-    public function getGoodsTotal($where = [])
+    public function getGoodsTotal(array $where = []): int
     {
         return $this->where($where)->where('is_delete', '=', 0)->count();
     }
 
+    /**
+     * 创建商品数据
+     * @param array $data
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws BaseException
+     */
+    private function createData(array $data): array
+    {
+        // 默认数据
+        $data = array_merge($data, [
+            'line_price' => $data['line_price'] ?? 0,
+            'content' => $data['content'] ?? '',
+            'newSpecList' => [],
+            'newSkuList' => [],
+            'store_id' => self::$storeId,
+        ]);
+        // 库存总量 stock_total
+        // 商品价格 最低最高
+        if ($data['spec_type'] == SpecTypeEnum::MULTI) {
+            $data['stock_total'] = GoodsSkuModel::getStockTotal($data['specData']['skuList']);
+            list($data['goods_price_min'], $data['goods_price_max']) = GoodsSkuModel::getGoodsPrices($data['specData']['skuList']);
+            list($data['line_price_min'], $data['line_price_max']) = GoodsSkuModel::getLinePrices($data['specData']['skuList']);
+        } elseif ($data['spec_type'] == SpecTypeEnum::SINGLE) {
+            $data['goods_price_min'] = $data['goods_price_max'] = $data['goods_price'];
+            $data['line_price_min'] = $data['line_price_max'] = $data['line_price'];
+            $data['stock_total'] = $data['stock_num'];
+        }
+        // 规格和sku数据处理
+        if ($data['spec_type'] == SpecTypeEnum::MULTI) {
+            // 验证规格值是否合法
+            SpecModel::checkSpecData($data['specData']['specList']);
+            // 生成多规格数据 (携带id)
+            $data['newSpecList'] = SpecModel::getNewSpecList($data['specData']['specList']);
+            // 生成skuList (携带goods_sku_id)
+            $data['newSkuList'] = GoodsSkuModel::getNewSkuList($data['newSpecList'], $data['specData']['skuList']);
+        } elseif ($data['spec_type'] == SpecTypeEnum::SINGLE) {
+            // 生成skuItem
+            $data['newSkuList'] = helper::pick($data, ['goods_price', 'line_price', 'stock_num', 'goods_weight']);
+        }
+        // 单独设置折扣的配置
+        $data['is_enable_grade'] == 0 && $data['is_alone_grade'] = 0;
+        $aloneGradeEquity = [];
+        if ($data['is_alone_grade'] == 1) {
+            foreach ($data['alone_grade_equity'] as $key => $value) {
+                $gradeId = str_replace('grade_id:', '', $key);
+                $aloneGradeEquity[$gradeId] = $value;
+            }
+        }
+        $data['alone_grade_equity'] = $aloneGradeEquity;
+        return $data;
+    }
 }

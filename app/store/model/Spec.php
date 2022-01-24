@@ -15,6 +15,7 @@ namespace app\store\model;
 use app\common\library\helper;
 use app\common\model\Spec as SpecModel;
 use app\store\model\SpecValue as SpecValueModel;
+use cores\exception\BaseException;
 
 /**
  * 规格组模型
@@ -24,7 +25,22 @@ use app\store\model\SpecValue as SpecValueModel;
 class Spec extends SpecModel
 {
     /**
-     * 规格组写入数据库并生成ID集
+     * 验证规格值是否合法
+     * @param array $specList
+     * @throws BaseException
+     */
+    public static function checkSpecData(array $specList)
+    {
+        foreach ($specList as $item) {
+            $values = helper::getArrayColumn($item['valueList'], 'spec_value');
+            if (count($item['valueList']) != count(array_unique($values))) {
+                throwError('很抱歉，不能存在重复的规格值 请检查您的输入');
+            }
+        }
+    }
+
+    /**
+     * 规格组写入数据库并生成id
      * 此时的$specList是用户端传来的
      * @param array $specList
      * @return array
@@ -47,7 +63,7 @@ class Spec extends SpecModel
             } else {
                 // 规格名不存在的新增记录
                 $result = static::add($item);
-                $item['spec_id'] = (int)$result['spec_id'];
+                $item['spec_id'] = $result['spec_id'];
             }
             // 规格值写入数据库并生成id
             $item['valueList'] = SpecValueModel::getNewValueList((int)$item['spec_id'], $item['valueList']);
@@ -78,7 +94,7 @@ class Spec extends SpecModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private static function getListByNames(array $names)
+    private static function getListByNames(array $names): \think\Collection
     {
         return (new static)->where('spec_name', 'in', $names)->select();
     }
