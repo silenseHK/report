@@ -263,8 +263,7 @@ class Goods extends BaseModel
         // 商品状态
         $status > 0 && $filter[] = ['status', '=', $status];
         // 获取商品列表数据
-        $data = $this
-            // ->withoutField(['content'])
+        $data = $this->withoutField(['content'])
             ->with(['images.file'])
             ->where($filter)
             ->where('is_delete', '=', 0)

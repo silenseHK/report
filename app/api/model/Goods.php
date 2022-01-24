@@ -12,11 +12,11 @@ declare (strict_types=1);
 
 namespace app\api\model;
 
-use app\api\model\GoodsSpecRel as GoodsSpecRelModel;
+use app\api\service\Goods as GoodsService;
 use app\api\service\user\Grade as UserGradeService;
+use app\api\model\GoodsSpecRel as GoodsSpecRelModel;
 use app\common\model\Goods as GoodsModel;
 use app\common\enum\goods\Status as GoodsStatusEnum;
-use app\common\library\helper;
 use cores\exception\BaseException;
 
 /**
@@ -115,6 +115,20 @@ class Goods extends GoodsModel
     }
 
     /**
+     * 获取商品指定的sku信息并且设置商品的会员价
+     * @param $goodsInfo
+     * @param string $goodsSkuId
+     * @return \app\common\model\GoodsSku|array|null
+     * @throws BaseException
+     */
+    public static function getSkuInfo($goodsInfo, string $goodsSkuId)
+    {
+        $goodsInfo['skuInfo'] = GoodsService::getSkuInfo($goodsInfo['goods_id'], $goodsSkuId);
+        (new static)->setGoodsGradeMoney($goodsInfo);
+        return $goodsInfo['skuInfo'];
+    }
+
+    /**
      * 设置商品展示的数据 api模块
      * @param $data
      * @return mixed
@@ -122,7 +136,7 @@ class Goods extends GoodsModel
     private function setGoodsListDataFromApi($data)
     {
         return $this->setGoodsListData($data, function ($goods) {
-            // 计算并设置商品会员价
+            // 整理商品数据 api模块
             $this->setGoodsDataFromApi($goods);
         });
     }
@@ -169,9 +183,15 @@ class Goods extends GoodsModel
         // 会员折扣价: 商品基础价格
         $goods['goods_price_min'] = UserGradeService::getDiscountPrice($goods['goods_price_min'], $discountRatio);
         $goods['goods_price_max'] = UserGradeService::getDiscountPrice($goods['goods_price_max'], $discountRatio);
-        // 会员折扣价: 商品sku
-        foreach ($goods['skuList'] as &$skuItem) {
-            $skuItem['goods_price'] = UserGradeService::getDiscountPrice($skuItem['goods_price'], $discountRatio);
+        // 会员折扣价: 商品sku列表
+        if ($goods->getRelation('skuList')) {
+            foreach ($goods['skuList'] as &$skuItem) {
+                $skuItem['goods_price'] = UserGradeService::getDiscountPrice($skuItem['goods_price'], $discountRatio);
+            }
+        }
+        // 会员折扣价: 已选择的商品sku（用于购物车）
+        if ($goods->getAttr('skuInfo')) {
+            $goods['skuInfo']['goods_price'] = UserGradeService::getDiscountPrice($goods['skuInfo']['goods_price'], $discountRatio);
         }
     }
 }

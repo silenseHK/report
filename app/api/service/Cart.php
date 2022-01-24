@@ -14,9 +14,8 @@ namespace app\api\service;
 
 use app\api\model\Cart as CartModel;
 use app\api\model\Goods as GoodsModel;
-use app\api\model\GoodsSku as GoodsSkuModel;
 use app\api\service\User as UserService;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 use app\common\library\helper;
 use app\common\service\BaseService;
 
@@ -68,7 +67,7 @@ class Cart extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getOrderGoodsList(array $cartIds = [])
+    public function getOrderGoodsList(array $cartIds = []): array
     {
         // 购物车列表
         $cartList = $this->getList($cartIds);
@@ -95,18 +94,19 @@ class Cart extends BaseService
      * @param mixed $goodsList 商品列表
      * @param CartModel $item 购物车记录
      * @return false|mixed
+     * @throws BaseException
      */
     private function findGoods($goodsList, CartModel $item)
     {
         // 查找商品记录
-        $result = helper::getArrayItemByColumn($goodsList, 'goods_id', $item['goods_id']);
-        if (empty($result)) {
+        $goodsInfo = helper::getArrayItemByColumn($goodsList, 'goods_id', $item['goods_id']);
+        if (empty($goodsInfo)) {
             return false;
         }
         // 获取当前选择的商品SKU信息
-        $result['skuInfo'] = GoodsSkuModel::detail($result['goods_id'], $item['goods_sku_id']);
+        $goodsInfo['skuInfo'] = GoodsModel::getSkuInfo($goodsInfo, $item['goods_sku_id']);
         // 这里需要用到clone, 因对象是引用传递 后面的值会覆盖前面的
-        return clone $result;
+        return clone $goodsInfo;
     }
 
     /**
@@ -115,7 +115,7 @@ class Cart extends BaseService
      * @return bool
      * @throws BaseException
      */
-    public function clear(array $cartIds = [])
+    public function clear(array $cartIds = []): bool
     {
         $model = new CartModel;
         return $model->clear($cartIds);
@@ -141,7 +141,7 @@ class Cart extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    private function getCartList(array $cartIds = [])
+    private function getCartList(array $cartIds = []): \think\Collection
     {
         // 当前用户ID
         $userId = UserService::getCurrentLoginUserId();
@@ -158,6 +158,4 @@ class Cart extends BaseService
             ->where('is_delete', '=', 0)
             ->select();
     }
-
-
 }
