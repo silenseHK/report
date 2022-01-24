@@ -18,7 +18,7 @@ use app\common\model\OrderRefund as OrderRefundModel;
 use app\common\enum\order\refund\RefundType as RefundTypeEnum;
 use app\common\enum\order\refund\AuditStatus as AuditStatusEnum;
 use app\common\enum\order\refund\RefundStatus as RefundStatusEnum;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 
 /**
  * 售后单模型
@@ -50,7 +50,7 @@ class OrderRefund extends OrderRefundModel
      * @param $data
      * @return string
      */
-    public function getStateTextAttr($value, $data)
+    public function getStateTextAttr($value, $data): string
     {
         // 已完成
         if ($data['status'] == RefundStatusEnum::COMPLETED) {
@@ -84,8 +84,9 @@ class OrderRefund extends OrderRefundModel
      * @return \think\Paginator
      * @throws \app\common\exception\BaseException
      * @throws \think\db\exception\DbException
+     * @throws BaseException
      */
-    public function getList(int $state = -1)
+    public function getList(int $state = -1): \think\Paginator
     {
         // 检索查询条件
         $filter = [];
@@ -108,7 +109,7 @@ class OrderRefund extends OrderRefundModel
      * @return static|null
      * @throws BaseException
      */
-    public static function getDetail(int $orderRefundId, $isWith = false)
+    public static function getDetail(int $orderRefundId, bool $isWith = false): ?OrderRefund
     {
         // 关联查询
         $with = $isWith ? ['orderGoods' => ['image'], 'images.file', 'address'] : [];
@@ -119,6 +120,19 @@ class OrderRefund extends OrderRefundModel
         ], $with);
         if (empty($detail)) throwError('未找到该售后单');
         return $detail;
+    }
+
+    /**
+     * 获取当前用户的售后单数量(进行中的)
+     * @return int
+     * @throws BaseException
+     */
+    public static function getCountByUnderway(): int
+    {
+        $userId = UserService::getCurrentLoginUserId();
+        return (new static)->where('user_id', '=', $userId)
+            ->where('status', '=', 0)
+            ->count();
     }
 
     /**
@@ -217,5 +231,4 @@ class OrderRefund extends OrderRefundModel
         }
         return !empty($data) && (new OrderRefundImage)->addAll($data) !== false;
     }
-
 }

@@ -12,7 +12,7 @@ declare (strict_types=1);
 
 namespace app\api\model;
 
-use app\api\model\{Goods as GoodsModel, Setting as SettingModel};
+use app\api\model\{Goods as GoodsModel, OrderRefund as OrderRefundModel, Setting as SettingModel};
 use app\api\service\{User as UserService, Goods as GoodsService, Payment as PaymentService};
 use app\api\service\order\{PaySuccess as OrderPaySuccesService, source\Factory as OrderSourceFactory};
 use app\common\model\Order as OrderModel;
@@ -353,9 +353,10 @@ class Order extends OrderModel
     public function getTodoCounts(): array
     {
         return [
-            'payment' => $this->getCount('payment'),
-            'delivery' => $this->getCount('delivery'),
-            'received' => $this->getCount('received')
+            'payment' => $this->getCount('payment'),    // 待付款的订单
+            'delivery' => $this->getCount('delivery'),  // 待发货的订单
+            'received' => $this->getCount('received'),  // 待收货的订单
+            'refund' => OrderRefundModel::getCountByUnderway(),  // 进行中的售后单
         ];
     }
 
