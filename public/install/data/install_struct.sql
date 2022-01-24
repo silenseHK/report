@@ -935,6 +935,7 @@ CREATE TABLE `yoshop_order_export` (
   KEY `store_id` (`store_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10001 DEFAULT CHARSET=utf8 COMMENT='订单导出Excel记录表';
 
+DROP TABLE IF EXISTS `yoshop_wxapp_setting`;
 CREATE TABLE `yoshop_wxapp_setting` (
   `key` varchar(30) NOT NULL DEFAULT '' COMMENT '设置项标示',
   `describe` varchar(255) NOT NULL DEFAULT '' COMMENT '设置项描述',
@@ -944,6 +945,7 @@ CREATE TABLE `yoshop_wxapp_setting` (
   UNIQUE KEY `unique_key` (`key`,`store_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信小程序设置表';
 
+DROP TABLE IF EXISTS `yoshop_h5_setting`;
 CREATE TABLE `yoshop_h5_setting` (
   `key` varchar(30) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '设置项标示',
   `describe` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '设置项描述',
@@ -953,4 +955,6 @@ CREATE TABLE `yoshop_h5_setting` (
   UNIQUE KEY `unique_key` (`key`,`store_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='H5端设置表';
 
-
+ALTER TABLE `yoshop_goods`
+ADD COLUMN `video_id`  int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '主图视频ID' AFTER `goods_no`,
+ADD COLUMN `video_cover_id`  int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '主图视频ID' AFTER `video_id`;
