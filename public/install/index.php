@@ -260,7 +260,7 @@ function getIsWriteArray()
 // 获取检测的函数数据
 function getExistsFuncArray()
 {
-    return ['curl_init', 'chmod', 'bcadd', 'mb_substr', 'simplexml_load_string'];
+    return ['curl_init', 'bcadd', 'mb_substr', 'simplexml_load_string'];
 }
 
 // 测试可写性
