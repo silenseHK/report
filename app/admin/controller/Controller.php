@@ -13,8 +13,9 @@ declare (strict_types=1);
 namespace app\admin\controller;
 
 use cores\BaseController;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 use app\admin\service\admin\User as AdminUserService;
+use think\response\Json;
 
 /**
  * 超管后台控制器基类
@@ -98,17 +99,17 @@ class Controller extends BaseController
      * 后台菜单配置
      * @return array
      */
-    private function menus()
+    private function menus(): array
     {
         // 获取后台菜单内容 [app/admin/config/menus.php]
-        $menus = \think\facade\Config::instance()->get('menus');
+        $menus = \think\facade\Config::get('menus');
         foreach ($menus as $group => &$first) {
             $first['active'] = $group === $this->group;
             // 遍历：二级菜单
             if (isset($first['submenu'])) {
                 foreach ($first['submenu'] as $secondKey => &$second) {
                     // 二级菜单所有uri
-                    $secondUris = isset($second['uris']) ? $second['uris'] : [$second['index']];
+                    $secondUris = $second['uris'] ?? [$second['index']];
                     // 二级菜单：active
                     !isset($second['active']) && $second['active'] = in_array($this->routeUri, $secondUris);
                 }
@@ -119,20 +120,19 @@ class Controller extends BaseController
 
     /**
      * 验证登录状态
-     * @return bool
+     * @return void
      * @throws BaseException
      */
-    private function checkLogin()
+    private function checkLogin(): void
     {
         // 验证当前请求是否在白名单
         if (in_array($this->routeUri, $this->allowAllAction)) {
-            return true;
+            return;
         }
         // 验证登录状态
         if (empty($this->admin) || (int)$this->admin['is_login'] !== 1) {
             throwError('请先登录后再访问', config('status.not_logged'));
         }
-        return true;
     }
 
     /**
@@ -140,9 +140,9 @@ class Controller extends BaseController
      * @param int|null $status 状态码
      * @param string $message
      * @param array $data
-     * @return array
+     * @return Json
      */
-    protected function renderJson(int $status = null, string $message = '', array $data = [])
+    protected function renderJson(int $status = null, string $message = '', array $data = []): Json
     {
         return json(compact('status', 'message', 'data'));
     }
@@ -151,9 +151,9 @@ class Controller extends BaseController
      * 返回操作成功json
      * @param array|string $data
      * @param string $message
-     * @return array
+     * @return Json
      */
-    protected function renderSuccess($data = [], string $message = 'success')
+    protected function renderSuccess($data = [], string $message = 'success'): Json
     {
         if (is_string($data)) {
             $message = $data;
@@ -166,9 +166,9 @@ class Controller extends BaseController
      * 返回操作失败json
      * @param string $message
      * @param array $data
-     * @return array
+     * @return Json
      */
-    protected function renderError(string $message = 'error', array $data = [])
+    protected function renderError(string $message = 'error', array $data = []): Json
     {
         return $this->renderJson(config('status.error'), $message, $data);
     }
@@ -185,10 +185,10 @@ class Controller extends BaseController
 
     /**
      * 获取post数据 (数组)
-     * @param $key
+     * @param string $key
      * @return mixed
      */
-    protected function postForm($key = 'form')
+    protected function postForm(string $key = 'form')
     {
         return $this->postData($key);
     }
@@ -197,23 +197,22 @@ class Controller extends BaseController
      * 强制验证当前访问的控制器方法method
      * @throws BaseException
      */
-    private function checkMethodRules()
+    private function checkMethodRules(): void
     {
         if (!isset($this->methodRules[$this->action])) {
-            return true;
+            return;
         }
         $methodRule = $this->methodRules[$this->action];
         $currentMethod = $this->request->method();
         if (empty($methodRule)) {
-            return true;
+            return;
         }
         if (is_array($methodRule) && in_array($currentMethod, $methodRule)) {
-            return true;
+            return;
         }
         if (is_string($methodRule) && $methodRule == $currentMethod) {
-            return true;
+            return;
         }
         throwError('illegal request method');
     }
-
 }

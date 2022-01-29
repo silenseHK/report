@@ -12,6 +12,7 @@ declare (strict_types=1);
 
 namespace app\admin\controller\setting;
 
+use think\response\Json;
 use app\admin\controller\Controller;
 use app\common\library\helper;
 
@@ -24,9 +25,9 @@ class Science extends Controller
 {
     /**
      * 环境检测
-     * @return array
+     * @return Json
      */
-    public function info(): array
+    public function info(): Json
     {
         return $this->renderSuccess([
             'scienceInfo' => [
@@ -41,7 +42,7 @@ class Science extends Controller
      * 服务器信息
      * @return array
      */
-    private function server()
+    private function server(): array
     {
         return [
             [
@@ -108,7 +109,7 @@ class Science extends Controller
      * get_loaded_extensions()
      * @return array
      */
-    private function phpinfo()
+    private function phpinfo(): array
     {
         return [
             [
