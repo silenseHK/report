@@ -146,7 +146,8 @@ class Setting extends BaseModel
                 'values' => [
                     // 订单流程设置
                     'order' => [
-                        'close_days' => '3',
+                        // 'close_days' => '3',    // 已废弃
+                        'closeHours' => 3 * 24,    // 未支付订单自动关闭期限(单位:小时)
                         'receive_days' => '10',
                         'refund_days' => '7'
                     ],
