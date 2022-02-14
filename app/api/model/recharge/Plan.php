@@ -34,26 +34,6 @@ class Plan extends PlanModel
     ];
 
     /**
-     * 获取器：充值金额
-     * @param $value
-     * @return int
-     */
-    public function getMoneyAttr($value)
-    {
-        return ($value == $intValue = (int)$value) ? $intValue : $value;
-    }
-
-    /**
-     * 获取器：赠送金额
-     * @param $value
-     * @return int
-     */
-    public function getGiftMoneyAttr($value)
-    {
-        return ($value == $intValue = (int)$value) ? $intValue : $value;
-    }
-
-    /**
      * 获取可用的充值套餐列表
      * @return \think\Collection
      * @throws \think\db\exception\DataNotFoundException
