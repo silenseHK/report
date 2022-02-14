@@ -26,7 +26,7 @@ define('INSTALL_PATH', str_replace('\\', '/', dirname(__FILE__)));
 define('ROOT_PATH', dirname(INSTALL_PATH, 2));
 
 // 版权信息设置
-$cfg_copyright = '© 2018-2021 YIOVO.COM';
+$cfg_copyright = '© 2018-2022 YIOVO.COM';
 
 // 获取当前步骤
 $s = getStep();
@@ -125,7 +125,7 @@ if ($s == 3) {
         $config_str = str_replace('~db_host~', $dbhost, $config_str);
         $config_str = str_replace('~db_name~', $dbname, $config_str);
         $config_str = str_replace('~db_user~', $dbuser, $config_str);
-        $config_str = str_replace('~db_pwd~', $dbpwd, $config_str);
+        $config_str = str_replace('~db_pwd~', "'{$dbpwd}'", $config_str);
         $config_str = str_replace('~db_port~', $dbport, $config_str);
         $config_str = str_replace('~db_charset~', 'utf8', $config_str);
 
