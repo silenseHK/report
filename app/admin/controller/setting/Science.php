@@ -120,6 +120,13 @@ class Science extends Controller
                 'remark' => 'PHP版本必须为 7.2.0及以上'
             ],
             [
+                'name' => 'Mysqlnd',
+                'key' => 'mysqlnd',
+                'value' => '支持',
+                'status' => extension_loaded('mysqlnd') ? 'normal' : 'danger',
+                'remark' => '您的PHP环境不支持mysqlnd, 系统无法正常运行'
+            ],
+            [
                 'name' => 'CURL',
                 'key' => 'curl',
                 'value' => '支持',
