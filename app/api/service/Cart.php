@@ -29,13 +29,14 @@ class Cart extends BaseService
     /**
      * 购物车商品列表(用于购物车页面)
      * @param array $cartIds 购物车记录ID集
+     * @param bool $isGoodsGradeMoney 是否设置商品会员价
      * @return array|\think\Collection
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getList(array $cartIds = [])
+    public function getList(array $cartIds = [], bool $isGoodsGradeMoney = true)
     {
         // 购物车列表
         $cartList = $this->getCartList($cartIds);
@@ -43,11 +44,11 @@ class Cart extends BaseService
         $goodsIds = helper::getArrayColumn($cartList, 'goods_id');
         if (empty($goodsIds)) return [];
         // 获取商品列表
-        $goodsList = $this->getGoodsListByIds($goodsIds);
+        $goodsList = $this->getGoodsListByIds($goodsIds, $isGoodsGradeMoney);
         // 整理购物车商品列表
         foreach ($cartList as $cartIdx => $item) {
             // 查找商品, 商品不存在则删除该购物车记录
-            $result = $this->findGoods($goodsList, $item);
+            $result = $this->findGoods($goodsList, $item, $isGoodsGradeMoney);
             if ($result !== false) {
                 $cartList[$cartIdx]['goods'] = $result;
             } else {
@@ -70,7 +71,7 @@ class Cart extends BaseService
     public function getOrderGoodsList(array $cartIds = []): array
     {
         // 购物车列表
-        $cartList = $this->getList($cartIds);
+        $cartList = $this->getList($cartIds, false);
         // 订单商品列表
         $goodsList = [];
         foreach ($cartList as $item) {
@@ -93,10 +94,11 @@ class Cart extends BaseService
      * 检索查询商品
      * @param mixed $goodsList 商品列表
      * @param CartModel $item 购物车记录
+     * @param bool $isGoodsGradeMoney 是否设置商品会员价
      * @return false|mixed
      * @throws BaseException
      */
-    private function findGoods($goodsList, CartModel $item)
+    private function findGoods($goodsList, CartModel $item, bool $isGoodsGradeMoney = true)
     {
         // 查找商品记录
         $goodsInfo = helper::getArrayItemByColumn($goodsList, 'goods_id', $item['goods_id']);
@@ -104,7 +106,7 @@ class Cart extends BaseService
             return false;
         }
         // 获取当前选择的商品SKU信息
-        $goodsInfo['skuInfo'] = GoodsModel::getSkuInfo($goodsInfo, $item['goods_sku_id']);
+        $goodsInfo['skuInfo'] = GoodsModel::getSkuInfo($goodsInfo, $item['goods_sku_id'], $isGoodsGradeMoney);
         // 这里需要用到clone, 因对象是引用传递 后面的值会覆盖前面的
         return clone $goodsInfo;
     }
@@ -124,12 +126,13 @@ class Cart extends BaseService
     /**
      * 根据商品ID集获取商品列表
      * @param array $goodsIds
+     * @param bool $isGoodsGradeMoney 是否设置会员折扣价
      * @return mixed
      */
-    private function getGoodsListByIds(array $goodsIds)
+    private function getGoodsListByIds(array $goodsIds, bool $isGoodsGradeMoney = true)
     {
         $model = new GoodsModel;
-        return $model->getListByIdsFromApi($goodsIds);
+        return $model->isGoodsGradeMoney($isGoodsGradeMoney)->getListByIdsFromApi($goodsIds);
     }
 
     /**

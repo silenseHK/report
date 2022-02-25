@@ -13,7 +13,7 @@ declare (strict_types=1);
 namespace app\api\model;
 
 use app\api\model\{Goods as GoodsModel, OrderRefund as OrderRefundModel, Setting as SettingModel};
-use app\api\service\{User as UserService, Goods as GoodsService, Payment as PaymentService};
+use app\api\service\{User as UserService, Payment as PaymentService};
 use app\api\service\order\{PaySuccess as OrderPaySuccesService, source\Factory as OrderSourceFactory};
 use app\common\model\Order as OrderModel;
 use app\common\service\{Order as OrderService, order\Complete as OrderCompleteService};
@@ -23,7 +23,7 @@ use app\common\enum\{
     order\PayType as OrderPayTypeEnum,
     order\PayStatus as PayStatusEnum,
     order\OrderStatus as OrderStatusEnum,
-    order\DeliveryType as DeliveryTypeEnum,
+//    order\DeliveryType as DeliveryTypeEnum,
     order\ReceiptStatus as ReceiptStatusEnum,
     order\DeliveryStatus as DeliveryStatusEnum
 };
@@ -128,7 +128,7 @@ class Order extends OrderModel
     {
         // 获取商品列表
         $model = new GoodsModel;
-        $goodsList = $model->getListByIdsFromApi([$goodsId]);
+        $goodsList = $model->isGoodsGradeMoney(false)->getListByIdsFromApi([$goodsId]);
         if ($goodsList->isEmpty()) {
             throwError('未找到商品信息');
         }
@@ -136,7 +136,7 @@ class Order extends OrderModel
         $goodsList->hidden(array_merge($model->hidden, ['content', 'goods_images', 'images']));
         foreach ($goodsList as &$item) {
             // 商品sku信息
-            $item['skuInfo'] = GoodsService::getSkuInfo($item['goods_id'], $goodsSkuId);
+            $goodsInfo['skuInfo'] = GoodsModel::getSkuInfo($item, $goodsSkuId, false);
             // 商品单价
             $item['goods_price'] = $item['skuInfo']['goods_price'];
             // 商品购买数量

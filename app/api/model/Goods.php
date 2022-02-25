@@ -43,6 +43,9 @@ class Goods extends GoodsModel
         'update_time'
     ];
 
+    // 是否设置会员折扣价
+    private $isGoodsGradeMoney = true;
+
     /**
      * 商品详情：HTML实体转换回普通字符
      * @param $value
@@ -51,6 +54,17 @@ class Goods extends GoodsModel
     public function getContentAttr($value): string
     {
         return htmlspecialchars_decode((string)$value);
+    }
+
+    /**
+     * 是否设置会员折扣价
+     * @param bool $value
+     * @return $this
+     */
+    public function isGoodsGradeMoney(bool $value): Goods
+    {
+        $this->isGoodsGradeMoney = $value;
+        return $this;
     }
 
     /**
@@ -116,15 +130,16 @@ class Goods extends GoodsModel
 
     /**
      * 获取商品指定的sku信息并且设置商品的会员价
-     * @param $goodsInfo
-     * @param string $goodsSkuId
+     * @param mixed $goodsInfo 商品信息
+     * @param string $goodsSkuId 商品SKUID
+     * @param bool $isGoodsGradeMoney 是否设置会员折扣价
      * @return \app\common\model\GoodsSku|array|null
      * @throws BaseException
      */
-    public static function getSkuInfo($goodsInfo, string $goodsSkuId)
+    public static function getSkuInfo($goodsInfo, string $goodsSkuId, bool $isGoodsGradeMoney = true)
     {
         $goodsInfo['skuInfo'] = GoodsService::getSkuInfo($goodsInfo['goods_id'], $goodsSkuId);
-        (new static)->setGoodsGradeMoney($goodsInfo);
+        $isGoodsGradeMoney && (new static)->setGoodsGradeMoney($goodsInfo);
         return $goodsInfo['skuInfo'];
     }
 
@@ -150,7 +165,7 @@ class Goods extends GoodsModel
     {
         return $this->setGoodsData($goodsInfo, function ($goods) {
             // 计算并设置商品会员价
-            $this->setGoodsGradeMoney($goods);
+            $this->isGoodsGradeMoney && $this->setGoodsGradeMoney($goods);
         });
     }
 
