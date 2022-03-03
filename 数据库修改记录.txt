@@ -1,11 +1,17 @@
 ﻿
+# dev
+# 修改时间：2022-03-03
+INSERT INTO `yoshop_store_menu_api` VALUES ('10664', '10015', '11025', '1614556800');
+INSERT INTO `yoshop_store_menu_api` VALUES ('10665', '10015', '11022', '1614556800');
+INSERT INTO `yoshop_store_menu_api` VALUES ('10666', '10015', '11020', '1614556800');
+
+-------------------------------------
+
 # v2.0.5
 # 修改时间：2022-01-24
 ALTER TABLE `yoshop_goods`
 ADD COLUMN `video_id`  int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '主图视频ID' AFTER `goods_no`,
 ADD COLUMN `video_cover_id`  int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '主图视频ID' AFTER `video_id`;
-
-
 
 # v2.0.4
 # 修改时间：2021-11-29
