@@ -12,6 +12,7 @@ declare (strict_types = 1);
 
 namespace app\api\controller;
 
+use think\response\Json;
 use app\api\model\Coupon as CouponModel;
 
 /**
@@ -23,17 +24,16 @@ class Coupon extends Controller
 {
     /**
      * 优惠券列表
-     * @return array
-     * @throws \app\common\exception\BaseException
+     * @return Json
+     * @throws \cores\exception\BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function list()
+    public function list(): Json
     {
         $model = new CouponModel;
         $list = $model->getList();
         return $this->renderSuccess(compact('list'));
     }
-
 }

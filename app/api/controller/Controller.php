@@ -17,7 +17,7 @@ use cores\BaseController;
 use app\api\model\User as UserModel;
 use app\api\model\Store as StoreModel;
 use app\api\service\User as UserService;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 
 /**
  * API控制器基类
@@ -44,16 +44,14 @@ class Controller extends BaseController
     }
 
     /**
-     * 获取当前商城id
+     * 获取当前商城ID
      * @return int|null
      * @throws BaseException
      */
     protected function getStoreId(): ?int
     {
         $storeId = getStoreId();    // app/api/common.php
-        if (empty($storeId)) {
-            throwError('缺少必要的参数：storeId');
-        }
+        empty($storeId) && throwError('缺少必要的参数：storeId');
         return $storeId;
     }
 
@@ -107,9 +105,9 @@ class Controller extends BaseController
      * @param int|null $status 状态码
      * @param string $message
      * @param array $data
-     * @return array|Json
+     * @return Json
      */
-    protected function renderJson(int $status = null, string $message = '', array $data = [])
+    protected function renderJson(int $status = null, string $message = '', array $data = []): Json
     {
         return json(compact('status', 'message', 'data'));
     }
@@ -118,9 +116,9 @@ class Controller extends BaseController
      * 返回操作成功json
      * @param array|string $data
      * @param string $message
-     * @return array
+     * @return Json
      */
-    protected function renderSuccess($data = [], string $message = 'success')
+    protected function renderSuccess($data = [], string $message = 'success'): Json
     {
         if (is_string($data)) {
             $message = $data;
@@ -133,9 +131,9 @@ class Controller extends BaseController
      * 返回操作失败json
      * @param string $message
      * @param array $data
-     * @return array
+     * @return Json
      */
-    protected function renderError(string $message = 'error', array $data = [])
+    protected function renderError(string $message = 'error', array $data = []): Json
     {
         return $this->renderJson(config('status.error'), $message, $data);
     }
@@ -152,12 +150,11 @@ class Controller extends BaseController
 
     /**
      * 获取post数据 (数组)
-     * @param $key
+     * @param string $key
      * @return mixed
      */
-    protected function postForm($key = 'form')
+    protected function postForm(string $key = 'form')
     {
         return $this->postData($key);
     }
-
 }

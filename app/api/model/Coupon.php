@@ -8,13 +8,13 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\model;
 
 use app\api\service\User as UserService;
-use app\common\exception\BaseException;
 use app\common\model\Coupon as CouponModel;
+use cores\exception\BaseException;
 
 /**
  * 优惠券模型
@@ -38,13 +38,13 @@ class Coupon extends CouponModel
      * 获取优惠券列表
      * @param int|null $limit 获取的数量
      * @param bool $onlyReceive 只显示可领取
-     * @return \think\Collection
+     * @return array
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getList(int $limit = null, bool $onlyReceive = false)
+    public function getList(int $limit = null, bool $onlyReceive = false): array
     {
         // 查询构造器
         $query = $this->getNewQuery();
@@ -56,7 +56,8 @@ class Coupon extends CouponModel
         // 查询数量
         $limit > 0 && $query->limit($limit);
         // 优惠券列表
-        $couponList = $query->where('is_delete', '=', 0)
+        $couponList = $query->where('status', '=', 1)
+            ->where('is_delete', '=', 0)
             ->order(['sort', 'create_time' => 'desc'])
             ->select();
         // 获取用户已领取的优惠券
@@ -66,10 +67,11 @@ class Coupon extends CouponModel
     /**
      * 获取用户已领取的优惠券
      * @param $couponList
-     * @return mixed
+     * @return array
      * @throws BaseException
      */
-    private function setIsReceive($couponList) {
+    private function setIsReceive($couponList): array
+    {
         // 获取用户已领取的优惠券
         $userInfo = UserService::getCurrentLoginUser();
         if ($userInfo !== false) {
@@ -86,7 +88,7 @@ class Coupon extends CouponModel
      * 验证优惠券是否可领取
      * @return bool
      */
-    public function checkReceive()
+    public function checkReceive(): bool
     {
         if ($this['total_num'] > -1 && $this['receive_num'] >= $this['total_num']) {
             $this->error = '优惠券已发完';
@@ -107,5 +109,4 @@ class Coupon extends CouponModel
     {
         return $this->setInc($this['coupon_id'], 'receive_num', 1);
     }
-
 }
