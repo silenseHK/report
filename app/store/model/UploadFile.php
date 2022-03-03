@@ -110,11 +110,11 @@ class UploadFile extends UploadFileModel
      * 批量移动文件分组
      * @param int $groupId
      * @param array $fileIds
-     * @return $this
+     * @return bool
      */
-    public function moveGroup(int $groupId, array $fileIds): UploadFile
+    public function moveGroup(int $groupId, array $fileIds): bool
     {
-        return $this->where('file_id', 'in', $fileIds)->update(['group_id' => $groupId]);
+        return static::updateBase(['group_id' => $groupId], [['file_id', 'in', $fileIds]]);
     }
 
     /**
