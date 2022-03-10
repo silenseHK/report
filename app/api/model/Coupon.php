@@ -38,13 +38,13 @@ class Coupon extends CouponModel
      * 获取优惠券列表
      * @param int|null $limit 获取的数量
      * @param bool $onlyReceive 只显示可领取
-     * @return array
+     * @return mixed
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getList(int $limit = null, bool $onlyReceive = false): array
+    public function getList(int $limit = null, bool $onlyReceive = false)
     {
         // 查询构造器
         $query = $this->getNewQuery();
@@ -66,11 +66,11 @@ class Coupon extends CouponModel
 
     /**
      * 获取用户已领取的优惠券
-     * @param $couponList
-     * @return array
+     * @param mixed $couponList
+     * @return mixed
      * @throws BaseException
      */
-    private function setIsReceive($couponList): array
+    private function setIsReceive($couponList)
     {
         // 获取用户已领取的优惠券
         $userInfo = UserService::getCurrentLoginUser();

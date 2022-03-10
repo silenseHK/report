@@ -16,6 +16,7 @@ use app\api\model\Goods as GoodsModel;
 use app\api\model\Coupon as CouponModel;
 use app\common\model\Page as PageModel;
 use app\common\library\helper;
+use cores\exception\BaseException;
 
 /**
  * 页面模型
@@ -118,8 +119,8 @@ class Page extends PageModel
     /**
      * 优惠券组件：获取优惠券列表
      * @param $item
-     * @return \think\Collection
-     * @throws \app\common\exception\BaseException
+     * @return array|mixed
+     * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
@@ -157,5 +158,4 @@ class Page extends PageModel
         $articleList = $model->getList($item['params']['auto']['category'], $item['params']['auto']['showNum']);
         return $articleList->isEmpty() ? [] : $articleList->toArray()['data'];
     }
-
 }
