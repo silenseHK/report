@@ -80,7 +80,7 @@ class Checkout extends BaseService
      * @var array
      */
     private $orderSource = [
-        'source' => OrderSourceEnum::MASTER,
+        'source' => OrderSourceEnum::MAIN,
         'source_id' => 0,
     ];
 

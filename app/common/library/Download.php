@@ -29,7 +29,7 @@ class Download
         $savePath = $this->getSavePath($storeId, $prefix, $url);
         if (!file_exists($savePath)) {
             $result = $this->curl($url);
-            empty($result) && throwError('获取到的图片内容为空');
+            empty($result) && throwError('获取到的图片内容为空 url: ' . $url);
             $this->fwrite($savePath, $result);
         }
         return $savePath;

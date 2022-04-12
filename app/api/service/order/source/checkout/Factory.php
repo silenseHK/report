@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\service\order\source\checkout;
 
@@ -24,7 +24,7 @@ class Factory extends BaseService
 {
     // 订单来源的结算台服务类
     private static $class = [
-        OrderSourceEnum::MASTER => Master::class,
+        OrderSourceEnum::MAIN => Main::class,
     ];
 
     /**
@@ -34,7 +34,7 @@ class Factory extends BaseService
      * @param int $orderSource
      * @return mixed
      */
-    public static function getFactory($user, $goodsList, $orderSource = OrderSourceEnum::MASTER)
+    public static function getFactory($user, $goodsList, $orderSource = OrderSourceEnum::MAIN)
     {
         return new static::$class[$orderSource]($user, $goodsList);
     }

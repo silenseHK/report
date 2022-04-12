@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\enum\order;
 
@@ -22,7 +22,7 @@ use app\common\enum\EnumBasics;
 class OrderSource extends EnumBasics
 {
     // 普通订单
-    const MASTER = 10;
+    const MAIN = 10;
 
     /**
      * 获取枚举数据
@@ -31,9 +31,9 @@ class OrderSource extends EnumBasics
     public static function data()
     {
         return [
-            self::MASTER => [
+            self::MAIN => [
                 'name' => '普通订单',
-                'value' => self::MASTER,
+                'value' => self::MAIN,
             ]
         ];
     }

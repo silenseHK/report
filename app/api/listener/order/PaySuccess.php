@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\listener\order;
 
@@ -38,7 +38,7 @@ class PaySuccess
      * @var array
      */
     protected $sourceCallbackClass = [
-        OrderSourceEnum::MASTER => \app\api\service\master\order\PaySuccess::class,
+        OrderSourceEnum::MAIN => \app\api\service\main\order\PaySuccess::class,
     ];
 
     /**

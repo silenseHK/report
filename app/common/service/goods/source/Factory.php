@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\service\goods\source;
 
@@ -24,7 +24,7 @@ class Factory extends BaseService
 {
     // 订单来源的结算台服务类
     private static $class = [
-        OrderSourceEnum::MASTER => Master::class
+        OrderSourceEnum::MAIN => Main::class
     ];
 
     /**
@@ -32,7 +32,7 @@ class Factory extends BaseService
      * @param int $orderSource
      * @return mixed
      */
-    public static function getFactory($orderSource = OrderSourceEnum::MASTER)
+    public static function getFactory($orderSource = OrderSourceEnum::MAIN)
     {
         static $classObj = [];
         if (!isset($classObj[$orderSource])) {
