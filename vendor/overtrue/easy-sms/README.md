@@ -12,8 +12,9 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/sponsors/overtrue"><img src="https://raw.githubusercontent.com/overtrue/overtrue/master/sponsor-me-button-s.svg" alt="Sponsor me" style="max-width: 100%;"></a>
+<a href="https://github.com/sponsors/overtrue"><img src="https://github.com/overtrue/overtrue/blob/master/sponsor-me-button-s.svg?raw=true" alt="Sponsor me" style="max-width: 100%;"></a>
 </p>
+
 
 ## 特点
 
@@ -54,6 +55,7 @@
 - [摩杜云](https://www.moduyun.com/)
 - [融合云（助通）](https://www.ztinfo.cn/products/sms)
 - [蜘蛛云](https://zzyun.com/)
+- [融合云信](https://maap.wo.cn/)
 
 ## 环境需求
 
@@ -356,6 +358,35 @@ $easySms->send(13188888888, $message);
         'app_secret_key' => '',
         'sign_name' => '',
     ],
+```
+
+### [阿里云国际](https://www.alibabacloud.com/help/zh/doc-detail/160524.html)
+
+短信内容使用 `template` + `data`
+
+```php
+    'aliyunintl' => [
+        'access_key_id' => '',
+        'access_key_secret' => '',
+        'sign_name' => '',
+    ],
+```
+
+发送示例：
+
+```php
+use Overtrue\EasySms\PhoneNumber;
+
+$easySms = new EasySms($config);
+$phone_number = new PhoneNumber(18888888888, 86);
+
+$easySms->send($phone_number, [
+    'content' => '您好：先生/女士！您的验证码为${code}，有效时间是5分钟，请及时验证。',
+    'template' => 'SMS_00000001', // 模板ID
+    'data' => [
+        "code" => 521410,
+    ],
+]);
 ```
 
 ### [云片](https://www.yunpian.com)
@@ -807,11 +838,40 @@ $easySms->send(18888888888, [
 
 ```
 
+### [融合云信](https://maap.wo.cn/)
+
+短信使用 `template` + `data`
+
+```php
+  'maap' => [
+        'cpcode' => '',    //必填 商户编码
+        'key' => '',     //必填 接口密钥
+        'excode'=> '',   //选填 扩展名
+    ],
+```
+
+```php
+$easySms->send(18888888888, [
+    'template' => '356120',   //短信模板
+    'data' => [
+        '123465'
+    ],//模板参数
+]);
+
+```
+
 ## :heart: 支持我
 
-If you like the work I do and want to support it, [you know what to do :heart:](https://github.com/sponsors/overtrue)
+[![Sponsor me](https://github.com/overtrue/overtrue/blob/master/sponsor-me.svg?raw=true)](https://github.com/sponsors/overtrue)
 
 如果你喜欢我的项目并想支持它，[点击这里 :heart:](https://github.com/sponsors/overtrue)
+
+## Project supported by JetBrains
+
+Many thanks to Jetbrains for kindly providing a license for me to work on this and other open-source projects.
+
+[![](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)](https://www.jetbrains.com/?from=https://github.com/overtrue)
+
 
 ## PHP 扩展包开发
 
