@@ -125,7 +125,7 @@ if ($s == 3) {
         $config_str = str_replace('~db_host~', $dbhost, $config_str);
         $config_str = str_replace('~db_name~', $dbname, $config_str);
         $config_str = str_replace('~db_user~', $dbuser, $config_str);
-        $config_str = str_replace('~db_pwd~', "'{$dbpwd}'", $config_str);
+        $config_str = str_replace('~db_pwd~', $dbpwd, $config_str);
         $config_str = str_replace('~db_port~', $dbport, $config_str);
         $config_str = str_replace('~db_charset~', 'utf8', $config_str);
 
