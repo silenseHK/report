@@ -1,4 +1,9 @@
 ﻿
+
+# dev
+# 修改时间：2022-04-18
+INSERT INTO `yoshop_store_api` VALUES ('11186', '上传视频文件', '/upload/video', '11008', '112', '1614556800', '1614556800');
+
 # dev
 # 修改时间：2022-03-03
 INSERT INTO `yoshop_store_menu_api` VALUES ('10664', '10015', '11025', '1614556800');
