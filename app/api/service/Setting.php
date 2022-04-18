@@ -14,6 +14,7 @@ namespace app\api\service;
 
 use app\common\library\helper;
 use app\common\service\BaseService;
+use app\api\model\Store as StoreModel;
 use app\api\model\Setting as SettingModel;
 use app\api\model\h5\Setting as H5SettingModel;
 use app\common\enum\Setting as SettingEnum;
@@ -44,6 +45,8 @@ class Setting extends BaseService
         $data[SettingEnum::RECHARGE] = $this->getRecharge();
         // 注册设置
         $data[SettingEnum::REGISTER] = $this->getRegister();
+        // 店铺设置
+        $data['store'] = StoreModel::getInfo();
         // 其他设置
         $data['_other'] = $this->getOtherSetting();
         return $data;

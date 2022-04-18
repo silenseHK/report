@@ -8,11 +8,12 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\model;
 
 use app\common\model\Store as StoreModel;
+use think\model\relation\HasOne;
 
 /**
  * 商家记录表模型
@@ -21,5 +22,34 @@ use app\common\model\Store as StoreModel;
  */
 class Store extends StoreModel
 {
+    /**
+     * 隐藏的字段
+     * @var string[]
+     */
+    protected $hidden = [
+        'sort',
+        'is_recycle',
+        'is_delete',
+        'create_time',
+        'update_time'
+    ];
 
+    /**
+     * 关联logo图片
+     * @return HasOne
+     */
+    public function logoImage(): HasOne
+    {
+        return $this->hasOne('UploadFile', 'file_id', 'logo_image_id')
+            ->bind(['image_url' => 'preview_url']);
+    }
+
+    /**
+     * 获取当前商城的基本信息
+     * @return Store|array|null
+     */
+    public static function getInfo()
+    {
+        return static::detail(static::$storeId);
+    }
 }
