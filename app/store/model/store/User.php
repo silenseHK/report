@@ -84,7 +84,8 @@ class User extends StoreUserModel
         // 用户信息
         $useInfo = static::withoutGlobalScope()
             ->with(['store'])
-            ->where(['user_name' => trim($data['username'])])
+            ->where('user_name', '=', trim($data['username']))
+            ->where('is_delete', '=', 0)
             ->find();
         if (empty($useInfo) || $useInfo['is_delete']) {
             $this->error = '登录失败, 该用户不存在或已删除';
