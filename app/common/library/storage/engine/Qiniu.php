@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\library\storage\engine;
 
@@ -61,7 +61,7 @@ class Qiniu extends Basics
         // 初始化 UploadManager 对象并进行文件的上传
         $bucketMgr = new BucketManager($auth);
         /* @var $error Error */
-        $error = $bucketMgr->delete($this->config['bucket'], $filePath);
+        list(, $error) = $bucketMgr->delete($this->config['bucket'], $filePath);
         if ($error !== null) {
             $this->error = $error->message();
             return false;
