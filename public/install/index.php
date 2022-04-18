@@ -253,7 +253,6 @@ function getIsWriteArray()
         '/public/install/',
         '/public/uploads/',
         '/public/temp/',
-        '/.env',
     ];
 }
 
