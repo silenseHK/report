@@ -27,7 +27,7 @@ class Store extends StoreModel
      * @return \think\Paginator
      * @throws \think\db\exception\DbException
      */
-    public function getList(bool $isRecycle = false)
+    public function getList(bool $isRecycle = false): \think\Paginator
     {
         return $this->where('is_recycle', '=', (int)$isRecycle)
             ->where('is_delete', '=', 0)
