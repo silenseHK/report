@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\controller;
 
@@ -53,12 +53,12 @@ class Goods extends Controller
 
     /**
      * 获取商品详情(基础信息)
-     * @param int $goodsId 商品ID
-     * @param bool $verifyStatus 是否验证商品状态(上架)
-     * @return Json
-     * @throws BaseException
+     * @param int $goodsId
+     * @param bool $verifyStatus
+     * @return \think\response\Json
+     * @throws \cores\exception\BaseException
      */
-    public function basic(int $goodsId, bool $verifyStatus = true): Json
+    public function basic(int $goodsId, bool $verifyStatus = true): \think\response\Json
     {
         // 获取商品详情
         $model = new GoodsModel;
@@ -74,7 +74,7 @@ class Goods extends Controller
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function specData(int $goodsId): Json
+    public function specData(int $goodsId): \think\response\Json
     {
         // 获取商品详情
         $model = new GoodsModel;
