@@ -868,16 +868,16 @@
         },
         {
             "name": "league/mime-type-detection",
-            "version": "1.10.0",
+            "version": "1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/mime-type-detection.git",
-                "reference": "3e4a35d756eedc67096f30240a68a3149120dae7"
+                "reference": "ff6248ea87a9f116e78edd6002e39e5128a0d4dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/3e4a35d756eedc67096f30240a68a3149120dae7",
-                "reference": "3e4a35d756eedc67096f30240a68a3149120dae7",
+                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/ff6248ea87a9f116e78edd6002e39e5128a0d4dd",
+                "reference": "ff6248ea87a9f116e78edd6002e39e5128a0d4dd",
                 "shasum": ""
             },
             "require": {
@@ -908,7 +908,7 @@
             "description": "Mime-type detection for Flysystem",
             "support": {
                 "issues": "https://github.com/thephpleague/mime-type-detection/issues",
-                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.10.0"
+                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.11.0"
             },
             "funding": [
                 {
@@ -920,7 +920,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-11T12:49:04+00:00"
+            "time": "2022-04-17T13:12:02+00:00"
         },
         {
             "name": "lvht/geohash",
@@ -1724,16 +1724,16 @@
         },
         {
             "name": "qcloud/cos-sdk-v5",
-            "version": "v2.5.2",
+            "version": "v2.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tencentyun/cos-php-sdk-v5.git",
-                "reference": "3b2f32efd6c7bba7b982b118c5af18db74658fc5"
+                "reference": "b4f26ccd7cfb7b77422f2652d47357e14c421fb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tencentyun/cos-php-sdk-v5/zipball/3b2f32efd6c7bba7b982b118c5af18db74658fc5",
-                "reference": "3b2f32efd6c7bba7b982b118c5af18db74658fc5",
+                "url": "https://api.github.com/repos/tencentyun/cos-php-sdk-v5/zipball/b4f26ccd7cfb7b77422f2652d47357e14c421fb4",
+                "reference": "b4f26ccd7cfb7b77422f2652d47357e14c421fb4",
                 "shasum": ""
             },
             "require": {
@@ -1785,22 +1785,22 @@
             ],
             "support": {
                 "issues": "https://github.com/tencentyun/cos-php-sdk-v5/issues",
-                "source": "https://github.com/tencentyun/cos-php-sdk-v5/tree/v2.5.2"
+                "source": "https://github.com/tencentyun/cos-php-sdk-v5/tree/v2.5.3"
             },
-            "time": "2022-04-07T03:22:53+00:00"
+            "time": "2022-04-19T07:19:00+00:00"
         },
         {
             "name": "qiniu/php-sdk",
-            "version": "v7.4.3",
+            "version": "v7.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/qiniu/php-sdk.git",
-                "reference": "ee5344f319dd7babd86c9a38e6bd05aa58dc90ea"
+                "reference": "0cc46e4206002d1a736dbb4abb1424b0b7fc3f22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/qiniu/php-sdk/zipball/ee5344f319dd7babd86c9a38e6bd05aa58dc90ea",
-                "reference": "ee5344f319dd7babd86c9a38e6bd05aa58dc90ea",
+                "url": "https://api.github.com/repos/qiniu/php-sdk/zipball/0cc46e4206002d1a736dbb4abb1424b0b7fc3f22",
+                "reference": "0cc46e4206002d1a736dbb4abb1424b0b7fc3f22",
                 "shasum": ""
             },
             "require": {
@@ -1842,9 +1842,9 @@
             ],
             "support": {
                 "issues": "https://github.com/qiniu/php-sdk/issues",
-                "source": "https://github.com/qiniu/php-sdk/tree/v7.4.3"
+                "source": "https://github.com/qiniu/php-sdk/tree/v7.5.0"
             },
-            "time": "2022-04-01T08:49:57+00:00"
+            "time": "2022-04-18T10:49:54+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -2539,16 +2539,16 @@
         },
         {
             "name": "yiovo/tp6-captcha",
-            "version": "v1.1.3",
+            "version": "v1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiovo/tp6-captcha.git",
-                "reference": "f344d1832a3d5d029c77e3a9f9ef93c537dda49b"
+                "reference": "ad04954c2c3de274f5bd7549788094ee96e4160e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiovo/tp6-captcha/zipball/f344d1832a3d5d029c77e3a9f9ef93c537dda49b",
-                "reference": "f344d1832a3d5d029c77e3a9f9ef93c537dda49b",
+                "url": "https://api.github.com/repos/yiovo/tp6-captcha/zipball/ad04954c2c3de274f5bd7549788094ee96e4160e",
+                "reference": "ad04954c2c3de274f5bd7549788094ee96e4160e",
                 "shasum": ""
             },
             "require": {
@@ -2584,9 +2584,9 @@
             "description": "tp6-captcha",
             "homepage": "https://github.com/yiovo/tp6-captcha",
             "support": {
-                "source": "https://github.com/yiovo/tp6-captcha/tree/v1.1.3"
+                "source": "https://github.com/yiovo/tp6-captcha/tree/v1.1.4"
             },
-            "time": "2021-12-03T13:05:34+00:00"
+            "time": "2022-04-12T14:26:54+00:00"
         }
     ],
     "packages-dev": [

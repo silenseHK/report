@@ -16,8 +16,10 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
+        '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         'cd5441689b14144e5573bf989ee47b34' => __DIR__ . '/..' . '/qcloud/cos-sdk-v5/src/Common.php',
         '841780ea2e1d6545ea3a253239d59c05' => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu/functions.php',
+        '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -29,6 +31,7 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
         't' => 
         array (
             'think\\worker\\' => 13,
+            'think\\trace\\' => 12,
             'think\\app\\' => 10,
             'think\\' => 6,
         ),
@@ -51,7 +54,9 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
         'S' => 
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
+            'Symfony\\Polyfill\\Php72\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Component\\VarDumper\\' => 28,
         ),
         'Q' => 
         array (
@@ -115,15 +120,19 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
         array (
             0 => __DIR__ . '/..' . '/topthink/think-worker/src',
         ),
+        'think\\trace\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/topthink/think-trace/src',
+        ),
         'think\\app\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-multi-app/src',
         ),
         'think\\' => 
         array (
-            0 => __DIR__ . '/..' . '/topthink/think-orm/src',
+            0 => __DIR__ . '/..' . '/topthink/framework/src/think',
             1 => __DIR__ . '/..' . '/topthink/think-helper/src',
-            2 => __DIR__ . '/..' . '/topthink/framework/src/think',
+            2 => __DIR__ . '/..' . '/topthink/think-orm/src',
         ),
         'cores\\' => 
         array (
@@ -145,9 +154,17 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
+        'Symfony\\Polyfill\\Php72\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php72',
+        ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Component\\VarDumper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/var-dumper',
         ),
         'Qiniu\\' => 
         array (
