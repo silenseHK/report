@@ -363,7 +363,7 @@ function my_trim($str)
  */
 function my_htmlspecialchars($string)
 {
-    return is_string($string) ? htmlspecialchars($string) : $string;
+    return is_string($string) ? htmlspecialchars($string, ENT_COMPAT) : $string;
 }
 
 /**
