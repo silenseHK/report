@@ -23,10 +23,10 @@ class Goods extends Controller
 {
     /**
      * 商品列表
-     * @return array
+     * @return \think\response\Json
      * @throws \think\db\exception\DbException
      */
-    public function list()
+    public function list(): \think\response\Json
     {
         // 获取列表数据
         $model = new GoodsModel;
@@ -37,13 +37,13 @@ class Goods extends Controller
     /**
      * 获取商品详情
      * @param int $goodsId
-     * @return array|\think\response\Json
-     * @throws \app\common\exception\BaseException
+     * @return \think\response\Json
+     * @throws \cores\exception\BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function detail(int $goodsId)
+    public function detail(int $goodsId): \think\response\Json
     {
         // 商品详情
         $model = new GoodsModel;
@@ -51,4 +51,34 @@ class Goods extends Controller
         return $this->renderSuccess(['detail' => $goodsInfo]);
     }
 
+    /**
+     * 获取商品详情(基础信息)
+     * @param int $goodsId 商品ID
+     * @param bool $verifyStatus 是否验证商品状态(上架)
+     * @return Json
+     * @throws BaseException
+     */
+    public function basic(int $goodsId, bool $verifyStatus = true): Json
+    {
+        // 获取商品详情
+        $model = new GoodsModel;
+        $detail = $model->getBasic($goodsId, $verifyStatus);
+        return $this->renderSuccess(compact('detail'));
+    }
+
+    /**
+     * 获取商品规格数据
+     * @param int $goodsId 商品ID
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function specData(int $goodsId): Json
+    {
+        // 获取商品详情
+        $model = new GoodsModel;
+        $specData = $model->getSpecData($goodsId);
+        return $this->renderSuccess(compact('specData'));
+    }
 }

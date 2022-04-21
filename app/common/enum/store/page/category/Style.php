@@ -8,8 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
-
+declare (strict_types=1);
 
 namespace app\common\enum\store\page\category;
 
@@ -28,14 +27,17 @@ class Style extends EnumBasics
     // 一级分类[小图]
     const ONE_LEVEL_SMALL = 11;
 
-    // 二级分类
+    // 一级分类+二级分类
     const TWO_LEVEL = 20;
+
+    // 分类+商品
+    const COMMODITY = 30;
 
     /**
      * 获取类型值
      * @return array
      */
-    public static function data()
+    public static function data(): array
     {
         return [
             self::ONE_LEVEL_BIG => [
@@ -49,6 +51,10 @@ class Style extends EnumBasics
             self::TWO_LEVEL => [
                 'name' => '二级分类',
                 'value' => self::TWO_LEVEL
+            ],
+            self::COMMODITY => [
+                'name' => '分类+商品',
+                'value' => self::COMMODITY
             ]
         ];
     }

@@ -8,11 +8,12 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\model;
 
 use cores\BaseModel;
+
 use app\common\library\helper;
 
 /**
@@ -29,10 +30,10 @@ class GoodsSku extends BaseModel
     protected $pk = 'id';
 
     /**
-     * 规格图片
+     * 关联模型：规格图片
      * @return \think\model\relation\HasOne
      */
-    public function image()
+    public function image(): \think\model\relation\HasOne
     {
         return $this->hasOne('UploadFile', 'file_id', 'image_id');
     }
@@ -40,7 +41,7 @@ class GoodsSku extends BaseModel
     /**
      * 获取器：规格值ID集
      * @param $value
-     * @return array
+     * @return array|mixed
      */
     public function getSpecValueIdsAttr($value)
     {
@@ -50,7 +51,7 @@ class GoodsSku extends BaseModel
     /**
      * 获取器：规格属性
      * @param $value
-     * @return array
+     * @return array|mixed
      */
     public function getGoodsPropsAttr($value)
     {
@@ -62,7 +63,7 @@ class GoodsSku extends BaseModel
      * @param $value
      * @return string
      */
-    public function setSpecValueIdsAttr($value)
+    public function setSpecValueIdsAttr($value): string
     {
         return helper::jsonEncode($value);
     }
@@ -72,7 +73,7 @@ class GoodsSku extends BaseModel
      * @param $value
      * @return string
      */
-    public function setGoodsPropsAttr($value)
+    public function setGoodsPropsAttr($value): string
     {
         return helper::jsonEncode($value);
     }
@@ -88,4 +89,16 @@ class GoodsSku extends BaseModel
         return static::get(['goods_id' => $goodsId, 'goods_sku_id' => $goodsSkuId]);
     }
 
+    /**
+     * 获取商品SKU列表
+     * @param int $goodsId 商品ID
+     * @return \think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public static function getSkuList(int $goodsId): \think\Collection
+    {
+        return (new static)->where('goods_id', '=', $goodsId)->select();
+    }
 }

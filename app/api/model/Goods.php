@@ -14,6 +14,7 @@ namespace app\api\model;
 
 use app\api\service\Goods as GoodsService;
 use app\api\service\user\Grade as UserGradeService;
+use app\api\model\GoodsSku as GoodsSkuModel;
 use app\api\model\GoodsSpecRel as GoodsSpecRelModel;
 use app\common\model\Goods as GoodsModel;
 use app\common\enum\goods\Status as GoodsStatusEnum;
@@ -91,28 +92,80 @@ class Goods extends GoodsModel
 
     /**
      * 获取商品详情 (详细数据用于页面展示)
-     * @param int $goodsId 商品id
+     * @param int $goodsId 商品ID
+     * @param bool $verifyStatus 是否验证商品状态(上架)
      * @return mixed
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getDetails(int $goodsId)
+    public function getDetails(int $goodsId, bool $verifyStatus = true)
     {
-        // 关联查询
+        // 关联查询(商品图片、sku列表)
         $with = ['images.file', 'skuList.image', 'video', 'videoCover'];
         // 获取商品记录
-        $goodsInfo = static::detail($goodsId, $with);
-        // 判断商品的状态
-        if (empty($goodsInfo) || $goodsInfo['is_delete'] || $goodsInfo['status'] != GoodsStatusEnum::ON_SALE) {
-            throwError('很抱歉，商品信息不存在或已下架');
-        }
-        // 设置商品展示的数据
-        $goodsInfo = $this->setGoodsDataFromApi($goodsInfo);
+        $goodsInfo = $this->getGoodsMain($goodsId, $with, $verifyStatus);
         // 商品规格列表
         $goodsInfo['specList'] = GoodsSpecRelModel::getSpecList($goodsInfo['goods_id']);
-        return $goodsInfo;
+        return $goodsInfo->hidden(array_merge($this->hidden, ['images']));
+    }
+
+    /**
+     * 获取商品详情 (仅包含主商品信息和商品图片)
+     * @param int $goodsId 商品ID
+     * @param bool $verifyStatus 是否验证商品状态(上架)
+     * @return mixed
+     * @throws BaseException
+     */
+    public function getBasic(int $goodsId, bool $verifyStatus = true)
+    {
+        // 关联查询(商品图片)
+        $with = ['images.file'];
+        // 获取商品记录
+        return $this->getGoodsMain($goodsId, $with, $verifyStatus);
+    }
+
+    /**
+     * 获取商品规格数据
+     * @param int $goodsId
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getSpecData(int $goodsId): array
+    {
+        $data = [];
+        // 商品SKU列表
+        $data['skuList'] = GoodsSkuModel::getSkuList($goodsId);
+        // 商品规格列表
+        $data['specList'] = GoodsSpecRelModel::getSpecList($goodsId);
+        return $data;
+    }
+
+    /**
+     * 获取商品主体信息
+     * @param int $goodsId 商品ID
+     * @param array $with 关联查询
+     * @param bool $verifyStatus 是否验证商品状态(上架)
+     * @return mixed
+     * @throws BaseException
+     */
+    private function getGoodsMain(int $goodsId, array $with = [], bool $verifyStatus = true)
+    {
+        // 获取商品记录
+        $goodsInfo = static::detail($goodsId, $with);
+        // 判断商品是否存在
+        if (empty($goodsInfo) || $goodsInfo['is_delete']) {
+            throwError('很抱歉，商品信息不存在');
+        }
+        // 判断商品状态(上架)
+        if ($verifyStatus && $goodsInfo['status'] == GoodsStatusEnum::OFF_SALE) {
+            throwError('很抱歉，当前商品已下架');
+        }
+        // 整理商品数据并返回
+        return $this->setGoodsDataFromApi($goodsInfo);
     }
 
     /**

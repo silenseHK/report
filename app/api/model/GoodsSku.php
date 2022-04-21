@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\model;
 
@@ -22,10 +22,10 @@ use app\common\model\GoodsSku as GoodsSkuModel;
 class GoodsSku extends GoodsSkuModel
 {
     /**
-     * 规格图片
+     * 关联模型：规格图片
      * @return \think\model\relation\HasOne
      */
-    public function image()
+    public function image(): \think\model\relation\HasOne
     {
         return parent::image()->bind(['image_url' => 'preview_url']);
     }
@@ -39,5 +39,4 @@ class GoodsSku extends GoodsSkuModel
         'create_time',
         'update_time'
     ];
-
 }

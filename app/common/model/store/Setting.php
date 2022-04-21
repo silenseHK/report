@@ -316,8 +316,10 @@ class Setting extends BaseModel
                 'key' => SettingEnum::PAGE_CATEGORY_TEMPLATE,
                 'describe' => '分类页模板设置',
                 'values' => [
-                    'style' => PageCategoryStyleEnum::TWO_LEVEL,    // 分类页样式
-                    'shareTitle' => ''                              // 分享标题
+                    'style' => PageCategoryStyleEnum::COMMODITY,    // 分类页样式
+                    'shareTitle' => '全部分类',                      // 分享标题
+                    'showAddCart' => true,                          // 是否显示购物车按钮
+                    'cartStyle' => 1,                               // 购物车按钮样式  1-3
                 ]
             ]
         ];
