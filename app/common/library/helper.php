@@ -114,9 +114,9 @@ class helper
     {
         $sum = 0;
         foreach ($array as $item) {
-            $sum += $item[$column] * 100;
+            $sum = self::bcadd($sum, $item[$column]);
         }
-        return $sum / 100;
+        return $sum;
     }
 
     /**

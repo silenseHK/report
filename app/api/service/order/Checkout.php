@@ -440,7 +440,7 @@ class Checkout extends BaseService
         // 设置商品积分赠送数量
         foreach ($this->goodsList as &$goods) {
             // 积分赠送比例
-            $ratio = $setting['gift_ratio'] / 100;
+            $ratio = helper::bcdiv($setting['gift_ratio'], 100);
             // 计算抵扣积分数量
             $goods['points_bonus'] = !$goods['is_points_gift'] ? 0 : helper::bcmul($goods['total_pay_price'], $ratio, 0);
         }
@@ -557,12 +557,13 @@ class Checkout extends BaseService
         foreach ($this->goodsList as &$goods) {
             $goodsKey = "{$goods['goods_id']}-{$goods['goods_sku_id']}";
             if (isset($rangeGoodsList[$goodsKey])) {
-                $goods['coupon_money'] = $rangeGoodsList[$goodsKey]['coupon_money'] / 100;
+                $goods['coupon_money'] = helper::bcdiv($rangeGoodsList[$goodsKey]['coupon_money'], 100);
             }
         }
+
         // 记录订单优惠券信息
         $this->orderData['couponId'] = $couponId;
-        $this->orderData['couponMoney'] = helper::number2($CouponMoney->getActualReducedMoney() / 100);
+        $this->orderData['couponMoney'] = helper::number2(helper::bcdiv($CouponMoney->getActualReducedMoney(), 100));
     }
 
     /**

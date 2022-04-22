@@ -76,7 +76,7 @@ class WxPay extends WxBase
             'openid' => $openid,
             'out_trade_no' => $orderNo,
             'spbill_create_ip' => \request()->ip(),
-            'total_fee' => $totalFee * 100, // 价格:单位分
+            'total_fee' => helper::bcmul($totalFee, 100), // 价格:单位分
             'trade_type' => 'JSAPI',
         ];
         // 生成签名
@@ -174,8 +174,8 @@ class WxPay extends WxBase
             'nonce_str' => $nonceStr,
             'transaction_id' => $transactionId,
             'out_refund_no' => $time,
-            'total_fee' => $totalFee * 100,
-            'refund_fee' => $refundFee * 100,
+            'total_fee' => helper::bcmul($totalFee,100),
+            'refund_fee' => helper::bcmul($refundFee,100),
         ];
         // 生成签名
         $params['sign'] = $this->makeSign($params);
