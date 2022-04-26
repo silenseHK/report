@@ -58,10 +58,10 @@ class Checkout extends BaseService
      * @var array
      */
     private $param = [
-        'delivery' => null, // 配送方式
-        'couponId' => 0,    // 优惠券id
-        'isUsePoints' => 0,    // 是否使用积分抵扣
-        'remark' => '',    // 买家留言
+        'delivery' => null,     // 配送方式
+        'couponId' => 0,        // 用户的优惠券ID
+        'isUsePoints' => 0,     // 是否使用积分抵扣
+        'remark' => '',         // 买家留言
         'payType' => OrderPayTypeEnum::BALANCE,  // 支付方式
     ];
 
@@ -525,15 +525,15 @@ class Checkout extends BaseService
     /**
      * 设置订单优惠券抵扣信息
      * @param array $couponList 当前用户可用的优惠券列表
-     * @param int $couponId 当前选择的优惠券id
+     * @param int $userCouponId 当前选择的优惠券ID
      * @return void
      * @throws BaseException
      */
-    private function setOrderCouponMoney(array $couponList, int $couponId): void
+    private function setOrderCouponMoney(array $couponList, int $userCouponId): void
     {
         // 设置默认数据：订单信息
         helper::setDataAttribute($this->orderData, [
-            'couponId' => 0,       // 用户优惠券id
+            'couponId' => 0,       // 用户的优惠券ID
             'couponMoney' => 0,    // 优惠券抵扣金额
         ], false);
         // 设置默认数据：订单商品列表
@@ -541,11 +541,11 @@ class Checkout extends BaseService
             'coupon_money' => 0,    // 优惠券抵扣金额
         ], true);
         // 验证选择的优惠券ID是否合法
-        if (!$this->verifyOrderCouponId($couponId, $couponList)) {
+        if (!$this->verifyOrderCouponId($userCouponId, $couponList)) {
             return;
         }
         // 获取优惠券信息
-        $couponInfo = $this->getCouponInfo($couponId, $couponList);
+        $couponInfo = $this->getCouponInfo($userCouponId, $couponList);
         // 计算订单商品优惠券抵扣金额
         $goodsListTemp = helper::getArrayColumns($this->goodsList, ['goods_id', 'goods_sku_id', 'total_price']);
         $CouponMoney = new GoodsDeductService;
@@ -562,29 +562,29 @@ class Checkout extends BaseService
         }
 
         // 记录订单优惠券信息
-        $this->orderData['couponId'] = $couponId;
+        $this->orderData['couponId'] = $userCouponId;
         $this->orderData['couponMoney'] = helper::number2(helper::bcdiv($CouponMoney->getActualReducedMoney(), 100));
     }
 
     /**
      * 验证用户选择的优惠券ID是否合法
-     * @param int $couponId
+     * @param int $userCouponId
      * @param $couponList
      * @return bool
      * @throws BaseException
      */
-    private function verifyOrderCouponId(int $couponId, $couponList): bool
+    private function verifyOrderCouponId(int $userCouponId, $couponList): bool
     {
         // 是否开启优惠券折扣
         if (!$this->checkoutRule['isCoupon']) {
             return false;
         }
         // 如果没有可用的优惠券，直接返回
-        if ($couponId <= 0 || empty($couponList)) {
+        if ($userCouponId <= 0 || empty($couponList)) {
             return false;
         }
         // 判断优惠券是否存在
-        $couponInfo = $this->getCouponInfo($couponId, $couponList);
+        $couponInfo = $this->getCouponInfo($userCouponId, $couponList);
         if (!$couponInfo) {
             throwError('未找到优惠券信息');
         }
@@ -597,13 +597,13 @@ class Checkout extends BaseService
 
     /**
      * 查找指定的优惠券信息
-     * @param int $couponId 优惠券ID
+     * @param int $userCouponId 优惠券ID
      * @param array $couponList 优惠券列表
      * @return false|mixed
      */
-    private function getCouponInfo(int $couponId, array $couponList)
+    private function getCouponInfo(int $userCouponId, array $couponList)
     {
-        return helper::getArrayItemByColumn($couponList, 'user_coupon_id', $couponId);
+        return helper::getArrayItemByColumn($couponList, 'user_coupon_id', $userCouponId);
     }
 
     /**

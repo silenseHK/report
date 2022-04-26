@@ -134,12 +134,12 @@ class UserCoupon extends BaseModel
 
     /**
      * 设置优惠券使用状态
-     * @param int $couponId 用户的优惠券id
+     * @param int $userCouponId 用户的优惠券ID
      * @param bool $isUse 是否已使用
      * @return bool|false
      */
-    public static function setIsUse(int $couponId, bool $isUse = true): bool
+    public static function setIsUse(int $userCouponId, bool $isUse = true): bool
     {
-        return static::updateBase(['is_use' => (int)$isUse], ['coupon_id' => $couponId]);
+        return static::updateBase(['is_use' => (int)$isUse], ['user_coupon_id' => $userCouponId]);
     }
 }
