@@ -176,7 +176,7 @@ class Checkout extends BaseService
         // 验证商品状态, 是否允许购买
         $this->validateGoodsList();
         // 订单商品总数量
-        $orderTotalNum = helper::getArrayColumnSum($this->goodsList, 'total_num');
+        $orderTotalNum = (int)helper::getArrayColumnSum($this->goodsList, 'total_num');
         // 设置订单商品会员折扣价
         $this->setOrderGoodsGradeMoney();
         // 设置订单商品总金额(不含优惠折扣)
@@ -236,7 +236,7 @@ class Checkout extends BaseService
         // 计算订单商品最多可抵扣的积分数量
         $this->setOrderGoodsMaxPointsNum();
         // 订单最多可抵扣的积分总数量
-        $maxPointsNumCount = helper::getArrayColumnSum($this->goodsList, 'max_points_num');
+        $maxPointsNumCount = (int)helper::getArrayColumnSum($this->goodsList, 'max_points_num');
         // 实际可抵扣的积分数量
         $actualPointsNum = min($maxPointsNumCount, $this->user['points']);
         if ($actualPointsNum < 1) {
@@ -445,7 +445,7 @@ class Checkout extends BaseService
             $goods['points_bonus'] = !$goods['is_points_gift'] ? 0 : helper::bcmul($goods['total_pay_price'], $ratio, 0);
         }
         //  订单积分赠送数量
-        $this->orderData['pointsBonus'] = helper::getArrayColumnSum($this->goodsList, 'points_bonus');
+        $this->orderData['pointsBonus'] = (int)helper::getArrayColumnSum($this->goodsList, 'points_bonus');
     }
 
     /**

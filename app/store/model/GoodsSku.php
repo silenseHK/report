@@ -30,7 +30,7 @@ class GoodsSku extends GoodsSkuModel
      */
     public static function getStockTotal(array $skuList)
     {
-        return helper::getArrayColumnSum($skuList, 'stock_num');
+        return (int)helper::getArrayColumnSum($skuList, 'stock_num');
     }
 
     /**

@@ -41,7 +41,7 @@ class GoodsDeduct extends BaseService
         // 计算实际积分抵扣数量
         $this->setGoodsListPointsNum($maxPointsNumCount, $actualPointsNum);
         // 总抵扣数量
-        $totalPointsNum = helper::getArrayColumnSum($this->goodsList, 'points_num');
+        $totalPointsNum = (int)helper::getArrayColumnSum($this->goodsList, 'points_num');
         // 填充余数
         $this->setGoodsListPointsNumFill($actualPointsNum, $totalPointsNum);
         $this->setGoodsListPointsNumDiff($actualPointsNum, $totalPointsNum);
