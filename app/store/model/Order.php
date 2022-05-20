@@ -81,6 +81,7 @@ class Order extends OrderModel
             ->alias('order')
             ->field('order.*')
             ->leftJoin('user', 'user.user_id = order.user_id')
+            ->leftJoin('order_address address', 'address.order_id = order.order_id')
             ->where($dataTypeFilter)
             ->where($filter)
             ->where('order.is_delete', '=', 0)
@@ -121,7 +122,7 @@ class Order extends OrderModel
     {
         // 默认参数
         $params = $this->setQueryDefaultValue($param, [
-            'searchType' => '',     // 关键词类型 (10订单号 20会员昵称 30会员ID)
+            'searchType' => '',     // 关键词类型 (10订单号 20会员昵称 30会员ID 40收货人姓名 50收货人电话)
             'searchValue' => '',    // 关键词内容
             'orderSource' => -1,    // 订单来源
             'payType' => -1,        // 支付方式
@@ -136,7 +137,9 @@ class Order extends OrderModel
             $searchWhere = [
                 10 => ['order.order_no', 'like', "%{$params['searchValue']}%"],
                 20 => ['user.nick_name', 'like', "%{$params['searchValue']}%"],
-                30 => ['order.user_id', '=', (int)$params['searchValue']]
+                30 => ['order.user_id', '=', (int)$params['searchValue']],
+                40 => ['address.name', 'like', "%{$params['searchValue']}%"],
+                50 => ['address.phone', 'like', "%{$params['searchValue']}%"],
             ];
             array_key_exists($params['searchType'], $searchWhere) && $filter[] = $searchWhere[$params['searchType']];
         }
