@@ -145,11 +145,13 @@ class Complete extends BaseService
                     && $goods['refund']['type'] == 10      // 售后类型：退货退款
                     && $goods['refund']['audit_status'] == 10  // 商家审核：已同意
                 ) {
-                    $expendMoney -= $goods['refund']['refund_money'];
+                    $expendMoney = helper::bcsub($expendMoney, $goods['refund']['refund_money']);
                 }
             }
             !isset($userData[$order['user_id']]) && $userData[$order['user_id']] = 0.00;
-            $expendMoney > 0 && $userData[$order['user_id']] += $expendMoney;
+            if ($expendMoney > 0) {
+                $userData[$order['user_id']] = helper::bcadd($userData[$order['user_id']], $expendMoney);
+            }
         }
         // 累积到会员表记录
         $this->UserModel->onBatchIncExpendMoney($userData);
