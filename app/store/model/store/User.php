@@ -132,6 +132,7 @@ class User extends StoreUserModel
      */
     public function add(array $data)
     {
+        $data['user_name'] = strtolower($data['user_name']);
         if (self::checkExist($data['user_name'])) {
             $this->error = '用户名已存在';
             return false;
@@ -166,6 +167,7 @@ class User extends StoreUserModel
      */
     public function edit(array $data)
     {
+        $data['user_name'] = strtolower($data['user_name']);
         if ($this['user_name'] !== $data['user_name']
             && self::checkExist($data['user_name'])) {
             $this->error = '用户名已存在';
