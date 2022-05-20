@@ -13,8 +13,9 @@ declare (strict_types=1);
 namespace app\common\model;
 
 use cores\BaseModel;
-
+use app\common\model\Coupon as CouponModel;
 use app\common\library\helper;
+use app\common\enum\coupon\ExpireType as ExpireTypeEnum;
 use think\model\relation\BelongsTo;
 
 /**
@@ -141,5 +142,61 @@ class UserCoupon extends BaseModel
     public static function setIsUse(int $userCouponId, bool $isUse = true): bool
     {
         return static::updateBase(['is_use' => (int)$isUse], ['user_coupon_id' => $userCouponId]);
+    }
+
+    /**
+     * 验证指定用户是否已领取优惠券
+     * @param int $couponId 优惠券ID
+     * @param int $userId 用户ID
+     * @return bool
+     */
+    public static function checktUserCoupon(int $couponId, int $userId): bool
+    {
+        return (bool)(new static)->where('coupon_id', '=', $couponId)
+            ->where('user_id', '=', $userId)
+            ->value('user_coupon_id');
+    }
+
+    /**
+     * 添加领取记录
+     * @param int $userId 用户ID
+     * @param CouponModel $couponInfo
+     * @return bool
+     */
+    public function add(int $userId, CouponModel $couponInfo): bool
+    {
+        // 计算有效期
+        if ($couponInfo['expire_type'] == ExpireTypeEnum::RECEIVE) {
+            $startTime = time();
+            $endTime = $startTime + ($couponInfo['expire_day'] * 86400);
+        } else {
+            $startTime = $couponInfo->getData('start_time');
+            $endTime = $couponInfo->getData('end_time');
+        }
+        // 整理领取记录
+        $data = [
+            'coupon_id' => $couponInfo['coupon_id'],
+            'name' => $couponInfo['name'],
+            'coupon_type' => $couponInfo['coupon_type'],
+            'reduce_price' => $couponInfo['reduce_price'],
+            'discount' => $couponInfo['discount'],
+            'min_price' => $couponInfo['min_price'],
+            'expire_type' => $couponInfo['expire_type'],
+            'expire_day' => $couponInfo['expire_day'],
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'apply_range' => $couponInfo['apply_range'],
+            'apply_range_config' => $couponInfo['apply_range_config'],
+            'user_id' => $userId,
+            'store_id' => self::$storeId
+        ];
+        // 事务处理
+        return $this->transaction(function () use ($data, $couponInfo) {
+            // 添加领取记录
+            $this->save($data);
+            // 累计优惠券已领取的数量
+            CouponModel::setIncReceiveNum($couponInfo['coupon_id']);
+            return true;
+        });
     }
 }

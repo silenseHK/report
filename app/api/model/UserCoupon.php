@@ -13,9 +13,9 @@ declare (strict_types=1);
 namespace app\api\model;
 
 use app\api\service\User as UserService;
+use app\api\model\Coupon as CouponModel;
 use app\common\model\UserCoupon as UserCouponModel;
 use app\common\enum\coupon\CouponType as CouponTypeEnum;
-use app\common\enum\coupon\ExpireType as ExpireTypeEnum;
 use app\common\enum\coupon\ApplyRange as ApplyRangeEnum;
 use app\common\library\helper;
 use cores\exception\BaseException;
@@ -114,83 +114,39 @@ class UserCoupon extends UserCouponModel
      */
     public function receive(int $couponId): bool
     {
-        // 当前用户信息
-        $userInfo = UserService::getCurrentLoginUser(true);
+        // 当前用户ID
+        $userId = UserService::getCurrentLoginUserId(true);
         // 获取优惠券信息
-        $coupon = Coupon::detail($couponId);
+        $couponInfo = Coupon::detail($couponId);
         // 验证优惠券是否可领取
-        if (!$this->checkReceive($userInfo, $coupon)) {
+        if (!$this->checkReceive($userId, $couponInfo)) {
             return false;
         }
         // 添加领取记录
-        return $this->add($userInfo, $coupon);
-    }
-
-    /**
-     * 添加领取记录
-     * @param $user
-     * @param Coupon $coupon
-     * @return bool
-     */
-    private function add($user, Coupon $coupon): bool
-    {
-        // 计算有效期
-        if ($coupon['expire_type'] == ExpireTypeEnum::RECEIVE) {
-            $startTime = time();
-            $endTime = $startTime + ($coupon['expire_day'] * 86400);
-        } else {
-            $startTime = $coupon->getData('start_time');
-            $endTime = $coupon->getData('end_time');
-        }
-        // 整理领取记录
-        $data = [
-            'coupon_id' => $coupon['coupon_id'],
-            'name' => $coupon['name'],
-            'coupon_type' => $coupon['coupon_type'],
-            'reduce_price' => $coupon['reduce_price'],
-            'discount' => $coupon['discount'],
-            'min_price' => $coupon['min_price'],
-            'expire_type' => $coupon['expire_type'],
-            'expire_day' => $coupon['expire_day'],
-            'start_time' => $startTime,
-            'end_time' => $endTime,
-            'apply_range' => $coupon['apply_range'],
-            'apply_range_config' => $coupon['apply_range_config'],
-            'user_id' => $user['user_id'],
-            'store_id' => self::$storeId
-        ];
-        // 事务处理
-        return $this->transaction(function () use ($data, $coupon) {
-            // 添加领取记录
-            $status = $this->save($data);
-            if ($status) {
-                // 更新优惠券领取数量
-                $coupon->setIncReceiveNum();
-            }
-            return $status;
-        });
+        return $this->add($userId, $couponInfo);
     }
 
     /**
      * 验证优惠券是否可领取
-     * @param mixed $userInfo 当前登录用户信息
-     * @param Coupon $coupon 优惠券详情
+     * @param int $userId 当前用户ID
+     * @param CouponModel $couponInfo 优惠券详情
      * @return bool
      */
-    private function checkReceive($userInfo, Coupon $coupon): bool
+    private function checkReceive(int $userId, CouponModel $couponInfo): bool
     {
-        if (empty($coupon)) {
-            $this->error = '优惠券不存在';
+        if (empty($couponInfo)) {
+            $this->error = '当前优惠券不存在';
             return false;
         }
-        if (!$coupon->checkReceive()) {
-            $this->error = $coupon->getError();
+        // 验证优惠券状态是否可领取
+        $model = new CouponModel;
+        if (!$model->checkReceive($couponInfo)) {
+            $this->error = $model->getError() ?: '优惠券状态不可领取';
             return false;
         }
-        // 验证是否已领取
-        $userCouponIds = $this->getUserCouponIds($userInfo['user_id']);
-        if (in_array($coupon['coupon_id'], $userCouponIds)) {
-            $this->error = '该优惠券已领取';
+        // 验证当前用户是否已领取
+        if (static::checktUserCoupon($couponInfo['coupon_id'], $userId)) {
+            $this->error = '当前用户已领取该优惠券';
             return false;
         }
         return true;

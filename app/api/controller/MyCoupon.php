@@ -14,7 +14,6 @@ namespace app\api\controller;
 
 use app\api\model\UserCoupon as UserCouponModel;
 use app\api\service\User as UserService;
-use app\common\exception\BaseException;
 
 /**
  * 用户优惠券
@@ -25,13 +24,11 @@ class MyCoupon extends Controller
 {
     /**
      * 用户优惠券列表
-     * @return mixed
-     * @throws BaseException
-     * @throws \think\db\exception\DataNotFoundException
+     * @return \think\response\Json
+     * @throws \cores\exception\BaseException
      * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
      */
-    public function list()
+    public function list(): \think\response\Json
     {
         $userId = UserService::getCurrentLoginUserId();
         $model = new UserCouponModel;
@@ -42,10 +39,10 @@ class MyCoupon extends Controller
     /**
      * 领取优惠券
      * @param int $couponId
-     * @return array|\think\response\Json
-     * @throws BaseException
+     * @return \think\response\Json
+     * @throws \cores\exception\BaseException
      */
-    public function receive(int $couponId)
+    public function receive(int $couponId): \think\response\Json
     {
         $model = new UserCouponModel;
         if ($model->receive($couponId)) {
@@ -53,5 +50,4 @@ class MyCoupon extends Controller
         }
         return $this->renderError($model->getError() ?: '领取失败');
     }
-
 }

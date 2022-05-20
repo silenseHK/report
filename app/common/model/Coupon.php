@@ -117,11 +117,43 @@ class Coupon extends BaseModel
 
     /**
      * 优惠券详情
-     * @param int $couponId
-     * @return null|static
+     * @param int $couponId 优惠券ID
+     * @return static|null
      */
-    public static function detail(int $couponId)
+    public static function detail(int $couponId): ?Coupon
     {
         return self::get($couponId);
+    }
+
+    /**
+     * 验证优惠券状态是否可领取
+     * @param $couponInfo
+     * @return bool
+     */
+    public function checkReceive($couponInfo): bool
+    {
+        if (empty($couponInfo)) {
+            $this->error = '当前优惠券不存在';
+            return false;
+        }
+        if ($couponInfo['total_num'] > -1 && $couponInfo['receive_num'] >= $couponInfo['total_num']) {
+            $this->error = '优惠券已发完';
+            return false;
+        }
+        if ($couponInfo['expire_type'] == 20 && ($couponInfo->getData('end_time') + 86400) < time()) {
+            $this->error = '优惠券已过期';
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 累计优惠券已领取的数量
+     * @param int $couponId
+     * @return mixed
+     */
+    public static function setIncReceiveNum(int $couponId)
+    {
+        return (new static)->setInc($couponId, 'receive_num', 1);
     }
 }

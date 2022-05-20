@@ -83,30 +83,4 @@ class Coupon extends CouponModel
         }
         return $couponList;
     }
-
-    /**
-     * 验证优惠券是否可领取
-     * @return bool
-     */
-    public function checkReceive(): bool
-    {
-        if ($this['total_num'] > -1 && $this['receive_num'] >= $this['total_num']) {
-            $this->error = '优惠券已发完';
-            return false;
-        }
-        if ($this['expire_type'] == 20 && ($this->getData('end_time') + 86400) < time()) {
-            $this->error = '优惠券已过期';
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * 累计已领取数量
-     * @return mixed
-     */
-    public function setIncReceiveNum()
-    {
-        return $this->setInc($this['coupon_id'], 'receive_num', 1);
-    }
 }
