@@ -76,7 +76,7 @@ class WxPay extends WxBase
             'openid' => $openid,
             'out_trade_no' => $orderNo,
             'spbill_create_ip' => \request()->ip(),
-            'total_fee' => helper::bcmul($totalFee, 100), // 价格:单位分
+            'total_fee' => (int)helper::bcmul($totalFee, 100), // 价格:单位分
             'trade_type' => 'JSAPI',
         ];
         // 生成签名
