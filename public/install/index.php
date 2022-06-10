@@ -188,7 +188,7 @@ if ($s == 63832) {
     $dbpwd = $_GET['dbpwd'] ?? '';
     $dbport = $_GET['dbport'] ?? '';
     try {
-        $dsn = "mysql:host=$dbhost;charset=utf8";
+        $dsn = "mysql:host=$dbhost;port={$dbport};charset=utf8";
         $pdo = new PDO($dsn, $dbuser, $dbpwd);
         echo 'true';
     } catch (Exception $e) {
