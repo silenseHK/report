@@ -174,8 +174,8 @@ class WxPay extends WxBase
             'nonce_str' => $nonceStr,
             'transaction_id' => $transactionId,
             'out_refund_no' => $time,
-            'total_fee' => helper::bcmul($totalFee,100),
-            'refund_fee' => helper::bcmul($refundFee,100),
+            'total_fee' => (int)helper::bcmul($totalFee,100),
+            'refund_fee' => (int)helper::bcmul($refundFee,100),
         ];
         // 生成签名
         $params['sign'] = $this->makeSign($params);
