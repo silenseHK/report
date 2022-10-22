@@ -34,7 +34,8 @@ class GoodsSku extends GoodsSkuModel
      * 隐藏字段
      * @var array
      */
-    protected $hidden = [
+    public $hidden = [
+        'image',
         'store_id',
         'create_time',
         'update_time'

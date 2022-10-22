@@ -12,7 +12,9 @@ declare (strict_types=1);
 
 namespace app\api\controller;
 
-use app\api\model\Goods as GoodsModel;
+use think\response\Json;
+use app\api\model\{Goods as GoodsModel};
+use app\api\service\{Goods as GoodsService};
 
 /**
  * 商品控制器
@@ -80,5 +82,17 @@ class Goods extends Controller
         $model = new GoodsModel;
         $specData = $model->getSpecData($goodsId);
         return $this->renderSuccess(compact('specData'));
+    }
+
+    /**
+     * 获取商品的指定SKU信息
+     * @param int $goodsId 商品ID
+     * @param string $goodsSkuId 商品SKU标识
+     * @return Json
+     */
+    public function skuInfo(int $goodsId, string $goodsSkuId): Json
+    {
+        $skuInfo = GoodsService::getSkuInfo($goodsId, $goodsSkuId);
+        return $this->renderSuccess(compact('skuInfo'));
     }
 }

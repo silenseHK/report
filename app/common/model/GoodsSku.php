@@ -13,7 +13,6 @@ declare (strict_types=1);
 namespace app\common\model;
 
 use cores\BaseModel;
-
 use app\common\library\helper;
 
 /**
@@ -86,7 +85,7 @@ class GoodsSku extends BaseModel
      */
     public static function detail(int $goodsId, string $goodsSkuId)
     {
-        return static::get(['goods_id' => $goodsId, 'goods_sku_id' => $goodsSkuId]);
+        return static::get(['goods_id' => $goodsId, 'goods_sku_id' => $goodsSkuId], ['image']);
     }
 
     /**

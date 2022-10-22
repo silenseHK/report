@@ -12,6 +12,7 @@ declare (strict_types = 1);
 
 namespace app\api\service;
 
+use app\api\model\GoodsSku as GoodsSkuModel;
 use app\common\service\Goods as GoodsService;
 
 /**
@@ -21,5 +22,18 @@ use app\common\service\Goods as GoodsService;
  */
 class Goods extends GoodsService
 {
-
+    /**
+     * 获取商品的指定的某个SKU信息
+     * @param int $goodsId
+     * @param string $goodsSkuId
+     * @return GoodsSkuModel|array|null
+     */
+    public static function getSkuInfo(int $goodsId, string $goodsSkuId)
+    {
+        $detail = GoodsSkuModel::detail($goodsId, $goodsSkuId);
+        if (!empty($detail['image'])) {
+            $detail['goods_image'] = $detail['image']['preview_url'];
+        }
+        return $detail;
+    }
 }

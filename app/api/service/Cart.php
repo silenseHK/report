@@ -107,6 +107,8 @@ class Cart extends BaseService
         }
         // 获取当前选择的商品SKU信息
         $goodsInfo['skuInfo'] = GoodsModel::getSkuInfo($goodsInfo, $item['goods_sku_id'], $isGoodsGradeMoney);
+        // 商品封面 (优先sku封面)
+        $goodsInfo['goods_image'] = $goodsInfo['skuInfo']['goods_image'] ?: $goodsInfo['goods_image'];
         // 这里需要用到clone, 因对象是引用传递 后面的值会覆盖前面的
         return clone $goodsInfo;
     }
@@ -132,7 +134,9 @@ class Cart extends BaseService
     private function getGoodsListByIds(array $goodsIds, bool $isGoodsGradeMoney = true)
     {
         $model = new GoodsModel;
-        return $model->isGoodsGradeMoney($isGoodsGradeMoney)->getListByIdsFromApi($goodsIds);
+        return $model->isGoodsGradeMoney($isGoodsGradeMoney)
+            ->getListByIdsFromApi($goodsIds)
+            ->hidden(GoodsModel::getHidden(['goods_images']));
     }
 
     /**

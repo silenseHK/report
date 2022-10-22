@@ -133,10 +133,12 @@ class Order extends OrderModel
             throwError('未找到商品信息');
         }
         // 隐藏冗余的属性
-        $goodsList->hidden(array_merge($model->hidden, ['content', 'goods_images', 'images']));
+        $goodsList->hidden(GoodsModel::getHidden(['content', 'goods_images', 'images']));
         foreach ($goodsList as &$item) {
             // 商品sku信息
             $goodsInfo['skuInfo'] = GoodsModel::getSkuInfo($item, $goodsSkuId, false);
+            // 商品封面 (优先sku封面)
+            $item['goods_image'] = $item['skuInfo']['goods_image'] ?: $item['goods_image'];
             // 商品单价
             $item['goods_price'] = $item['skuInfo']['goods_price'];
             // 商品购买数量

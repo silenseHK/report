@@ -84,8 +84,8 @@ class Goods extends GoodsModel
         if ($list->isEmpty()) {
             return $list;
         }
-        // 隐藏冗余的字段
-        $list->hidden(array_merge($this->hidden, ['content', 'goods_images', 'images']));
+        // 隐藏冗余的属性
+        $list->hidden(static::getHidden(['content', 'goods_images', 'images']));
         // 整理列表数据并返回
         return $this->setGoodsListDataFromApi($list);
     }
@@ -108,7 +108,7 @@ class Goods extends GoodsModel
         $goodsInfo = $this->getGoodsMain($goodsId, $with, $verifyStatus);
         // 商品规格列表
         $goodsInfo['specList'] = GoodsSpecRelModel::getSpecList($goodsInfo['goods_id']);
-        return $goodsInfo->hidden(array_merge($this->hidden, ['images']));
+        return $goodsInfo->hidden(static::getHidden(['images']));
     }
 
     /**

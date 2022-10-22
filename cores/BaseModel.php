@@ -284,4 +284,15 @@ abstract class BaseModel extends Model
         }
         return $fields;
     }
+
+    /**
+     * 获取隐藏的属性
+     * @param array $hidden
+     * @return array
+     */
+    public static function getHidden(array $hidden = []): array
+    {
+        $model = new static;
+        return array_merge($model->hidden, $hidden);
+    }
 }

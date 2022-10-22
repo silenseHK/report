@@ -55,7 +55,11 @@ class Goods extends BaseService
      */
     public static function getSkuInfo(int $goodsId, string $goodsSkuId)
     {
-        return GoodsSkuModel::detail($goodsId, $goodsSkuId);
+        $detail = GoodsSkuModel::detail($goodsId, $goodsSkuId);
+        if (!empty($detail['image'])) {
+            $detail['goods_image'] = $detail['image']['preview_url'];
+        }
+        return $detail->hidden(['image']);
     }
 
     /**
