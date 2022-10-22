@@ -400,6 +400,9 @@ function str_substr($str, int $length = 30)
  */
 function app_end()
 {
+    if (\request()->isCli()) {
+        exit(PHP_EOL);
+    }
     throw new HttpResponseException(Response::create());
 }
 

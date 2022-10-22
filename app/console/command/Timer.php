@@ -82,7 +82,7 @@ class Timer extends Command
     public function start()
     {
         // 每隔n秒执行一次
-        return $this->timer = \Workerman\Lib\Timer::add($this->interval, function () use (&$task) {
+        return $this->timer = \Workerman\Lib\Timer::add($this->interval, function () {
             try {
                 // 这里执行系统预设的定时任务事件
                 echo 'timer...' . PHP_EOL;
