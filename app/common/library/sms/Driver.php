@@ -80,7 +80,8 @@ class Driver
             'acceptPhone' => $acceptPhone,
             'templateCode' => $templateCode,
             'templateParams' => $templateParams,
-            'sendStatus' => $sendStatus,
+            'sendStatus' => $sendStatus ? 'true' : 'false',
+            'sendErrMsg' => $this->getError(),
         ]);
         // 存在异常时抛错
         $sendStatus === false && throwError($this->getError());
