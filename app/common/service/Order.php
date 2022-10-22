@@ -46,7 +46,7 @@ class Order extends BaseService
         // 回退用户积分
         if ($order['points_num'] > 0) {
             $describe = "订单取消：{$order['order_no']}";
-            UserModel::setIncPoints($order['user_id'], $order['points_num'], $describe);
+            UserModel::setIncPoints($order['user_id'], $order['points_num'], $describe, $order['store_id']);
         }
     }
 }

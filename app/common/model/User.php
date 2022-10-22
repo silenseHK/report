@@ -199,16 +199,18 @@ class User extends BaseModel
      * 累积用户的可用积分
      * @param int $userId 用户ID
      * @param int $points 累计的积分
-     * @param string $describe
+     * @param string $describe 积分描述
+     * @param int|null $storeId
      * @return mixed
      */
-    public static function setIncPoints(int $userId, int $points, string $describe)
+    public static function setIncPoints(int $userId, int $points, string $describe, ?int $storeId = null)
     {
         // 新增积分变动明细
         PointsLogModel::add([
             'user_id' => $userId,
             'value' => $points,
             'describe' => $describe,
+            'store_id' => $storeId
         ]);
         // 更新用户可用积分
         return (new static)->setInc($userId, 'points', $points);

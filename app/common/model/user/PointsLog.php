@@ -8,11 +8,12 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\model\user;
 
 use cores\BaseModel;
+use think\model\relation\BelongsTo;
 
 /**
  * 用户积分变动明细模型
@@ -31,9 +32,9 @@ class PointsLog extends BaseModel
 
     /**
      * 关联会员记录表
-     * @return \think\model\relation\BelongsTo
+     * @return BelongsTo
      */
-    public function user()
+    public function user(): BelongsTo
     {
         $module = self::getCalledModule();
         return $this->belongsTo("app\\{$module}\\model\\User");
@@ -41,12 +42,13 @@ class PointsLog extends BaseModel
 
     /**
      * 新增记录
-     * @param $data
+     * @param array $data
      */
-    public static function add($data)
+    public static function add(array $data)
     {
         $static = new static;
-        $static->save(array_merge(['store_id' => $static::$storeId], $data));
+        empty($data['store_id']) && $data['store_id'] = $static::$storeId;
+        $static->save($data);
     }
 
     /**
@@ -54,9 +56,8 @@ class PointsLog extends BaseModel
      * @param $saveData
      * @return bool
      */
-    public function onBatchAdd($saveData)
+    public function onBatchAdd($saveData): bool
     {
         return $this->addAll($saveData) !== false;
     }
-
 }
