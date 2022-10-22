@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 // 商户后台api白名单配置
 // 此处定义的api所有账户均有权访问
 // Auth类: app\store\service\Auth.php
@@ -31,6 +31,8 @@ return [
     '/files.group/list',
     // 上传图片文件
     '/upload/image',
+    // 上传视频文件
+    '/upload/video',
 
     // 获取所有地区
     '/region/all',
