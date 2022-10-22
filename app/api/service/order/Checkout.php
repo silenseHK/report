@@ -793,7 +793,7 @@ class Checkout extends BaseService
                 'goods_id' => $goods['goods_id'],
                 'goods_name' => $goods['goods_name'],
                 'goods_no' => $goods['goods_no'] ?: '',
-                'image_id' => (int)current($goods['goods_images'])['file_id'],
+                'image_id' => $this->getGoodsImageId($goods),
                 'deduct_stock_type' => $goods['deduct_stock_type'],
                 'spec_type' => $goods['spec_type'],
                 'goods_sku_id' => $goods['skuInfo']['goods_sku_id'],
@@ -820,6 +820,16 @@ class Checkout extends BaseService
             $goodsList[] = $item;
         }
         $this->model->goods()->saveAll($goodsList) !== false;
+    }
+
+    /**
+     * 获取订单商品的封面图（优先sku封面图）
+     * @param $goods
+     * @return int
+     */
+    private function getGoodsImageId($goods): int
+    {
+        return $goods['skuInfo']['image_id'] ?: (int)current($goods['goods_images'])['file_id'];
     }
 
     /**
