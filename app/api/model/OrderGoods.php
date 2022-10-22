@@ -26,6 +26,7 @@ class OrderGoods extends OrderGoodsModel
      * @var array
      */
     protected $hidden = [
+        'image',
         'content',
         'store_id',
         'create_time',
