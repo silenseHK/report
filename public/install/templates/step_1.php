@@ -31,7 +31,7 @@
             </tr>
             <tr>
                 <td height="26" class="firstCol">PHP 版本</td>
-                <td>7.1</td>
+                <td>7.2</td>
                 <td>7.4</td>
                 <td class="endCol"><?php echo PHP_VERSION; ?></td>
             </tr>
@@ -39,17 +39,15 @@
                 <td height="26" class="firstCol">附件上传</td>
                 <td>2M</td>
                 <td>2M</td>
-                <td class="endCol"><?php echo get_cfg_var("upload_max_filesize") ? get_cfg_var("upload_max_filesize") : '不允许上传附件'; ?></td>
+                <td class="endCol"><?php echo get_cfg_var("upload_max_filesize") ?: '不允许上传附件'; ?></td>
             </tr>
             <tr>
                 <td height="26" class="firstCol">GD 库</td>
                 <td>2.0</td>
                 <td>2.1</td>
                 <td class="endCol"><?php
-                    $tmp = function_exists('gd_info') ? gd_info() : array();
-                    @$env_items[$key]['current'] = empty($tmp['GD Version']) ? 'noext' : $tmp['GD Version'];
-                    echo @$env_items[$key]['current'];
-                    unset($tmp);
+                    $gdInfo = function_exists('gd_info') ? gd_info() : [];
+                    echo empty($gdInfo['GD Version']) ? 'noext' : $gdInfo['GD Version'];
                     ?></td>
             </tr>
             <tr>
@@ -59,11 +57,10 @@
                 <td class="endCol">
                     <?php
                     if (function_exists('disk_free_space')) {
-                        @$env_items[$key]['current'] = floor(disk_free_space('../') / (1024 * 1024)) . 'M';
+                        echo floor(disk_free_space('../') / (1024 * 1024)) . 'M';
                     } else {
-                        $env_items[$key]['current'] = 'unknow';
+                        echo 'unknow';
                     }
-                    echo @$env_items[$key]['current'];
                     ?>
                 </td>
             </tr>
