@@ -30,7 +30,7 @@
 - 商城后台演示：https://shop2.yiovo.com/admin/
 - 用户名和密码：admin yinghuo
 ![前端演示二维码](https://images.gitee.com/uploads/images/2021/0316/104516_3778337e_2166072.png "111.png")
-- QQ交流群 1055189864
+- QQ交流群 806461900
 #### 源码下载
 1. 主商城端（又称后端、服务端，PHP开发 用于管理后台和提供api接口）
 
