@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\common\model;
 
@@ -31,13 +31,13 @@ class Page extends BaseModel
 
     /**
      * 获取器：格式化页面数据
-     * @param $json
+     * @param string $json
      * @return array
      */
-    public function getPageDataAttr(string $json)
+    public function getPageDataAttr(string $json): array
     {
         // 数据转义
-        $array = helper::jsonDecode($json);
+        $array = helper::jsonDecode(htmlspecialchars_decode($json));
         // 合并默认数据
         return $this->_mergeDefaultData($array);
     }
@@ -47,18 +47,16 @@ class Page extends BaseModel
      * @param array $value
      * @return string
      */
-    public function setPageDataAttr(array $value)
+    public function setPageDataAttr(array $value): string
     {
-        $json = helper::jsonEncode($value ?: ['items' => []]);
-        return $json;
-        // return htmlspecialchars_decode($json);
+        return helper::jsonEncode($value ?: ['items' => []]);
     }
 
     /**
      * 页面标题栏默认数据
      * @return array
      */
-    public function getDefaultPage()
+    public function getDefaultPage(): array
     {
         return [
             'name' => '页面设置',
