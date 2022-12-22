@@ -93,6 +93,23 @@ class User extends UserModel
     }
 
     /**
+     * 修改个人信息（头像昵称）
+     * @param array $form
+     * @return bool
+     * @throws BaseException
+     */
+    public function personal(array $form): bool
+    {
+        // 当前登录的用户信息
+        $userInfo = UserService::getCurrentLoginUser(true);
+        // 默认数据
+        $data['avatar_id'] =  $form['avatarId'] ?: $userInfo['avatar_id'];
+        $data['nick_name'] =  $form['nickName'] ?: $userInfo['nick_name'];
+        // 更新用户记录
+        return $userInfo->save($data);
+    }
+
+    /**
      * 验证绑定的手机号
      * @param array $data
      * @return void

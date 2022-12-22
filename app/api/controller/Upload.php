@@ -60,7 +60,7 @@ class Upload extends Controller
         $storage = new StorageDriver($this->config);
         // 设置上传文件的信息
         $storage->setUploadFile('file')
-            ->setRootDirName((string)$this->getStoreId())
+            ->setRootDirName((string)$this->storeId)
             ->setValidationScene('image');
         // 执行文件上传
         if (!$storage->upload()) {
