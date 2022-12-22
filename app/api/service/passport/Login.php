@@ -220,7 +220,11 @@ class Login extends BaseService
         }
         // 新增用户记录
         $model = new UserModel;
-        $status = $model->save($data);
+        $model->save($data);
+        // 将微信用户昵称添加编号便于后台管理, 例如：微信用户_10001
+        if ($data['nick_name'] === '微信用户') {
+            $model->save(['nick_name' => "微信用户_{$model['user_id']}"]);
+        }
         // 记录用户信息
         $this->userInfo = $model;
     }
