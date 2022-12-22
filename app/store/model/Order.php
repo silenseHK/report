@@ -325,13 +325,16 @@ class Order extends OrderModel
     public function confirmCancel(array $data)
     {
         // 判断订单是否有效
-        if ($this['pay_status'] != PayStatusEnum::SUCCESS) {
+        if (
+            $this['pay_status'] != PayStatusEnum::SUCCESS
+            || $this['order_status'] != OrderStatusEnum::APPLY_CANCEL
+        ) {
             $this->error = '该订单不合法';
             return false;
         }
         // 订单取消事件
         return $this->transaction(function () use ($data) {
-            if ($data['status'] == true) {
+            if ($data['status']) {
                 // 执行退款操作
                 (new RefundService)->execute($this);
                 // 订单取消事件
