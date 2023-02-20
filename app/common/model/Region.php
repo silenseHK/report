@@ -43,7 +43,7 @@ class Region extends BaseModel
     ];
 
     // 当前数据版本号
-    private static $version = '1.0.1';
+    private static $version = '1.0.2';
 
     /**
      * 根据id获取地区名称
