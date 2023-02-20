@@ -26,7 +26,7 @@ class FileValidate extends \think\Validate
         'image' => 'filesize:2097152|fileExt:jpg,jpeg,png,bmp,gif',
 
         // 视频文件: mp4
-        // 文件大小: 10MB = (1024 * 1024 * 10) = 10485760 字节
+        // 文件大小: 20MB = (1024 * 1024 * 20) = 20971520 字节
         'video' => 'filesize:10485760|fileExt:mp4',
     ];
 
