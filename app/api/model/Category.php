@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\model;
 
@@ -39,9 +39,8 @@ class Category extends CategoryModel
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getList(array $param = [])
+    public function getListPublic(array $param = []): array
     {
         return parent::getList(array_merge($param, ['status' => 1]));
     }
-
 }

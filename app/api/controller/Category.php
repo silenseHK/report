@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 // | Author: 萤火科技 <admin@yiovo.com>
 // +----------------------------------------------------------------------
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace app\api\controller;
 
@@ -31,8 +31,7 @@ class Category extends Controller
     public function list()
     {
         $model = new CategoryModel;
-        $list = $model->getList($this->request->param());
+        $list = $model->getListPublic($this->request->param());
         return $this->renderSuccess(compact('list'));
     }
-
 }
