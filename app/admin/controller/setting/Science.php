@@ -96,8 +96,8 @@ class Science extends Controller
             ],
             [
                 'name' => '程序运行目录',
-                'key' => 'web_path',
-                'value' => str_replace('\\', '/', web_path()),
+                'key' => 'root_path',
+                'value' => str_replace('\\', '/', root_path()),
                 'status' => 'normal',
                 'remark' => ''
             ],
@@ -125,6 +125,13 @@ class Science extends Controller
                 'status' => extension_loaded('mysqlnd') ? 'normal' : 'danger',
                 'remark' => '您的PHP环境不支持mysqlnd, 系统无法正常运行'
             ],
+//            [
+//                'name' => 'Redis',
+//                'key' => 'redis',
+//                'value' => '支持',
+//                'status' => extension_loaded('redis') ? 'normal' : 'warning',
+//                'remark' => '您的PHP环境不支持redis, 系统无法使用队列服务'
+//            ],
             [
                 'name' => 'ZIP',
                 'key' => 'zip',
@@ -207,6 +214,7 @@ class Science extends Controller
         $paths = [
             'data' => realpath(data_path()) . '/',
             'uploads' => realpath(web_path()) . '/uploads/',
+            'downloads' => realpath(web_path()) . '/downloads/',
             'temp' => realpath(web_path()) . '/temp/',
         ];
         return [
@@ -222,6 +230,13 @@ class Science extends Controller
                 'key' => 'uploads',
                 'value' => str_replace('\\', '/', $paths['uploads']),
                 'status' => helper::checkWriteable($paths['uploads']) ? 'normal' : 'danger',
+                'remark' => '目录不可写，系统将无法正常上传文件'
+            ],
+            [
+                'name' => '文件下载目录',
+                'key' => 'downloads',
+                'value' => str_replace('\\', '/', $paths['downloads']),
+                'status' => helper::checkWriteable($paths['downloads']) ? 'normal' : 'danger',
                 'remark' => '目录不可写，系统将无法正常上传文件'
             ],
             [
