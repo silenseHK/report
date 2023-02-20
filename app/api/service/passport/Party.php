@@ -43,7 +43,6 @@ class Party extends BaseService
         } catch (BaseException $e) {
             // isBack参数代表需重新获取code, 前端拿到该参数进行页面返回
             throwError($e->getMessage(), null, ['isBack' => true]);
-            return false;
         }
         // 是否存在第三方用户
         $oauthId = UserOauthModel::getOauthIdByUserId($userId, $partyData['oauth']);
@@ -85,7 +84,6 @@ class Party extends BaseService
             } catch (BaseException $e) {
                 // showError参数表示让前端显示错误
                 throwError($e->getMessage());
-                return false;
             }
         }
         return $session;

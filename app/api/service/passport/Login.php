@@ -214,10 +214,10 @@ class Login extends BaseService
             'store_id' => $this->storeId
         ];
         // 写入用户信息(第三方)
-        if ($isParty === true && !empty($partyData)) {
-            $partyUserInfo = PartyService::partyUserInfo($partyData, true);
-            $data = array_merge($data, $partyUserInfo);
-        }
+//        if ($isParty === true && !empty($partyData)) {
+//            $partyUserInfo = PartyService::partyUserInfo($partyData, true);
+//            $data = array_merge($data, $partyUserInfo);
+//        }
         // 新增用户记录
         $model = new UserModel;
         $model->save($data);
