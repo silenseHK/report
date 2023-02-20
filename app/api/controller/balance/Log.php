@@ -12,6 +12,7 @@ declare (strict_types=1);
 
 namespace app\api\controller\balance;
 
+use think\response\Json;
 use app\api\controller\Controller;
 use app\api\model\user\BalanceLog as BalanceLogModel;
 
@@ -24,15 +25,14 @@ class Log extends Controller
 {
     /**
      * 余额账单明细列表
-     * @return array
-     * @throws \app\common\exception\BaseException
+     * @return Json
+     * @throws \cores\exception\BaseException
      * @throws \think\db\exception\DbException
      */
-    public function list()
+    public function list(): Json
     {
         $model = new BalanceLogModel;
         $list = $model->getList();
         return $this->renderSuccess(compact('list'));
     }
-
 }

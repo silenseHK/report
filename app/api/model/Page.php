@@ -39,7 +39,7 @@ class Page extends PageModel
      * DIY页面详情
      * @param int|null $pageId 页面ID
      * @return array
-     * @throws \app\common\exception\BaseException
+     * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException

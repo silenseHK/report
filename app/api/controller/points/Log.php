@@ -25,7 +25,7 @@ class Log extends Controller
     /**
      * 积分明细列表
      * @return array
-     * @throws \app\common\exception\BaseException
+     * @throws \cores\exception\BaseException
      * @throws \think\db\exception\DbException
      */
     public function list()

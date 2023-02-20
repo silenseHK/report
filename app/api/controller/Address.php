@@ -12,9 +12,10 @@ declare (strict_types=1);
 
 namespace app\api\controller;
 
+use think\response\Json;
 use app\api\service\User as UserService;
 use app\api\model\UserAddress as UserAddressModel;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 
 /**
  * 收货地址管理
@@ -25,13 +26,13 @@ class Address extends Controller
 {
     /**
      * 收货地址列表
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function list()
+    public function list(): Json
     {
         // 获取收货地址列表
         $model = new UserAddressModel;
@@ -41,10 +42,10 @@ class Address extends Controller
 
     /**
      * 获取当前用户默认收货地址
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      */
-    public function defaultId()
+    public function defaultId(): Json
     {
         $useInfo = UserService::getCurrentLoginUser(true);
         return $this->renderSuccess(['defaultId' => $useInfo['address_id']]);
@@ -53,10 +54,10 @@ class Address extends Controller
     /**
      * 收货地址详情
      * @param int $addressId 地址ID
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      */
-    public function detail(int $addressId)
+    public function detail(int $addressId): Json
     {
         $detail = UserAddressModel::detail($addressId);
         return $this->renderSuccess(compact('detail'));
@@ -64,10 +65,10 @@ class Address extends Controller
 
     /**
      * 添加收货地址
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      */
-    public function add()
+    public function add(): Json
     {
         $model = new UserAddressModel;
         if ($model->add($this->postForm())) {
@@ -79,10 +80,10 @@ class Address extends Controller
     /**
      * 编辑收货地址
      * @param int $addressId 地址ID
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      */
-    public function edit(int $addressId)
+    public function edit(int $addressId): Json
     {
         $model = UserAddressModel::detail($addressId);
         if ($model->edit($this->postForm())) {
@@ -94,10 +95,10 @@ class Address extends Controller
     /**
      * 设为默认地址
      * @param int $addressId 地址ID
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      */
-    public function setDefault(int $addressId)
+    public function setDefault(int $addressId): Json
     {
         $model = UserAddressModel::detail($addressId);
         if ($model->setDefault((int)$model['address_id'])) {
@@ -109,10 +110,10 @@ class Address extends Controller
     /**
      * 删除收货地址
      * @param int $addressId 地址ID
-     * @return array|\think\response\Json
+     * @return Json
      * @throws BaseException
      */
-    public function remove(int $addressId)
+    public function remove(int $addressId): Json
     {
         $model = UserAddressModel::detail($addressId);
         if ($model->remove()) {
@@ -120,5 +121,4 @@ class Address extends Controller
         }
         return $this->renderError($model->getError() ?: '删除失败');
     }
-
 }

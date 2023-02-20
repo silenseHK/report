@@ -29,7 +29,7 @@ class Comment extends Controller
      * @param int $orderId
      * @return array
      * @throws \Exception
-     * @throws \app\common\exception\BaseException
+     * @throws \cores\exception\BaseException
      * @throws \think\exception\DbException
      */
     public function list(int $orderId)
@@ -53,7 +53,7 @@ class Comment extends Controller
      * 创建商品评价
      * @param int $orderId
      * @return array|\think\response\Json
-     * @throws \app\common\exception\BaseException
+     * @throws \cores\exception\BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException

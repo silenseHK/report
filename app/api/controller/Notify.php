@@ -13,7 +13,6 @@ declare (strict_types=1);
 namespace app\api\controller;
 
 use app\common\library\wechat\WxPay;
-use app\common\exception\BaseException;
 
 /**
  * 支付成功异步通知接口

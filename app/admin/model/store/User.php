@@ -12,7 +12,7 @@ declare (strict_types=1);
 
 namespace app\admin\model\store;
 
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 use app\common\model\store\User as StoreUserModel;
 
 /**
@@ -57,5 +57,4 @@ class User extends StoreUserModel
         static::update(['is_delete' => '1'], ['store_id' => $storeId]);
         return true;
     }
-
 }

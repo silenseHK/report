@@ -14,7 +14,7 @@ namespace app\api\controller\recharge;
 
 use app\api\controller\Controller;
 use app\api\model\recharge\Order as OrderModel;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 
 /**
  * 充值记录管理

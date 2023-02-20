@@ -14,7 +14,6 @@ namespace app\api\controller\recharge;
 
 use app\api\controller\Controller;
 use app\api\model\recharge\Plan as PlanModel;
-use app\common\exception\BaseException;
 
 /**
  * 充值套餐管理
@@ -26,7 +25,6 @@ class Plan extends Controller
     /**
      * 充值套餐列表
      * @return array
-     * @throws BaseException
      * @throws \think\db\exception\DbException
      */
     public function list()
@@ -35,5 +33,4 @@ class Plan extends Controller
         $list = $model->getList();
         return $this->renderSuccess(compact('list'));
     }
-
 }

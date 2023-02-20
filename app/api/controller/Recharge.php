@@ -15,7 +15,7 @@ namespace app\api\controller;
 use app\api\model\recharge\Order as OrderModel;
 use app\api\service\Payment as PaymentService;
 use app\common\enum\OrderType as OrderTypeEnum;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 
 /**
  * 用户充值管理

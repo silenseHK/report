@@ -25,7 +25,7 @@ class PointsLog extends PointsLogModel
     /**
      * 获取日志明细列表
      * @return \think\Paginator
-     * @throws \app\common\exception\BaseException
+     * @throws \cores\exception\BaseException
      * @throws \think\db\exception\DbException
      */
     public function getList()

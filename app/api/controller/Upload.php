@@ -18,7 +18,7 @@ use app\api\service\User as UserService;
 use app\common\enum\Setting as SettingEnum;
 use app\common\enum\file\FileType as FileTypeEnum;
 use app\common\library\storage\Driver as StorageDriver;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 
 /**
  * 文件库管理

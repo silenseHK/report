@@ -15,7 +15,7 @@ namespace app\api\model;
 use app\api\model\User as UserModel;
 use app\api\service\User as UserService;
 use app\common\model\UserAddress as UserAddressModel;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 
 /**
  * 用户收货地址模型
@@ -174,9 +174,7 @@ class UserAddress extends UserAddressModel
         $detail = self::get(['user_id' => $userId, 'address_id' => $addressId]);
         if (empty($detail)) {
             throwError('未找到该收货地址');
-            return false;
         }
         return $detail;
     }
-
 }

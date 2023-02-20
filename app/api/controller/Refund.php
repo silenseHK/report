@@ -13,7 +13,7 @@ declare (strict_types=1);
 namespace app\api\controller;
 
 use app\api\model\OrderRefund as OrderRefundModel;
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 
 /**
  * 订单售后服务

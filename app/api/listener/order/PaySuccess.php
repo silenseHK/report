@@ -15,7 +15,6 @@ namespace app\api\listener\order;
 use app\common\service\Message as MessageService;
 use app\common\enum\OrderType as OrderTypeEnum;
 use app\common\enum\order\OrderSource as OrderSourceEnum;
-use app\common\exception\BaseException;
 
 /**
  * 订单支付成功后扩展类
@@ -45,7 +44,6 @@ class PaySuccess
      * 执行句柄
      * @param array $params
      * @return bool
-     * @throws BaseException
      */
     public function handle(array $params)
     {
@@ -74,7 +72,6 @@ class PaySuccess
 
     /**
      * 订单公共业务
-     * @throws BaseException
      */
     private function onCommonEvent()
     {

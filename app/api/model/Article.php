@@ -12,7 +12,7 @@ declare (strict_types=1);
 
 namespace app\api\model;
 
-use app\common\exception\BaseException;
+use cores\exception\BaseException;
 use app\common\model\Article as ArticleModel;
 
 /**

@@ -24,7 +24,7 @@ class Passport extends Controller
     /**
      * 登录接口 (需提交手机号、短信验证码、第三方用户信息)
      * @return array|\think\response\Json
-     * @throws \app\common\exception\BaseException
+     * @throws \cores\exception\BaseException
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
@@ -50,7 +50,7 @@ class Passport extends Controller
      * 业务流程：判断openid是否存在 -> 存在:  更新用户登录信息 -> 返回userId和token
      *                          -> 不存在: 返回false, 跳转到注册页面
      * @return array|\think\response\Json
-     * @throws \app\common\exception\BaseException
+     * @throws \cores\exception\BaseException
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
@@ -74,7 +74,7 @@ class Passport extends Controller
     /**
      * 快捷登录: 微信小程序授权手机号登录
      * @return array|\think\response\Json
-     * @throws \app\common\exception\BaseException
+     * @throws \cores\exception\BaseException
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException

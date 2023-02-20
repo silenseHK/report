@@ -24,7 +24,7 @@ class Article extends Controller
     /**
      * 文章列表
      * @param int $categoryId
-     * @return array
+     * @return \think\response\Json
      * @throws \think\db\exception\DbException
      */
     public function list(int $categoryId = 0)
@@ -37,8 +37,8 @@ class Article extends Controller
     /**
      * 文章详情
      * @param int $articleId
-     * @return array|\think\response\Json
-     * @throws \app\common\exception\BaseException
+     * @return \think\response\Json
+     * @throws \cores\exception\BaseException
      */
     public function detail(int $articleId)
     {

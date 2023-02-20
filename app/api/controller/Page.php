@@ -25,7 +25,7 @@ class Page extends Controller
      * 页面数据
      * @param int|null $pageId 页面ID, 不传的话默认为首页
      * @return array|\think\response\Json
-     * @throws \app\common\exception\BaseException
+     * @throws \cores\exception\BaseException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
