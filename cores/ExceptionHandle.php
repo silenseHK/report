@@ -26,13 +26,13 @@ use cores\exception\BaseException;
 class ExceptionHandle extends Handle
 {
     // 状态码
-    private $status;
+    private int $status = 200;
 
     // 错误信息
-    private $message;
+    private string $message;
 
     // 附加数据
-    public $data = [];
+    public array $data = [];
 
     /**
      * 记录异常信息（包括日志或者其它方式记录）
@@ -128,7 +128,7 @@ class ExceptionHandle extends Handle
         $log .= "\r\n" . "[ file ] {$data['file']}:{$data['line']}";
         // $log .= "\r\n" . "[ time ] " . format_time(time());
         $log .= "\r\n" . '[ header ] ' . print_r(Request::header(), true);
-        $log .= "" . '[ param ] ' . print_r(Request::param(), true);
+        $log .= '[ param ] ' . print_r(Request::param(), true);
         // 如果是数据库报错, 则记录sql语句
         if ($e instanceof PDOException) {
             $log .= "[ Error SQL ] " . $e->getData()['Database Status']['Error SQL'];
