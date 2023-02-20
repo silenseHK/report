@@ -70,7 +70,6 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
             'Psr\\Container\\' => 14,
-            'Psr\\Cache\\' => 10,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
         ),
         'O' => 
@@ -86,9 +85,6 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
         'L' => 
         array (
             'Lvht\\' => 5,
-            'League\\MimeTypeDetection\\' => 25,
-            'League\\Flysystem\\Cached\\' => 24,
-            'League\\Flysystem\\' => 17,
         ),
         'G' => 
         array (
@@ -195,10 +191,6 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'Psr\\Cache\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/cache/src',
-        ),
         'PhpOffice\\PhpSpreadsheet\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
@@ -222,18 +214,6 @@ class ComposerStaticInitb17d9cf9df517c3dd2f492a1c933c315
         'Lvht\\' => 
         array (
             0 => __DIR__ . '/..' . '/lvht/geohash/src',
-        ),
-        'League\\MimeTypeDetection\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/league/mime-type-detection/src',
-        ),
-        'League\\Flysystem\\Cached\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/league/flysystem-cached-adapter/src',
-        ),
-        'League\\Flysystem\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/league/flysystem/src',
         ),
         'GuzzleHttp\\UriTemplate\\' => 
         array (
