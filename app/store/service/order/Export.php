@@ -126,7 +126,7 @@ class Export extends BaseService
      */
     private function getExportPath(): string
     {
-        $filePath = 'temp/' . $this->getStoreId() . '/';
+        $filePath = 'downloads/' . $this->getStoreId() . '/';
         !is_dir($filePath) && mkdir($filePath, 0755, true);
         return $filePath;
     }
