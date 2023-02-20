@@ -9,5 +9,5 @@ window.publicConfig = {
   uploadImageSize: 2,
 
   // 视频文件上传大小 (单位mb)
-  uploadVideoSize: 10
+  uploadVideoSize: 20
 }
