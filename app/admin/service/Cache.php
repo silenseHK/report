@@ -53,7 +53,8 @@ class Cache extends BaseService
         if (in_array('temp', $data['item'])) {
             $paths = [
                 'temp' => web_path() . 'temp/',
-                'runtime' => runtime_root_path() . 'image/'
+                'runtime-image' => runtime_root_path() . 'image/',
+                'runtime-local' => runtime_root_path() . 'local/',
             ];
             foreach ($paths as $path) {
                 $this->deleteFolder($path);

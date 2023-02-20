@@ -68,6 +68,14 @@ class Clear extends BaseService
                     'runtime' => runtime_root_path() . "/image/{$storeId}/",
                 ]
             ],
+            'local' => [
+                'type' => self::ITEM_TYPE_FILE,
+                'name' => '临时文件',
+                'dirPath' => [
+                    'batch-delivery' => runtime_root_path() . "local/batch-delivery/{$storeId}/",
+                    'goods-import' => runtime_root_path() . "local/goods-import/{$storeId}/",
+                ]
+            ],
         ];
     }
 
