@@ -15,9 +15,9 @@ namespace app\api\service;
 use app\api\model\Cart as CartModel;
 use app\api\model\Goods as GoodsModel;
 use app\api\service\User as UserService;
-use cores\exception\BaseException;
 use app\common\library\helper;
 use app\common\service\BaseService;
+use cores\exception\BaseException;
 
 /**
  * 服务类: 购物车
@@ -107,6 +107,9 @@ class Cart extends BaseService
         }
         // 获取当前选择的商品SKU信息
         $goodsInfo['skuInfo'] = GoodsModel::getSkuInfo($goodsInfo, $item['goods_sku_id'], $isGoodsGradeMoney);
+        if (empty($goodsInfo['skuInfo'])) {
+            return false;
+        }
         // 商品封面 (优先sku封面)
         $goodsInfo['goods_image'] = $goodsInfo['skuInfo']['goods_image'] ?: $goodsInfo['goods_image'];
         // 这里需要用到clone, 因对象是引用传递 后面的值会覆盖前面的
