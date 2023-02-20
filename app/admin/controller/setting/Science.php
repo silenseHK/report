@@ -63,8 +63,8 @@ class Science extends Controller
                 'name' => 'PHP版本',
                 'key' => 'php',
                 'value' => PHP_VERSION,
-                'status' => version_compare(PHP_VERSION, '7.2.0') === -1 ? 'danger' : 'normal',
-                'remark' => 'PHP版本必须为 7.2.0 以上'
+                'status' => version_compare(PHP_VERSION, '7.4.0') === -1 ? 'danger' : 'normal',
+                'remark' => 'PHP版本必须为 7.4.0 及以上'
             ],
             [
                 'name' => 'PHP运行位数',
@@ -106,8 +106,7 @@ class Science extends Controller
 
     /**
      * PHP环境要求
-     * get_loaded_extensions()
-     * @return array
+     * @return string[][]
      */
     private function phpinfo(): array
     {
@@ -115,9 +114,9 @@ class Science extends Controller
             [
                 'name' => 'PHP版本',
                 'key' => 'php_version',
-                'value' => '7.2.0及以上',
-                'status' => version_compare(PHP_VERSION, '7.2.0') === -1 ? 'danger' : 'normal',
-                'remark' => 'PHP版本必须为 7.2.0及以上'
+                'value' => '7.4.0及以上',
+                'status' => version_compare(PHP_VERSION, '7.4.0') === -1 ? 'danger' : 'normal',
+                'remark' => 'PHP版本必须为 7.4.0及以上'
             ],
             [
                 'name' => 'Mysqlnd',
@@ -127,11 +126,32 @@ class Science extends Controller
                 'remark' => '您的PHP环境不支持mysqlnd, 系统无法正常运行'
             ],
             [
+                'name' => 'ZIP',
+                'key' => 'zip',
+                'value' => '支持',
+                'status' => extension_loaded('zip') ? 'normal' : 'warning',
+                'remark' => '您的PHP环境不支持zip, 系统无法使用zip压缩文件'
+            ],
+            [
                 'name' => 'CURL',
                 'key' => 'curl',
                 'value' => '支持',
                 'status' => extension_loaded('curl') && function_exists('curl_init') ? 'normal' : 'danger',
                 'remark' => '您的PHP环境不支持CURL, 系统无法正常运行'
+            ],
+            [
+                'name' => 'JSON',
+                'key' => 'json',
+                'value' => '支持',
+                'status' => extension_loaded('json') ? 'normal' : 'danger',
+                'remark' => '您的PHP环境不支持JSON, 系统无法正常运行'
+            ],
+            [
+                'name' => 'Fileinfo',
+                'key' => 'fileinfo',
+                'value' => '支持',
+                'status' => extension_loaded('fileinfo') ? 'normal' : 'danger',
+                'remark' => '您的PHP环境不支持fileinfo, 系统无法上传文件'
             ],
             [
                 'name' => 'OpenSSL',
@@ -162,7 +182,7 @@ class Science extends Controller
                 'remark' => '您的PHP环境不支持BCMath, 系统无法正常运行'
             ],
             [
-                'name' => 'mbstring',
+                'name' => 'Mbstring',
                 'key' => 'mbstring',
                 'value' => '支持',
                 'status' => extension_loaded('mbstring') ? 'normal' : 'danger',
@@ -180,16 +200,23 @@ class Science extends Controller
 
     /**
      * 目录权限监测
+     * @return array[]
      */
     private function writeable(): array
     {
         $paths = [
+            'data' => realpath(data_path()) . '/',
             'uploads' => realpath(web_path()) . '/uploads/',
             'temp' => realpath(web_path()) . '/temp/',
-            'wxpay_log' => realpath(base_path()) . '/common/library/wechat/logs/',
-            'wxpay_cert' => realpath(base_path()) . '/common/library/wechat/cert/',
         ];
         return [
+            [
+                'name' => '系统数据目录',
+                'key' => 'data',
+                'value' => str_replace('\\', '/', $paths['data']),
+                'status' => helper::checkWriteable($paths['data']) ? 'normal' : 'danger',
+                'remark' => '目录不可写，系统将无法正常写入文件'
+            ],
             [
                 'name' => '文件上传目录',
                 'key' => 'uploads',
@@ -202,20 +229,6 @@ class Science extends Controller
                 'key' => 'temp',
                 'value' => str_replace('\\', '/', $paths['temp']),
                 'status' => helper::checkWriteable($paths['temp']) ? 'normal' : 'danger',
-                'remark' => '目录不可写，系统将无法正常写入文件'
-            ],
-//            [
-//                'name' => '微信支付日志目录',
-//                'key' => 'wxpay_log',
-//                'value' => str_replace('\\', '/', $paths['wxpay_log']),
-//                'status' => helper::checkWriteable($paths['wxpay_log']) ? 'normal' : 'danger',
-//                'remark' => '目录不可写，系统将无法正常写入文件'
-//            ],
-            [
-                'name' => '微信支付证书目录',
-                'key' => 'wxpay_cert',
-                'value' => str_replace('\\', '/', $paths['wxpay_cert']),
-                'status' => helper::checkWriteable($paths['wxpay_cert']) ? 'normal' : 'danger',
                 'remark' => '目录不可写，系统将无法正常写入文件'
             ],
         ];

@@ -210,16 +210,28 @@ function getExtendArray()
 {
     $data = [
         [
+            'name' => 'PDO Mysql',
+            'status' => extension_loaded('PDO') && extension_loaded('pdo_mysql'),
+        ],
+        [
+            'name' => 'Mysqlnd',
+            'status' => extension_loaded('mysqlnd'),
+        ],
+        [
+            'name' => 'JSON',
+            'status' => extension_loaded('json')
+        ],
+        [
+            'name' => 'Fileinfo',
+            'status' => extension_loaded('fileinfo')
+        ],
+        [
             'name' => 'CURL',
             'status' => extension_loaded('curl'),
         ],
         [
             'name' => 'OpenSSL',
             'status' => extension_loaded('openssl'),
-        ],
-        [
-            'name' => 'PDO Mysql',
-            'status' => extension_loaded('PDO') && extension_loaded('pdo_mysql'),
         ],
         [
             'name' => 'GD',
@@ -230,13 +242,13 @@ function getExtendArray()
             'status' => extension_loaded('bcmath'),
         ],
         [
-            'name' => 'mbstring',
+            'name' => 'Mbstring',
             'status' => extension_loaded('mbstring'),
         ],
         [
             'name' => 'SimpleXML',
             'status' => extension_loaded('SimpleXML'),
-        ]
+        ],
     ];
     foreach ($data as $item) {
         !$item['status'] && setIsNext(false);
