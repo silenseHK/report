@@ -45,7 +45,7 @@ class Cache extends BaseService
         // 数据缓存
         if (in_array('data', $data['item'])) {
             // 强制模式
-            $isForce = isset($data['isForce']) ? (bool)$data['isForce'] : false;
+            $isForce = isset($data['isForce']) && $data['isForce'];
             // 清除缓存
             $isForce ? $this->cache->clear() : $this->cache->tag('cache')->clear();
         }

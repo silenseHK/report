@@ -77,7 +77,7 @@ class Address extends StoreAddressModel
      */
     public function add(array $data)
     {
-        list($data['province_id'], $data['city_id'], $data['region_id']) = $data['cascader'];
+        [$data['province_id'], $data['city_id'], $data['region_id']] = $data['cascader'];
         $data['store_id'] = self::$storeId;
         return $this->save($data);
     }
@@ -89,7 +89,7 @@ class Address extends StoreAddressModel
      */
     public function edit(array $data)
     {
-        list($data['province_id'], $data['city_id'], $data['region_id']) = $data['cascader'];
+        [$data['province_id'], $data['city_id'], $data['region_id']] = $data['cascader'];
         return $this->save($data);
     }
 
@@ -101,5 +101,4 @@ class Address extends StoreAddressModel
     {
         return $this->save(['is_delete' => 1]);
     }
-
 }

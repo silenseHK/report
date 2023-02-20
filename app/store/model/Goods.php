@@ -210,8 +210,8 @@ class Goods extends GoodsModel
         // 商品价格 最低最高
         if ($data['spec_type'] == SpecTypeEnum::MULTI) {
             $data['stock_total'] = GoodsSkuModel::getStockTotal($data['specData']['skuList']);
-            list($data['goods_price_min'], $data['goods_price_max']) = GoodsSkuModel::getGoodsPrices($data['specData']['skuList']);
-            list($data['line_price_min'], $data['line_price_max']) = GoodsSkuModel::getLinePrices($data['specData']['skuList']);
+            [$data['goods_price_min'], $data['goods_price_max']] = GoodsSkuModel::getGoodsPrices($data['specData']['skuList']);
+            [$data['line_price_min'], $data['line_price_max']] = GoodsSkuModel::getLinePrices($data['specData']['skuList']);
         } elseif ($data['spec_type'] == SpecTypeEnum::SINGLE) {
             $data['goods_price_min'] = $data['goods_price_max'] = $data['goods_price'];
             $data['line_price_min'] = $data['line_price_max'] = $data['line_price'];

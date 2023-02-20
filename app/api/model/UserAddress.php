@@ -73,7 +73,7 @@ class UserAddress extends UserAddressModel
         // 当前用户信息
         $user = UserService::getCurrentLoginUser(true);
         // 省市区ID
-        list($data['province_id'], $data['city_id'], $data['region_id']) = $this->getRegionId($data);
+        [$data['province_id'], $data['city_id'], $data['region_id']] = $this->getRegionId($data);
         // 添加收货地址
         return $this->transaction(function () use ($user, $data) {
             $this->save([
@@ -120,7 +120,7 @@ class UserAddress extends UserAddressModel
     public function edit(array $data)
     {
         // 省市区ID
-        list($data['province_id'], $data['city_id'], $data['region_id']) = $this->getRegionId($data);
+        [$data['province_id'], $data['city_id'], $data['region_id']] = $this->getRegionId($data);
         // 更新收货地址
         return $this->save([
                 'name' => $data['name'],
