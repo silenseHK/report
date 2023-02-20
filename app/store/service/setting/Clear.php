@@ -73,7 +73,7 @@ class Clear extends BaseService
                 'name' => '临时文件',
                 'dirPath' => [
                     'batch-delivery' => runtime_root_path() . "local/batch-delivery/{$storeId}/",
-                    'goods-import' => runtime_root_path() . "local/goods-import/{$storeId}/",
+                    'batch-goods' => runtime_root_path() . "local/batch-goods/{$storeId}/",
                 ]
             ],
         ];
