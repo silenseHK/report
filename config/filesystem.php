@@ -7,7 +7,7 @@ return [
     'disks'   => [
         'local'  => [
             'type' => 'local',
-            'root' => app()->getRuntimePath() . 'storage',
+            'root' => app()->getRuntimePath() . 'local',
         ],
         'public' => [
             // 磁盘类型
@@ -18,6 +18,12 @@ return [
             'url'        => '/uploads',
             // 可见性
             'visibility' => 'public',
+        ],
+        'data' => [
+            // 磁盘类型
+            'type'       => 'local',
+            // 磁盘路径
+            'root'       => app()->getRootPath() . 'data',
         ],
         // 更多的磁盘配置信息
     ],
