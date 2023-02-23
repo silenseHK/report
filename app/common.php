@@ -19,7 +19,6 @@ use think\facade\Env;
 use think\facade\Log;
 use think\facade\Config;
 use think\facade\Request;
-use app\common\library\helper;
 use cores\exception\BaseException;
 use cores\exception\DebugException;
 use think\exception\HttpResponseException;
@@ -46,6 +45,20 @@ function pree($content, bool $export = false)
 {
     $output = $export ? var_export($content, true) : $content;
     throw new DebugException([], $output);
+}
+
+/**
+ * 打印调试函数 输出在终端
+ * 只有debug模式下输出
+ * @param $content
+ * @return void
+ */
+function tre($content)
+{
+    if (is_debug()) {
+        $output = print_r($content, true);
+        echo "$output\n";
+    }
 }
 
 /**
@@ -134,7 +147,7 @@ function root_url(): string
  */
 function uploads_url(): string
 {
-    return base_url() . 'uploads';
+    return base_url() . 'uploads/';
 }
 
 /**
@@ -170,6 +183,15 @@ function web_path(): string
 }
 
 /**
+ * 获取data目录路径
+ * @return string
+ */
+function data_path(): string
+{
+    return config('filesystem.disks.data.root') . DIRECTORY_SEPARATOR;
+}
+
+/**
  * 获取runtime根目录路径
  * @return string
  */
@@ -180,7 +202,7 @@ function runtime_root_path(): string
 
 /**
  * 写入日志 (使用tp自带驱动记录到runtime目录中)
- * @param $value
+ * @param mixed $value
  * @param string $type
  */
 function log_record($value, string $type = 'info')
@@ -191,11 +213,11 @@ function log_record($value, string $type = 'info')
 
 /**
  * 多维数组合并
- * @param array $array1
- * @param array $array2
+ * @param $array1
+ * @param $array2
  * @return array
  */
-function array_merge_multiple(array $array1, array $array2): array
+function array_merge_multiple($array1, $array2): array
 {
     $merge = $array1 + $array2;
     $data = [];
@@ -232,7 +254,7 @@ function is_assoc(array $array): bool
  * @param bool $desc
  * @return array
  */
-function array_sort($arr, $keys, bool $desc = false): array
+function array_sort($arr, $keys, bool $desc): array
 {
     $key_value = $new_array = array();
     foreach ($arr as $k => $v) {
@@ -252,10 +274,10 @@ function array_sort($arr, $keys, bool $desc = false): array
 
 /**
  * 隐藏敏感字符
- * @param string $value
+ * @param $value
  * @return string
  */
-function substr_cut(string $value): string
+function substr_cut($value): string
 {
     $strlen = mb_strlen($value, 'utf-8');
     if ($strlen <= 1) return $value;
@@ -266,26 +288,12 @@ function substr_cut(string $value): string
 
 /**
  * 获取当前系统版本号
- * @return mixed|null
- * @throws Exception
+ * @return string
+ * @throws BaseException
  */
-function get_version()
+function get_version(): string
 {
-    static $version = [];
-    if (!empty($version)) {
-        return $version['version'];
-    }
-    // 读取version.json文件
-    $file = root_path() . '/version.json';
-    if (!file_exists($file)) {
-        throw new Exception('version.json not found');
-    }
-    // 解析json数据
-    $version = helper::jsonDecode(file_get_contents($file));
-    if (!is_array($version)) {
-        throw new Exception('version cannot be decoded');
-    }
-    return $version['version'];
+    return \cores\library\Version::getVersion();
 }
 
 /**
@@ -298,7 +306,7 @@ function get_guid_v4(bool $trim = true): string
     // Windows
     if (function_exists('com_create_guid') === true) {
         $charid = com_create_guid();
-        return $trim == true ? trim($charid, '{}') : $charid;
+        return $trim ? trim($charid, '{}') : $charid;
     }
     // OSX/Linux
     if (function_exists('openssl_random_pseudo_bytes') === true) {
@@ -337,19 +345,19 @@ function format_time($timeStamp, bool $withTime = true)
 
 /**
  * 左侧填充0
- * @param $value
+ * @param string $value
  * @param int $padLength
  * @return string
  */
-function pad_left($value, int $padLength = 2): string
+function pad_left(string $value, int $padLength = 2): string
 {
-    return \str_pad($value, $padLength, "0", STR_PAD_LEFT);
+    return str_pad($value, $padLength, '0', STR_PAD_LEFT);
 }
 
 /**
  * 重写trim方法 (解决int类型过滤后后变为string类型)
  * @param $str
- * @return mixed
+ * @return string|void
  */
 function my_trim($str)
 {
@@ -359,7 +367,7 @@ function my_trim($str)
 /**
  * 重写htmlspecialchars方法 (解决int类型过滤后后变为string类型)
  * @param $string
- * @return mixed
+ * @return string|void
  */
 function my_htmlspecialchars($string)
 {
@@ -418,9 +426,9 @@ function is_debug(): bool
 /**
  * 文本左斜杠转换为右斜杠
  * @param string $string
- * @return mixed
+ * @return string
  */
-function convert_left_slash(string $string)
+function convert_left_slash(string $string): string
 {
     return str_replace('\\', '/', $string);
 }
