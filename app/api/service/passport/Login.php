@@ -214,10 +214,10 @@ class Login extends BaseService
             'store_id' => $this->storeId
         ];
         // 写入用户信息(第三方)
-//        if ($isParty === true && !empty($partyData)) {
-//            $partyUserInfo = PartyService::partyUserInfo($partyData, true);
-//            $data = array_merge($data, $partyUserInfo);
-//        }
+        if ($isParty === true && !empty($partyData)) {
+            $partyUserInfo = PartyService::partyUserInfo($partyData, true);
+            $data = array_merge($data, $partyUserInfo);
+        }
         // 新增用户记录
         $model = new UserModel;
         $model->save($data);
@@ -245,10 +245,10 @@ class Login extends BaseService
         ];
         // 写入用户信息(第三方)
         // 如果不需要每次登录都更新微信用户头像昵称, 下面4行代码可以屏蔽掉
-        if ($isParty === true && !empty($partyData)) {
-            $partyUserInfo = PartyService::partyUserInfo($partyData, true);
-            $data = array_merge($data, $partyUserInfo);
-        }
+//        if ($isParty === true && !empty($partyData)) {
+//            $partyUserInfo = PartyService::partyUserInfo($partyData, true);
+//            $data = array_merge($data, $partyUserInfo);
+//        }
         // 更新用户记录
         $status = $userInfo->save($data) !== false;
         // 记录用户信息
